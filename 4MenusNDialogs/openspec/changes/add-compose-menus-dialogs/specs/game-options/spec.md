@@ -1,0 +1,243 @@
+## Purpose
+
+Define el menú de opciones y sus diálogos Material 3 para el tres en raya (nueva partida, dificultad, salida confirmada y Acerca de), junto con la identidad visual propia de la aplicación.
+
+## ADDED Requirements
+
+### Requirement: Menú principal de opciones
+
+La interfaz SHALL ofrecer un menú principal en Compose, visible y accesible durante la partida, con exactamente cuatro entradas: Nueva partida, Dificultad, Acerca de y Salir. Cada entrada MUST mostrar una etiqueta proveniente de recursos y SHALL disponer de un icono asociado. La entrada Nueva partida MUST ejecutar la misma acción que el botón de nueva partida existente; ese botón SHALL permanecer visible y accesible como atajo y MUST mantener las reglas previas de nueva partida. Al elegir una entrada habilitada, el menú SHALL cerrarse antes de ejecutar su acción o mostrar el diálogo correspondiente, evitando ventanas apiladas; una entrada deshabilitada MUST NOT ejecutar acción alguna ni abrir diálogo.
+
+#### Scenario: Menú con las cuatro entradas
+
+- **GIVEN** que la interfaz muestra una partida activa o terminada
+- **WHEN** la persona abre el menú principal
+- **THEN** aparecen las cuatro entradas Nueva partida, Dificultad, Acerca de y Salir, cada una con su etiqueta y su icono
+
+#### Scenario: Nueva partida desde el menú respeta las reglas previas
+
+- **GIVEN** que el menú principal está abierto
+- **WHEN** la persona elige Nueva partida
+- **THEN** se ejecuta la misma acción que el botón existente: se limpia el tablero, se conserva el marcador y se alterna el iniciador según las reglas vigentes
+
+#### Scenario: El botón existente permanece como atajo
+
+- **GIVEN** que la interfaz muestra el juego
+- **WHEN** la persona busca iniciar una nueva partida
+- **THEN** encuentra el botón de nueva partida visible y accesible y, al usarlo, ejecuta la misma acción que la entrada del menú
+
+#### Scenario: El menú se cierra antes de la acción
+
+- **GIVEN** que el menú principal está abierto
+- **WHEN** la persona elige una de sus entradas habilitadas
+- **THEN** el menú se cierra antes de ejecutar la acción o de abrir el diálogo correspondiente, sin ventanas apiladas
+
+#### Scenario: Entrada deshabilitada no ejecuta acción
+
+- **GIVEN** que el menú principal está abierto con la entrada Dificultad deshabilitada
+- **WHEN** la persona intenta elegir Dificultad
+- **THEN** no se abre ningún diálogo, no se ejecuta ninguna acción y la partida y la sesión permanecen sin cambios
+
+### Requirement: Selección de dificultad
+
+Al abrir la entrada Dificultad, el sistema SHALL mostrar un diálogo de selección con los cuatro niveles Easy, Hard, Expert e Impossible presentados mediante etiquetas de recursos en español: Fácil, Difícil, Experto e Imposible, en ese orden y con la dificultad vigente marcada como opción de radio seleccionada. La dificultad SHALL ser editable únicamente con el tablero vacío antes de la primera jugada (incluido el inicio de partida con X) o después de un resultado terminal. Durante una partida activa, entendida como resultado InProgress con al menos una marca, incluida la apertura automática de O, la entrada Dificultad MUST permanecer visible pero deshabilitada, MUST NOT abrir el diálogo y MUST NOT aceptar selecciones. Al elegir un nivel aceptado, SHALL actualizar la dificultad vigente, cerrar el diálogo y emitir exactamente un Toast con la etiqueta visible del nivel seleccionado. Si el diálogo se descarta sin confirmar por Atrás o por toque fuera cuando proceda, la dificultad vigente MUST permanecer sin cambios. Una selección aceptada MUST NOT reiniciar la partida ni alterar tablero, resultado, marcador, turnos o iniciadores, ni disparar un movimiento de la computadora. Si la selección ocurre con el tablero vacío antes de la primera jugada, el nivel elegido SHALL regir esa misma partida, pendiente aún de su primera jugada, incluida su eventual apertura de O; si ocurre tras un resultado terminal, SHALL aplicarse desde la próxima partida, incluida su apertura de O. En ambos casos el nivel elegido SHALL conservarse en la sesión para las partidas siguientes, sin reiniciar la partida ni alterar el iniciador. El ViewModel MUST rechazar cualquier solicitud de cambio de dificultad durante una partida activa sin alterar la dificultad ni ningún otro estado y sin emitir un Toast de confirmación.
+
+#### Scenario: Apertura muestra el nivel vigente
+
+- **GIVEN** que la dificultad vigente es el nivel Y y que la dificultad es editable
+- **WHEN** la persona abre el diálogo de dificultad
+- **THEN** el radio de la etiqueta visible de Y aparece marcado como seleccionado
+
+#### Scenario: El selector ofrece los cuatro niveles
+
+- **GIVEN** que la dificultad es editable y la persona abre el diálogo de dificultad
+- **WHEN** el diálogo se muestra
+- **THEN** aparecen exactamente cuatro radios con las etiquetas Fácil, Difícil, Experto e Imposible en ese orden, con un solo radio marcado
+
+#### Scenario: Reapertura tras elegir Imposible
+
+- **GIVEN** que la dificultad vigente es Imposible y que la dificultad es editable
+- **WHEN** la persona reabre el diálogo de dificultad
+- **THEN** el radio de la etiqueta visible Imposible aparece marcado como seleccionado
+
+#### Scenario: La selección actualiza, cierra y notifica una sola vez
+
+- **GIVEN** que la dificultad es editable y el diálogo está abierto con el nivel Y marcado
+- **WHEN** la persona pulsa otro nivel Z
+- **THEN** la dificultad vigente pasa a Z, el diálogo se cierra y se emite exactamente un Toast con la etiqueta visible del nivel Z
+
+#### Scenario: Elegir el radio ya seleccionado
+
+- **GIVEN** que la dificultad es editable y el diálogo está abierto con el nivel Y ya marcado
+- **WHEN** la persona pulsa ese mismo radio Y
+- **THEN** la dificultad permanece en Y, el diálogo se cierra y se emite exactamente un Toast con la etiqueta visible de Y, sin repetirse por recomposición ni recreación
+
+#### Scenario: Cancelar no cambia la dificultad
+
+- **GIVEN** que la dificultad es editable y el diálogo está abierto con el nivel Y
+- **WHEN** se descarta por Atrás o por toque fuera cuando proceda
+- **THEN** la dificultad vigente sigue siendo Y y no se emite un Toast de nivel seleccionado
+
+#### Scenario: La entrada está habilitada antes de la primera jugada
+
+- **GIVEN** una partida nueva con el tablero vacío y O aún no ha abierto
+- **WHEN** la persona abre el menú y elige Dificultad
+- **THEN** la entrada está habilitada, el diálogo se abre y una selección aceptada actualiza la dificultad sin colocar ninguna marca
+
+#### Scenario: La entrada está habilitada tras un desenlace
+
+- **GIVEN** una partida ya terminada por victoria o empate
+- **WHEN** la persona abre el menú y elige Dificultad
+- **THEN** la entrada está habilitada y el diálogo se abre mostrando el nivel vigente
+
+#### Scenario: Rechazo durante una partida activa
+
+- **GIVEN** una partida activa con al menos una marca, con la dificultad vigente Y y el tablero, marcador, turnos e iniciador definidos
+- **WHEN** la persona intenta cambiar la dificultad, o el ViewModel recibe una solicitud directa u obsoleta
+- **THEN** la dificultad sigue siendo Y, no se altera ningún otro estado, no se emite Toast de confirmación y no se dispara un movimiento de la computadora
+
+#### Scenario: La apertura automática de O cierra la ventana de edición
+
+- **GIVEN** que la dificultad es editable y la alternancia determina que O inicia la nueva partida
+- **WHEN** comienza la partida y O realiza su única jugada inicial
+- **THEN** la apertura usa la dificultad vigente y, tras ella, la entrada Dificultad queda deshabilitada durante el resto de la partida activa
+
+#### Scenario: El nivel elegido rige la partida iniciada con él
+
+- **GIVEN** que la dificultad vigente cambió a Z en una ventana permitida (tablero vacío antes de la primera jugada o tras un desenlace)
+- **WHEN** la computadora juega en una partida iniciada con ese nivel, incluida la apertura de O de esa partida
+- **THEN** la selección del movimiento usa el nivel Z
+
+#### Scenario: Sin repetición de la notificación por recomposición o recreación
+
+- **GIVEN** que se emitió un Toast por una selección de dificultad
+- **WHEN** la interfaz se recompone o la pantalla se recrea
+- **THEN** no se vuelve a emitir la notificación de esa selección
+
+### Requirement: Conservación de la dificultad en la sesión
+
+La dificultad vigente SHALL conservarse en memoria durante la sesión viva: MUST mantenerse al solicitar una nueva partida y al recrearse la pantalla por rotación o al volver desde segundo plano. Una sesión nueva MUST iniciar con Expert y MUST NOT recuperar la dificultad desde almacenamiento permanente. No se exige conservar abierto el diálogo de dificultad durante una recreación.
+
+#### Scenario: Se retiene al pedir una nueva partida
+
+- **GIVEN** que la dificultad vigente es el nivel Y
+- **WHEN** la persona solicita una nueva partida
+- **THEN** la dificultad vigente sigue siendo Y
+
+#### Scenario: Se retiene tras rotación o regreso de segundo plano
+
+- **GIVEN** que la dificultad vigente es el nivel Y
+- **WHEN** la pantalla se recrea por rotación o el juego vuelve desde segundo plano sin finalizar la sesión
+- **THEN** la dificultad vigente sigue siendo Y
+
+#### Scenario: Imposible se retiene durante la sesión viva
+
+- **GIVEN** que la dificultad vigente es Imposible
+- **WHEN** la persona solicita una nueva partida o la pantalla se recrea por rotación
+- **THEN** la dificultad vigente sigue siendo Imposible
+
+#### Scenario: Sesión nueva inicia en Expert
+
+- **GIVEN** que se abre el juego sin una sesión viva
+- **WHEN** comienza la nueva sesión
+- **THEN** la dificultad vigente es Expert
+
+#### Scenario: Sin persistencia en disco
+
+- **GIVEN** que la aplicación se abre en una sesión distinta de la anterior
+- **WHEN** se consulta la dificultad vigente
+- **THEN** no se recupera la dificultad de la sesión anterior desde almacenamiento permanente
+
+#### Scenario: El diálogo abierto no se conserva obligatoriamente
+
+- **GIVEN** que el diálogo de dificultad está abierto con el nivel Y
+- **WHEN** la pantalla se recrea
+- **THEN** la dificultad vigente sigue siendo Y, sin exigir que el diálogo permanezca abierto
+
+### Requirement: Confirmación de salida
+
+La entrada Salir MUST abrir un diálogo de confirmación con las opciones Sí y No que MUST NOT descartarse por Atrás ni por toque fuera; solo SHALL cerrarse mediante sus botones. Elegir No MUST cerrar el diálogo y conservar la partida y la sesión sin cambios. Elegir Sí MUST finalizar la actividad. La aplicación MUST NOT terminar el proceso de forma artificial ni añadir una interceptación global de Atrás. Cuando existe un menú o un diálogo distinto del de salida, Atrás MUST descartarlo según el comportamiento normal; solo cuando no hay ningún menú ni diálogo activo, Atrás MUST aplicar la navegación normal del sistema.
+
+#### Scenario: No descartable por Atrás ni por toque fuera
+
+- **GIVEN** que el diálogo de confirmación de salida está abierto
+- **WHEN** se pulsa Atrás o se toca fuera
+- **THEN** el diálogo permanece abierto y la partida y la sesión siguen intactas
+
+#### Scenario: Elegir No conserva la partida
+
+- **GIVEN** que el diálogo de confirmación de salida está abierto sobre una partida en curso
+- **WHEN** la persona elige No
+- **THEN** el diálogo se cierra y la partida y la sesión permanecen sin cambios
+
+#### Scenario: Sí finaliza la actividad
+
+- **GIVEN** que el diálogo de confirmación de salida está abierto
+- **WHEN** la persona elige Sí
+- **THEN** la actividad finaliza
+
+#### Scenario: Atrás descarta un menú o diálogo distinto
+
+- **GIVEN** que hay un menú desplegable o un diálogo distinto del de salida activo
+- **WHEN** la persona pulsa Atrás
+- **THEN** ese menú o diálogo se descarta según el comportamiento normal, sin cambios en la partida ni en la sesión
+
+#### Scenario: Atrás aplica la navegación del sistema sin menú ni diálogo activo
+
+- **GIVEN** que no hay ningún menú ni diálogo activo
+- **WHEN** la persona pulsa Atrás
+- **THEN** la aplicación no intercepta esa acción y se aplica la navegación normal del sistema
+
+### Requirement: Acerca de
+
+La entrada Acerca de MUST abrir un diálogo con una imagen propia del tres en raya, el nombre del autor exacto `Juan Sebastian Rodriguez` y un botón de aceptar. El botón de aceptar MUST cerrar el diálogo sin modificar la partida, el marcador ni la dificultad.
+
+#### Scenario: Muestra la imagen y el autor
+
+- **GIVEN** que la persona abre el diálogo Acerca de
+- **WHEN** el diálogo se muestra
+- **THEN** aparecen la imagen propia del tres en raya y el texto exacto Juan Sebastian Rodriguez
+
+#### Scenario: Aceptar cierra sin cambiar la sesión
+
+- **GIVEN** que el diálogo Acerca de está abierto sobre una partida
+- **WHEN** la persona pulsa aceptar
+- **THEN** el diálogo se cierra y la partida, el marcador y la dificultad permanecen sin cambios
+
+### Requirement: Identidad visual e icono de launcher
+
+La aplicación SHALL usar una identidad visual propia del tres en raya. El launcher SHALL disponer de un icono adaptativo propio, coherente en sus variantes normal y redonda; si se usa un tema monocromático, MUST corresponder al icono propio y MUST NOT ser la plantilla de Android. La imagen del diálogo Acerca de SHALL compartir el motivo del juego.
+
+#### Scenario: Icono adaptativo en variante normal y redonda
+
+- **GIVEN** que la aplicación está instalada en un launcher con soporte de iconos adaptativos
+- **WHEN** se muestra el icono de la aplicación
+- **THEN** existe una variante normal y una variante redonda coherentes con la identidad del tres en raya
+
+#### Scenario: Acerca de usa la imagen propia
+
+- **GIVEN** que el diálogo Acerca de está abierto
+- **WHEN** se muestra su contenido
+- **THEN** la imagen presentada corresponde a la identidad propia del tres en raya
+
+### Requirement: Accesibilidad de opciones y diálogos
+
+Las entradas del menú y los controles de los diálogos SHALL ser visibles y alcanzables, y MUST exponer una etiqueta textual proveniente de recursos para su uso con tecnologías de asistencia, sin requerir gestos especiales ni botones físicos. Cuando una entrada del menú esté deshabilitada, MUST exponer su estado deshabilitado a las tecnologías de asistencia y MUST NOT presentarse como accionable.
+
+#### Scenario: Entradas del menú etiquetadas
+
+- **GIVEN** que el menú principal está abierto
+- **WHEN** se recorre con una tecnología de asistencia
+- **THEN** cada una de las cuatro entradas expone su etiqueta textual y su estado (habilitada o deshabilitada), y expone su acción ejecutable solo cuando está habilitada
+
+#### Scenario: Controles de diálogo alcanzables
+
+- **GIVEN** que un diálogo del menú está abierto
+- **WHEN** se recorre con una tecnología de asistencia
+- **THEN** sus opciones y botones son alcanzables y exponen una etiqueta textual
+
+#### Scenario: Entrada deshabilitada no accionable
+
+- **GIVEN** que la entrada Dificultad está deshabilitada durante una partida activa
+- **WHEN** se recorre el menú con una tecnología de asistencia
+- **THEN** la entrada expone su etiqueta y su estado deshabilitado y no se ofrece como acción ejecutable
