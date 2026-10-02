@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">TicTacToe</string>
+
+    <string name="first_human">La persona hace la primera jugada</string>
+    <string name="turn_human">Tu turno</string>
+    <string name="turn_computer">Turno de la computadora</string>
+    <string name="result_tie">Empate</string>
+    <string name="result_human_wins">Victoria humana</string>
+    <string name="result_computer_wins">Victoria de la computadora</string>
+    <string name="new_game">Nueva partida</string>
+
+    <string name="score_human_wins">Victorias de X: %1$d</string>
+    <string name="score_computer_wins">Victorias de O: %1$d</string>
+    <string name="score_ties">Empates: %1$d</string>
+
+    <string name="board_label">Tablero de tres en raya</string>
+    <string name="score_label">Marcador</string>
+    <string name="cell_empty">Casilla, fila %1$d, columna %2$d, vacía</string>
+    <string name="cell_x">Casilla, fila %1$d, columna %2$d, X</string>
+    <string name="cell_o">Casilla, fila %1$d, columna %2$d, O</string>
+
+    <string name="menu_open">Abrir menú</string>
+    <string name="menu_difficulty">Dificultad</string>
+    <string name="menu_about">Acerca de</string>
+    <string name="menu_exit">Salir</string>
+
+    <string name="difficulty_dialog_title">Dificultad</string>
+    <string name="difficulty_easy">Fácil</string>
+    <string name="difficulty_hard">Difícil</string>
+    <string name="difficulty_expert">Experto</string>
+    <string name="difficulty_impossible">Imposible</string>
+
+    <string name="about_title">Acerca de</string>
+    <string name="about_image_description">Imagen del tres en raya</string>
+    <string name="about_author">Juan Sebastian Rodriguez</string>
+    <string name="about_accept">Aceptar</string>
+
+    <string name="exit_dialog_title">Salir</string>
+    <string name="exit_dialog_message">¿Seguro que quieres salir?</string>
+    <string name="exit_yes">Sí</string>
+    <string name="exit_no">No</string>
+</resources>
