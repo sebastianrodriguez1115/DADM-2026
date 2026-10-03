@@ -286,6 +286,7 @@ class MainActivityTest {
             .assertIsEnabled()
             .performClick()
         composeTestRule.waitForIdle()
+        awaitHumanOrTerminal(activityViewModel)
     }
 
     private fun clickNewGame() {
@@ -295,6 +296,14 @@ class MainActivityTest {
             .assertIsEnabled()
             .performClick()
         composeTestRule.waitForIdle()
+        awaitHumanOrTerminal(activityViewModel)
+    }
+
+    private fun awaitHumanOrTerminal(viewModel: GameViewModel) {
+        composeTestRule.waitUntil(timeoutMillis = 5_000) {
+            val state = viewModel.uiState.value
+            state.turn == Turn.Human || state.result != GameResult.InProgress
+        }
     }
 
     private fun assertTerminalStatus(result: GameResult) {
@@ -319,6 +328,9 @@ class MainActivityTest {
         assertEquals(expected.starter, actual.starter)
         assertEquals(expected.nextStarter, actual.nextStarter)
         assertEquals(expected.score, actual.score)
+        assertEquals(expected.difficulty, actual.difficulty)
+        assertEquals(expected.soundEnabled, actual.soundEnabled)
+        assertEquals(expected.canChangeDifficulty, actual.canChangeDifficulty)
     }
 
     private fun scoreTotal(state: GameUiState): Int =

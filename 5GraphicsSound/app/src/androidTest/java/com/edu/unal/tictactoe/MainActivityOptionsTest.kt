@@ -199,6 +199,7 @@ class MainActivityOptionsTest {
         assertNotSame(oldViewModel, newViewModel)
         val fresh = newViewModel.uiState.value
         assertEquals(DifficultyLevel.Expert, fresh.difficulty)
+        assertTrue(fresh.soundEnabled)
         assertTrue(fresh.board.all { it == Mark.Empty })
         assertEquals(0, scoreTotal(fresh))
         assertTrue(fresh.canChangeDifficulty)
@@ -248,6 +249,9 @@ class MainActivityOptionsTest {
             node = node.performScrollTo().assertIsEnabled()
         }
         node.assertIsDisplayed().performClick()
+        if (tag == GameMenuTags.NEW_GAME || tag == NEW_GAME_SHORTCUT_TAG) {
+            awaitHumanOrTerminal()
+        }
     }
 
     private fun openExitDialog() {
@@ -271,7 +275,10 @@ class MainActivityOptionsTest {
         awaitTag(DifficultyDialogTags.DIALOG, present = false)
     }
 
-    private fun clickCell(location: Int) = clickTag(CELL_TAG_PREFIX + location, scroll = true)
+    private fun clickCell(location: Int) {
+        clickTag(CELL_TAG_PREFIX + location, scroll = true)
+        awaitHumanOrTerminal()
+    }
 
     private fun playUntilTerminal(): GameUiState {
         var humanMoves = 0
@@ -285,6 +292,13 @@ class MainActivityOptionsTest {
             humanMoves++
         }
         return snapshot()
+    }
+
+    private fun awaitHumanOrTerminal() {
+        composeTestRule.waitUntil(timeoutMillis = 5_000) {
+            val state = snapshot()
+            state.turn == Turn.Human || state.result != GameResult.InProgress
+        }
     }
 
     private fun assertDialogVisible(tag: String) {
@@ -317,6 +331,7 @@ class MainActivityOptionsTest {
         assertEquals(expected.nextStarter, actual.nextStarter)
         assertEquals(expected.score, actual.score)
         assertEquals(expected.difficulty, actual.difficulty)
+        assertEquals(expected.soundEnabled, actual.soundEnabled)
         assertEquals(expected.canChangeDifficulty, actual.canChangeDifficulty)
     }
 

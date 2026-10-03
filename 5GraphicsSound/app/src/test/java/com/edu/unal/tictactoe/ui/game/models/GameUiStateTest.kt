@@ -21,6 +21,7 @@ class GameUiStateTest {
         assertEquals(Player.X, state.starter)
         assertEquals(Player.O, state.nextStarter)
         assertEquals(Score(), state.score)
+        assertEquals(true, state.soundEnabled)
     }
 
     @Test
@@ -52,6 +53,14 @@ class GameUiStateTest {
         original[0] = Mark.X
 
         assertEquals(Mark.Empty, state.board[0])
+    }
+
+    @Test
+    fun soundPreferenceCanBeInitializedDisabledAsAnImmutableValue() {
+        val state = GameUiState(soundEnabled = false)
+
+        assertEquals(false, state.soundEnabled)
+        assertEquals(true, GameUiState().soundEnabled)
     }
 
     @Test

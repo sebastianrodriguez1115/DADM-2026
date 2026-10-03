@@ -1,6 +1,7 @@
 package com.edu.unal.tictactoe.ui.game
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -15,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import com.edu.unal.tictactoe.R
 
 internal object GameMenuTags {
@@ -22,6 +25,7 @@ internal object GameMenuTags {
     const val MENU = "game_menu"
     const val NEW_GAME = "game_menu_new_game"
     const val DIFFICULTY = "game_menu_difficulty"
+    const val SOUND = "game_menu_sound"
     const val ABOUT = "game_menu_about"
     const val EXIT = "game_menu_exit"
 }
@@ -29,13 +33,18 @@ internal object GameMenuTags {
 @Composable
 fun GameMenu(
     canChangeDifficulty: Boolean,
+    soundEnabled: Boolean,
     onNewGame: () -> Unit,
     onDifficulty: () -> Unit,
+    onToggleSound: () -> Unit,
     onAbout: () -> Unit,
     onExit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val soundStateLabel = stringResource(
+        if (soundEnabled) R.string.sound_enabled else R.string.sound_disabled,
+    )
 
     Box(modifier = modifier) {
         IconButton(
@@ -81,6 +90,26 @@ fun GameMenu(
                     )
                 },
                 modifier = Modifier.testTag(GameMenuTags.DIFFICULTY),
+            )
+            DropdownMenuItem(
+                text = {
+                    Column {
+                        Text(text = stringResource(R.string.menu_sound))
+                        Text(text = soundStateLabel)
+                    }
+                },
+                onClick = {
+                    expanded = false
+                    onToggleSound()
+                },
+                leadingIcon = {
+                    Icon(painter = painterResource(R.drawable.ic_menu_sound), contentDescription = null)
+                },
+                modifier = Modifier
+                    .testTag(GameMenuTags.SOUND)
+                    .semantics {
+                        stateDescription = soundStateLabel
+                    },
             )
             DropdownMenuItem(
                 text = { Text(text = stringResource(R.string.menu_about)) },

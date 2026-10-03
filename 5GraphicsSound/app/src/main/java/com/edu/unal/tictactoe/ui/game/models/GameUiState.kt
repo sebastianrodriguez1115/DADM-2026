@@ -18,6 +18,7 @@ class GameUiState(
     val nextStarter: Player = Player.O,
     val score: Score = Score(),
     val difficulty: DifficultyLevel = DifficultyLevel.Expert,
+    val soundEnabled: Boolean = true,
 ) {
     init {
         require(board.size == BOARD_SIZE)

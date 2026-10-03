@@ -7,14 +7,26 @@ import com.edu.unal.tictactoe.game.models.GameResult
 import com.edu.unal.tictactoe.game.models.Mark
 import com.edu.unal.tictactoe.game.models.Player
 import com.edu.unal.tictactoe.game.models.Score
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotSame
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
+import org.junit.Rule
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class GameViewModelDifficultyTest {
+    @get:Rule
+    val harness = GameViewModelCoroutineTestHarness()
+
+    private fun playMove(viewModel: GameViewModel, location: Int) {
+        viewModel.onHumanMove(location)
+        harness.scheduler.advanceTimeBy(1_000)
+        harness.scheduler.runCurrent()
+    }
+
     @Test
     fun aNewSessionStartsInExpertWithAnEditableEmptyBoard() {
         val viewModel = newViewModel()
@@ -40,6 +52,7 @@ class GameViewModelDifficultyTest {
         assertEquals(before.starter, after.starter)
         assertEquals(before.nextStarter, after.nextStarter)
         assertEquals(before.score, after.score)
+        assertEquals(before.soundEnabled, after.soundEnabled)
         assertEquals(0, randomizer.calls)
     }
 
@@ -56,6 +69,7 @@ class GameViewModelDifficultyTest {
         assertEquals(DifficultyLevel.Expert, after.difficulty)
         assertEquals(before.board, after.board)
         assertEquals(before.score, after.score)
+        assertEquals(before.soundEnabled, after.soundEnabled)
         assertEquals(0, randomizer.calls)
     }
 
@@ -78,6 +92,7 @@ class GameViewModelDifficultyTest {
         assertEquals(terminal.score, after.score)
         assertEquals(terminal.starter, after.starter)
         assertEquals(terminal.nextStarter, after.nextStarter)
+        assertEquals(terminal.soundEnabled, after.soundEnabled)
         assertEquals(callsBefore, randomizer.calls)
         assertEquals(terminalBoard, terminal.board)
     }
@@ -86,7 +101,7 @@ class GameViewModelDifficultyTest {
     fun setDifficultyDuringAnActiveGameIsRejectedWithoutPublishingOrMoving() {
         val randomizer = RecordingRandomizer(selectedIndex = 0)
         val viewModel = newViewModel(randomizer)
-        viewModel.onHumanMove(0)
+        playMove(viewModel, 0)
         val active = viewModel.uiState.value
         val callsAfterMove = randomizer.calls
         assertFalse(active.canChangeDifficulty)
@@ -108,7 +123,7 @@ class GameViewModelDifficultyTest {
         val staleEditableState = viewModel.uiState.value
         assertTrue(staleEditableState.canChangeDifficulty)
 
-        viewModel.onHumanMove(0)
+        playMove(viewModel, 0)
         val active = viewModel.uiState.value
 
         assertFalse(viewModel.setDifficulty(DifficultyLevel.Easy))
@@ -133,14 +148,20 @@ class GameViewModelDifficultyTest {
         assertEquals(terminalScore, openingOState.score)
         assertEquals(Player.O, openingOState.starter)
         assertEquals(Player.X, openingOState.nextStarter)
-        assertEquals(listOf(Mark.O) + List(8) { Mark.Empty }, openingOState.board)
-        assertFalse(openingOState.canChangeDifficulty)
+        assertEquals(List(9) { Mark.Empty }, openingOState.board)
+        assertTrue(openingOState.canChangeDifficulty)
         assertEquals(callsBeforeNewGame, randomizer.calls)
+
+        harness.scheduler.advanceTimeBy(1_000)
+        harness.scheduler.runCurrent()
+        assertEquals(listOf(Mark.O) + List(8) { Mark.Empty }, viewModel.uiState.value.board)
+        assertFalse(viewModel.uiState.value.canChangeDifficulty)
 
         viewModel.newGame()
 
         val openingXState = viewModel.uiState.value
         assertEquals(DifficultyLevel.Impossible, openingXState.difficulty)
+        assertEquals(true, openingXState.soundEnabled)
         assertEquals(terminalScore, openingXState.score)
         assertEquals(Player.X, openingXState.starter)
         assertEquals(Player.O, openingXState.nextStarter)
@@ -158,10 +179,103 @@ class GameViewModelDifficultyTest {
 
         val state = viewModel.uiState.value
         assertEquals(Player.O, state.starter)
-        assertEquals(listOf(Mark.O) + List(8) { Mark.Empty }, state.board)
+        assertEquals(List(9) { Mark.Empty }, state.board)
         assertEquals(DifficultyLevel.Impossible, state.difficulty)
         assertEquals(0, randomizer.calls)
-        assertFalse(state.canChangeDifficulty)
+        assertTrue(state.canChangeDifficulty)
+        harness.scheduler.advanceTimeBy(1_000)
+        harness.scheduler.runCurrent()
+        assertEquals(listOf(Mark.O) + List(8) { Mark.Empty }, viewModel.uiState.value.board)
+        assertEquals(DifficultyLevel.Impossible, viewModel.uiState.value.difficulty)
+        assertEquals(0, randomizer.calls)
+        assertFalse(viewModel.uiState.value.canChangeDifficulty)
+    }
+
+    @Test
+    fun staleEasySelectionIsDiscardedAfterReentrantDifficultyChange() {
+        lateinit var viewModel: GameViewModel
+        var changedDifficulty = false
+        val randomizer = object : MoveRandomizer {
+            var calls = 0
+            override fun nextInt(bound: Int): Int {
+                calls++
+                if (!changedDifficulty) {
+                    changedDifficulty = true
+                    assertTrue(viewModel.setDifficulty(DifficultyLevel.Impossible))
+                }
+                return bound - 1
+            }
+        }
+        viewModel = harness.createViewModelResumed(TicTacToeGame(randomizer))
+        assertTrue(viewModel.setDifficulty(DifficultyLevel.Easy))
+        viewModel.newGame()
+
+        harness.scheduler.advanceTimeBy(1_000)
+        harness.scheduler.runCurrent()
+
+        assertEquals(DifficultyLevel.Impossible, viewModel.uiState.value.difficulty)
+        assertEquals(listOf(Mark.O) + List(8) { Mark.Empty }, viewModel.uiState.value.board)
+        assertEquals(Score(), viewModel.uiState.value.score)
+        assertEquals(1, randomizer.calls)
+        assertFalse(viewModel.uiState.value.canChangeDifficulty)
+        val afterOpening = viewModel.uiState.value
+        assertFalse(viewModel.setDifficulty(DifficultyLevel.Easy))
+        assertSame(afterOpening, viewModel.uiState.value)
+    }
+
+    @Test
+    fun difficultyChangedAt400MillisecondsDoesNotRestartOpeningDeadline() {
+        val randomizer = RecordingRandomizer(selectedIndex = 0)
+        val viewModel = newViewModel(randomizer)
+        assertTrue(viewModel.setDifficulty(DifficultyLevel.Easy))
+        viewModel.newGame()
+
+        harness.scheduler.advanceTimeBy(400)
+        harness.scheduler.runCurrent()
+        assertTrue(viewModel.setDifficulty(DifficultyLevel.Impossible))
+        harness.scheduler.advanceTimeBy(599)
+        harness.scheduler.runCurrent()
+        assertEquals(List(9) { Mark.Empty }, viewModel.uiState.value.board)
+        assertEquals(0, randomizer.calls)
+
+        harness.scheduler.advanceTimeBy(1)
+        harness.scheduler.runCurrent()
+        assertEquals(listOf(Mark.O) + List(8) { Mark.Empty }, viewModel.uiState.value.board)
+        assertEquals(1_000, harness.scheduler.currentTime)
+        assertEquals(0, randomizer.calls)
+        assertFalse(viewModel.setDifficulty(DifficultyLevel.Easy))
+    }
+
+    @Test
+    fun reentrantNewGamesDiscardTheOldOpeningSelectionAndKeepTheNewOpeningDeadline() {
+        lateinit var viewModel: GameViewModel
+        var restarted = false
+        val randomizer = object : MoveRandomizer {
+            override fun nextInt(bound: Int): Int {
+                if (!restarted) {
+                    restarted = true
+                    viewModel.newGame() // X opening
+                    viewModel.newGame() // new O opening, with its own full second
+                }
+                return 0
+            }
+        }
+        viewModel = harness.createViewModelResumed(TicTacToeGame(randomizer))
+        viewModel.newGame()
+        harness.scheduler.advanceTimeBy(1_000)
+        harness.scheduler.runCurrent()
+
+        val restartedOpening = viewModel.uiState.value
+        assertEquals(Player.O, restartedOpening.starter)
+        assertEquals(List(9) { Mark.Empty }, restartedOpening.board)
+        assertEquals(Score(), restartedOpening.score)
+        harness.scheduler.advanceTimeBy(999)
+        harness.scheduler.runCurrent()
+        assertEquals(List(9) { Mark.Empty }, viewModel.uiState.value.board)
+        harness.scheduler.advanceTimeBy(1)
+        harness.scheduler.runCurrent()
+        assertEquals(1, viewModel.uiState.value.board.count { it == Mark.O })
+        assertEquals(Score(), viewModel.uiState.value.score)
     }
 
     @Test
@@ -170,11 +284,11 @@ class GameViewModelDifficultyTest {
         val viewModel = newViewModel(randomizer)
         assertTrue(viewModel.setDifficulty(DifficultyLevel.Easy))
 
-        viewModel.onHumanMove(0)
+        playMove(viewModel, 0)
         assertEquals(DifficultyLevel.Easy, viewModel.uiState.value.difficulty)
-        viewModel.onHumanMove(2)
+        playMove(viewModel, 2)
         assertEquals(DifficultyLevel.Easy, viewModel.uiState.value.difficulty)
-        viewModel.onHumanMove(4)
+        playMove(viewModel, 4)
 
         // Tras la tercera jugada humana X amenaza la linea 0-4-8: Expert bloquearia
         // sin consultar el randomizador, por lo que este caso discrimina el nivel.
@@ -193,18 +307,18 @@ class GameViewModelDifficultyTest {
         assertTrue(viewModel.setDifficulty(DifficultyLevel.Easy))
         val initial = viewModel.uiState.value
 
-        viewModel.onHumanMove(0)
+        playMove(viewModel, 0)
         assertEquals(DifficultyLevel.Easy, viewModel.uiState.value.difficulty)
-        viewModel.onHumanMove(2)
+        playMove(viewModel, 2)
         assertEquals(DifficultyLevel.Easy, viewModel.uiState.value.difficulty)
-        viewModel.onHumanMove(4)
+        playMove(viewModel, 4)
 
         val beforeWinningMove = viewModel.uiState.value
         assertEquals(GameResult.InProgress, beforeWinningMove.result)
         assertEquals(DifficultyLevel.Easy, beforeWinningMove.difficulty)
         assertEquals(3, randomizer.calls)
 
-        viewModel.onHumanMove(8)
+        playMove(viewModel, 8)
 
         val terminal = viewModel.uiState.value
         assertEquals(DifficultyLevel.Easy, terminal.difficulty)
@@ -240,7 +354,7 @@ class GameViewModelDifficultyTest {
         val viewModel = newViewModel(randomizer)
         assertTrue(viewModel.uiState.value.canChangeDifficulty)
 
-        viewModel.onHumanMove(0)
+        playMove(viewModel, 0)
         assertFalse(viewModel.uiState.value.canChangeDifficulty)
 
         playFirstEmptyUntilTerminal(viewModel)
@@ -254,7 +368,7 @@ class GameViewModelDifficultyTest {
             if (location < 0) {
                 break
             }
-            viewModel.onHumanMove(location)
+            playMove(viewModel, location)
             humanMoves++
         }
         assertFalse(
@@ -265,7 +379,7 @@ class GameViewModelDifficultyTest {
 
     private fun newViewModel(
         randomizer: MoveRandomizer = RecordingRandomizer(selectedIndex = 0),
-    ): GameViewModel = GameViewModel(TicTacToeGame(randomizer))
+    ): GameViewModel = harness.createViewModelResumed(TicTacToeGame(randomizer))
 
     private class RecordingRandomizer(
         private val selectedIndex: Int,

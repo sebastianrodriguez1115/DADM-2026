@@ -88,6 +88,7 @@ class GameScreenTest {
             .performClick()
         composeTestRule.waitForIdle()
         waitUntilMenuClosed()
+        awaitComputerOpening(viewModel)
 
         val afterMenu = viewModel.uiState.value
         assertEquals(Player.O, afterMenu.starter)
@@ -181,6 +182,34 @@ class GameScreenTest {
     }
 
     @Test
+    fun staleDifficultyChoiceAfterOpeningIsRejectedWithoutToastOrStateChange() {
+        val viewModel = controlledViewModel()
+        val host = HostState()
+        setHost(viewModel, host)
+
+        // Keep the difficulty dialog open over an empty-X game, then let O's
+        // opening make that already-open selection stale.
+        openMenu()
+        composeTestRule.onNodeWithTag(GameMenuTags.DIFFICULTY)
+            .assertIsEnabled().performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.runOnIdle { viewModel.newGame() }
+        awaitComputerOpening(viewModel)
+        val stateAfterOpening = viewModel.uiState.value
+        assertEquals(1, stateAfterOpening.board.count { it == Mark.O })
+        assertFalse(stateAfterOpening.canChangeDifficulty)
+
+        clickDifficultyOption(DifficultyLevel.Hard)
+
+        assertEquals(DifficultyLevel.Expert, viewModel.uiState.value.difficulty)
+        assertEquals(stateAfterOpening.board, viewModel.uiState.value.board)
+        assertEquals(stateAfterOpening.result, viewModel.uiState.value.result)
+        assertEquals(stateAfterOpening.score, viewModel.uiState.value.score)
+        assertEquals(stateAfterOpening.turn, viewModel.uiState.value.turn)
+        assertTrue(host.toasts.isEmpty())
+    }
+
+    @Test
     fun hostRecompositionAndRecreationDoNotReplayTheToast() {
         val viewModel = controlledViewModel()
         val host = HostState()
@@ -220,6 +249,7 @@ class GameScreenTest {
                         uiState = uiState,
                         onCellClick = viewModel::onHumanMove,
                         onNewGame = viewModel::newGame,
+                        onToggleSound = viewModel::toggleSound,
                         onDifficultySelected = viewModel::setDifficulty,
                         onShowToast = { host.toasts += it },
                         onExit = { host.exitCount++ },
@@ -261,8 +291,17 @@ class GameScreenTest {
             .assertIsEnabled()
     }
 
-    private fun controlledViewModel(): GameViewModel =
-        GameViewModel(TicTacToeGame(MoveRandomizer { 0 }))
+    private fun controlledViewModel(): GameViewModel = GameViewModel(
+        TicTacToeGame(MoveRandomizer { 0 }),
+    ).also { viewModel ->
+        composeTestRule.runOnIdle { viewModel.onHostResumed() }
+    }
+
+    private fun awaitComputerOpening(viewModel: GameViewModel) {
+        composeTestRule.waitUntil(timeoutMillis = 5_000) {
+            viewModel.uiState.value.board.count { it == Mark.O } == 1
+        }
+    }
 
     private fun setHost(
         viewModel: GameViewModel,
@@ -277,6 +316,7 @@ class GameScreenTest {
                         uiState = uiState,
                         onCellClick = viewModel::onHumanMove,
                         onNewGame = viewModel::newGame,
+                        onToggleSound = viewModel::toggleSound,
                         onDifficultySelected = viewModel::setDifficulty,
                         onShowToast = { host.toasts += it },
                         onExit = { host.exitCount++ },

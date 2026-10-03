@@ -14,6 +14,9 @@ import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.getUnclippedBoundsInRoot
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasClickAction
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -203,10 +206,23 @@ class MainActivityAccessibilityTest {
     }
 
     private fun assertMenuEntries(difficultyEnabled: Boolean) {
+        assertEquals(
+            5,
+            composeTestRule.onAllNodes(
+                hasAnyAncestor(hasTestTag(GameMenuTags.MENU)) and hasClickAction(),
+            )
+                .fetchSemanticsNodes().size,
+        )
         assertLabeled(GameMenuTags.NEW_GAME, R.string.new_game, enabled = true)
         assertLabeled(GameMenuTags.ABOUT, R.string.menu_about, enabled = true)
         assertLabeled(GameMenuTags.EXIT, R.string.menu_exit, enabled = true)
         assertLabeled(GameMenuTags.DIFFICULTY, R.string.menu_difficulty, enabled = difficultyEnabled)
+        assertLabeled(GameMenuTags.SOUND, R.string.menu_sound, enabled = true)
+        composeTestRule.onNodeWithTag(GameMenuTags.SOUND)
+            .assert(SemanticsMatcher.expectValue(
+                SemanticsProperties.StateDescription,
+                context.getString(R.string.sound_enabled),
+            ))
     }
 
     private fun assertLabeled(tag: String, labelRes: Int, role: Role? = null, enabled: Boolean) {

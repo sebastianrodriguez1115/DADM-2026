@@ -25,6 +25,7 @@ fun GameScreen(
     uiState: GameUiState,
     onCellClick: (Int) -> Unit,
     onNewGame: () -> Unit,
+    onToggleSound: () -> Unit,
     onDifficultySelected: (DifficultyLevel) -> Boolean,
     onShowToast: (DifficultyLevel) -> Unit,
     onExit: () -> Unit,
@@ -40,7 +41,9 @@ fun GameScreen(
                 actions = {
                     GameMenu(
                         canChangeDifficulty = uiState.canChangeDifficulty,
+                        soundEnabled = uiState.soundEnabled,
                         onNewGame = onNewGame,
+                        onToggleSound = onToggleSound,
                         onDifficulty = {
                             if (uiState.canChangeDifficulty) {
                                 activeWindow = GameWindow.Difficulty

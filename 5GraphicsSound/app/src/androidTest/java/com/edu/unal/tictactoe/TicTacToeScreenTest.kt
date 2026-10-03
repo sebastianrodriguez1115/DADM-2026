@@ -17,6 +17,7 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.getUnclippedBoundsInRoot
 import androidx.compose.ui.test.hasClickAction
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.hasTestTag
@@ -53,6 +54,7 @@ private const val BOARD_TAG = "tic_tac_toe_board"
 private const val STATUS_TAG = "tic_tac_toe_status"
 private const val SCORE_TAG = "tic_tac_toe_score"
 private const val NEW_GAME_TAG = "tic_tac_toe_new_game"
+private const val UI_STATE_TIMEOUT_MILLIS = 5_000L
 
 @RunWith(AndroidJUnit4::class)
 class TicTacToeScreenTest {
@@ -303,8 +305,12 @@ class TicTacToeScreenTest {
             onCellClick = { cellCallbacks++ },
         )
 
-        composeTestRule.onNodeWithText(Mark.X.symbol.toString()).assertExists()
-        composeTestRule.onNodeWithText(Mark.O.symbol.toString()).assertExists()
+        composeTestRule.onNodeWithContentDescription(context.getString(R.string.cell_x, 1, 1)).assertExists()
+        composeTestRule.onNodeWithContentDescription(context.getString(R.string.cell_o, 1, 2)).assertExists()
+        composeTestRule.onAllNodes(
+            hasAnyAncestor(hasTestTag(BOARD_TAG)) and
+                (hasText(Mark.X.symbol.toString()) or hasText(Mark.O.symbol.toString())),
+        ).assertCountEquals(0)
         composeTestRule.onNodeWithContentDescription(context.getString(R.string.cell_x, 1, 1))
             .assertIsNotEnabled()
         composeTestRule.onNodeWithContentDescription(context.getString(R.string.cell_o, 1, 2))
@@ -364,8 +370,10 @@ class TicTacToeScreenTest {
             composeTestRule.onNodeWithContentDescription(
                 context.getString(R.string.cell_o, 1, 2),
             ).assertIsDisplayed()
-            composeTestRule.onNodeWithText(Mark.X.symbol.toString()).assertIsDisplayed()
-            composeTestRule.onNodeWithText(Mark.O.symbol.toString()).assertIsDisplayed()
+            composeTestRule.onNodeWithContentDescription(context.getString(R.string.cell_x, 1, 1))
+                .assertIsDisplayed()
+            composeTestRule.onNodeWithContentDescription(context.getString(R.string.cell_o, 1, 2))
+                .assertIsDisplayed()
             composeTestRule.onNodeWithTag(NEW_GAME_TAG)
                 .performScrollTo()
                 .assertIsDisplayed()
@@ -379,12 +387,13 @@ class TicTacToeScreenTest {
         val viewModel = controlledViewModel()
         setViewModelScreen(viewModel)
 
-        listOf(0, 3, 4, 8).forEach(::clickCell)
+        listOf(0, 3, 4, 8).forEach { clickCellAndAwaitComputerResponse(viewModel, it) }
         assertResultAndScore(R.string.result_human_wins, xWins = 1, oWins = 0, ties = 0)
         composeTestRule.onNodeWithContentDescription(context.getString(R.string.cell_x, 1, 1))
             .assertExists()
 
         clickNewGame()
+        awaitComputerTurn(viewModel)
         composeTestRule.onNodeWithContentDescription(context.getString(R.string.cell_o, 1, 1))
             .assertExists()
         assertScore(xWins = 1, oWins = 0, ties = 0)
@@ -392,7 +401,7 @@ class TicTacToeScreenTest {
             .performScrollTo()
             .assertIsDisplayed()
 
-        listOf(1, 3, 5).forEach(::clickCell)
+        listOf(1, 3, 5).forEach { clickCellAndAwaitComputerResponse(viewModel, it) }
         assertResultAndScore(R.string.result_computer_wins, xWins = 1, oWins = 1, ties = 0)
         composeTestRule.onNodeWithContentDescription(context.getString(R.string.cell_o, 1, 1))
             .assertExists()
@@ -407,7 +416,7 @@ class TicTacToeScreenTest {
             .performScrollTo()
             .assertIsDisplayed()
 
-        listOf(0, 4, 2, 7, 5).forEach(::clickCell)
+        listOf(0, 4, 2, 7, 5).forEach { clickCellAndAwaitComputerResponse(viewModel, it) }
         assertResultAndScore(R.string.result_tie, xWins = 1, oWins = 1, ties = 1)
     }
 
@@ -417,22 +426,33 @@ class TicTacToeScreenTest {
         setViewModelScreen(viewModel)
 
         clickCell(0)
-        clickCell(4)
+        composeTestRule.waitUntil(timeoutMillis = UI_STATE_TIMEOUT_MILLIS) {
+            viewModel.uiState.value.turn == Turn.Computer
+        }
         val beforeRejectedTouch = viewModel.uiState.value
-        composeTestRule.onNodeWithContentDescription(
-            context.getString(R.string.cell_x, 1, 1),
-        ).assertIsNotEnabled().performTouchInput { click() }
+        composeTestRule.onNodeWithTag("tic_tac_toe_cell_4")
+            .assertIsNotEnabled()
+            .performTouchInput { click() }
         composeTestRule.waitForIdle()
         val afterRejectedTouch = viewModel.uiState.value
-        composeTestRule.onNodeWithContentDescription(context.getString(R.string.cell_x, 1, 1))
-            .assertExists()
         assertEquals(beforeRejectedTouch.board, afterRejectedTouch.board)
         assertEquals(beforeRejectedTouch.turn, afterRejectedTouch.turn)
         assertEquals(beforeRejectedTouch.result, afterRejectedTouch.result)
         assertEquals(beforeRejectedTouch.score, afterRejectedTouch.score)
+        composeTestRule.waitUntil(timeoutMillis = UI_STATE_TIMEOUT_MILLIS) {
+            viewModel.uiState.value.turn == Turn.Human ||
+                viewModel.uiState.value.result != GameResult.InProgress
+        }
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithContentDescription(context.getString(R.string.cell_x, 1, 1))
+            .assertExists()
+        assertScore(xWins = 0, oWins = 0, ties = 0)
+
+        clickCellAndAwaitComputerResponse(viewModel, 4)
         assertScore(xWins = 0, oWins = 0, ties = 0)
 
         clickNewGame()
+        awaitComputerTurn(viewModel)
         assertBoardHasExactly(xCount = 0, oCount = 1, emptyLocations = 1..8)
         assertScore(xWins = 0, oWins = 0, ties = 0)
 
@@ -534,6 +554,8 @@ class TicTacToeScreenTest {
     )
 
     private fun setViewModelScreen(viewModel: GameViewModel) {
+        // This test host explicitly represents a RESUMED Activity; the ViewModel defaults paused.
+        composeTestRule.runOnIdle { viewModel.onHostResumed() }
         composeTestRule.setContent {
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
             TicTacToeTheme(dynamicColor = false) {
@@ -557,11 +579,29 @@ class TicTacToeScreenTest {
         composeTestRule.waitForIdle()
     }
 
+    private fun clickCellAndAwaitComputerResponse(viewModel: GameViewModel, location: Int) {
+        clickCell(location)
+        composeTestRule.waitUntil(timeoutMillis = UI_STATE_TIMEOUT_MILLIS) {
+            val state = viewModel.uiState.value
+            state.board[location] == Mark.X &&
+                (state.turn == Turn.Human || state.result != GameResult.InProgress)
+        }
+        composeTestRule.waitForIdle()
+    }
+
     private fun clickNewGame() {
         composeTestRule.onNodeWithTag(NEW_GAME_TAG)
             .performScrollTo()
             .assertIsDisplayed()
             .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    private fun awaitComputerTurn(viewModel: GameViewModel) {
+        composeTestRule.waitUntil(timeoutMillis = UI_STATE_TIMEOUT_MILLIS) {
+            val state = viewModel.uiState.value
+            state.turn == Turn.Human || state.result != GameResult.InProgress
+        }
         composeTestRule.waitForIdle()
     }
 
@@ -585,12 +625,27 @@ class TicTacToeScreenTest {
     }
 
     private fun assertBoardHasExactly(xCount: Int, oCount: Int, emptyLocations: IntRange) {
-        composeTestRule.onAllNodes(
-            hasAnyAncestor(hasTestTag(BOARD_TAG)) and hasText(Mark.X.symbol.toString()),
-        ).assertCountEquals(xCount)
-        composeTestRule.onAllNodes(
-            hasAnyAncestor(hasTestTag(BOARD_TAG)) and hasText(Mark.O.symbol.toString()),
-        ).assertCountEquals(oCount)
+        var actualX = 0
+        var actualO = 0
+        var actualEmpty = 0
+        (0 until 9).forEach { location ->
+            val row = location / 3 + 1
+            val column = location % 3 + 1
+            val mark = when {
+                composeTestRule.onAllNodes(hasContentDescription(context.getString(R.string.cell_x, row, column))).fetchSemanticsNodes().isNotEmpty() -> Mark.X
+                composeTestRule.onAllNodes(hasContentDescription(context.getString(R.string.cell_o, row, column))).fetchSemanticsNodes().isNotEmpty() -> Mark.O
+                else -> Mark.Empty
+            }
+            when (mark) {
+                Mark.X -> actualX++
+                Mark.O -> actualO++
+                Mark.Empty -> actualEmpty++
+            }
+            if (location in emptyLocations) assertEquals(Mark.Empty, mark)
+        }
+        assertEquals(xCount, actualX)
+        assertEquals(oCount, actualO)
+        assertEquals(9 - xCount - oCount, actualEmpty)
         emptyLocations.forEach { location ->
             composeTestRule.onNodeWithContentDescription(
                 context.getString(R.string.cell_empty, location / 3 + 1, location % 3 + 1),
