@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="15" failures="0" errors="0" skipped="0" time="0.000" timestamp="2026-10-02T02:31:18" hostname="localhost">
+  <testsuite name="com.edu.unal.tictactoe.TicTacToeScreenTest" tests="15" failures="0" errors="0" skipped="0" time="20.360" timestamp="2026-10-02T02:31:18" hostname="localhost">
+    <properties>
+      <property name="device" value="AUTHORIZED_DEVICE" />
+    </properties>
+    <testcase name="rendersBoardStatusScoreAndNewGameInOrder" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="1.718" />
+    <testcase name="terminalResultsAndComputerTurnRejectCellTouchesButAllowNewGame" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="1.991" />
+    <testcase name="occupiedCellsKeepTheirMarksAndAreDisabled" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="0.988" />
+    <testcase name="largeFontKeepsTerminalMarksVisibleAndControlsReachableInBothThemes" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="1.508" />
+    <testcase name="cellAndNewGameCallbacksAreOnlyInvokedByActions" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="0.979" />
+    <testcase name="rendersComputerResultFromResources" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="0.971" />
+    <testcase name="boardAndControlsAdaptToPortraitAndLandscapeConstraints" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="1.794" />
+    <testcase name="recompositionDoesNotInvokeCallbacksOrChangeSnapshot" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="0.969" />
+    <testcase name="realViewModelUiFlowCoversHumanComputerAndTieResults" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="2.663" />
+    <testcase name="rendersTieFromResources" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="0.922" />
+    <testcase name="rendersNineCellsAndLocalizedCellDescription" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="1.089" />
+    <testcase name="realViewModelUiFlowAlternatesAfterAbandonmentWithoutScoringOrDuplicateOpening" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="1.973" />
+    <testcase name="rendersComputerTurnFromResources" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="0.888" />
+    <testcase name="cellsArePositiveSquareAndStayInsideTheBoard" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="0.987" />
+    <testcase name="rendersActiveTurnStatesFromResources" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="0.920" />
+  </testsuite>
+</testsuites>

@@ -1,0 +1,82 @@
+{
+  "clazz": "com.edu.unal.tictactoe.GameBoardInteractionTest",
+  "expected": 5,
+  "adb_exit": 0,
+  "complete_inventory": true,
+  "starts": 5,
+  "passed": 5,
+  "failed": 0,
+  "other_results": 0,
+  "status_counts": {
+    "1": 5,
+    "0": 5
+  },
+  "ok_summary": true,
+  "final_codes": [
+    "-1"
+  ],
+  "failure_marker": false,
+  "verified_pass": true,
+  "events": [
+    {
+      "class": "com.edu.unal.tictactoe.GameBoardInteractionTest",
+      "numtests": "5",
+      "test": "keyboardTabSkipsOccupiedCellAndEnterActivatesTheFocusedAvailableCell",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameBoardInteractionTest",
+      "numtests": "5",
+      "test": "keyboardTabSkipsOccupiedCellAndEnterActivatesTheFocusedAvailableCell",
+      "code": 0
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameBoardInteractionTest",
+      "numtests": "5",
+      "test": "availableCellAcceptsKeyboardEnterAndDisabledCellHasNoActivationAction",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameBoardInteractionTest",
+      "numtests": "5",
+      "test": "availableCellAcceptsKeyboardEnterAndDisabledCellHasNoActivationAction",
+      "code": 0
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameBoardInteractionTest",
+      "numtests": "5",
+      "test": "computerTurnAndTerminalStateExposeDisabledCellsWithoutCallbacks",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameBoardInteractionTest",
+      "numtests": "5",
+      "test": "computerTurnAndTerminalStateExposeDisabledCellsWithoutCallbacks",
+      "code": 0
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameBoardInteractionTest",
+      "numtests": "5",
+      "test": "availableCellClickRequestsExactlyOneMove",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameBoardInteractionTest",
+      "numtests": "5",
+      "test": "availableCellClickRequestsExactlyOneMove",
+      "code": 0
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameBoardInteractionTest",
+      "numtests": "5",
+      "test": "exposesNineLabeledButtonHitboxesAndEachTouchRequestsOneMove",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameBoardInteractionTest",
+      "numtests": "5",
+      "test": "exposesNineLabeledButtonHitboxesAndEachTouchRequestsOneMove",
+      "code": 0
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.edu.unal.tictactoe.ui.game.GameViewModelTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-10-02T13:52:36.993Z" hostname="Mac-Studio-de-Juan.local" time="0.005">
+  <properties/>
+  <testcase name="newGamesPreserveScoresAcrossTerminalGamesAndKeepOldSnapshotsIntact" classname="com.edu.unal.tictactoe.ui.game.GameViewModelTest" time="0.001"/>
+  <testcase name="incompleteGamesDoNotUpdateAnyScore" classname="com.edu.unal.tictactoe.ui.game.GameViewModelTest" time="0.001"/>
+  <testcase name="humanFillingTheLastCellWithNoWinProducesATieWithoutComputerMove" classname="com.edu.unal.tictactoe.ui.game.GameViewModelTest" time="0.0"/>
+  <testcase name="newGameAlternatesAfterAbandoningActiveXAndActiveOOpening" classname="com.edu.unal.tictactoe.ui.game.GameViewModelTest" time="0.0"/>
+  <testcase name="newGamesAlternateOpenersAndRepeatedReadsDoNotStartAnotherGame" classname="com.edu.unal.tictactoe.ui.game.GameViewModelTest" time="0.0"/>
+  <testcase name="repeatedStateReadsReturnTheSameSnapshotWithoutStartingOrScoring" classname="com.edu.unal.tictactoe.ui.game.GameViewModelTest" time="0.001"/>
+  <testcase name="invalidAndOccupiedLocationsAreExactNoOpsWithoutInvokingComputer" classname="com.edu.unal.tictactoe.ui.game.GameViewModelTest" time="0.0"/>
+  <testcase name="legalHumanMovePlacesXAndExactlyOneComputerMoveReturnsToHuman" classname="com.edu.unal.tictactoe.ui.game.GameViewModelTest" time="0.0"/>
+  <testcase name="initialStateStartsWithAnEmptyBoardAndZeroScore" classname="com.edu.unal.tictactoe.ui.game.GameViewModelTest" time="0.0"/>
+  <testcase name="stateFlowIsReadOnlyToConsumers" classname="com.edu.unal.tictactoe.ui.game.GameViewModelTest" time="0.0"/>
+  <testcase name="humanVictoryIsDetectedBeforeComputerCanMove" classname="com.edu.unal.tictactoe.ui.game.GameViewModelTest" time="0.0"/>
+  <testcase name="independentViewModelStartsWithAZeroScoreAndX" classname="com.edu.unal.tictactoe.ui.game.GameViewModelTest" time="0.001"/>
+  <testcase name="humanInputDuringComputerTurnIsRejectedReentrantlyBeforeComputerMove" classname="com.edu.unal.tictactoe.ui.game.GameViewModelTest" time="0.0"/>
+  <testcase name="initializationClearsAnInjectedGameWithoutCallingTheRandomizer" classname="com.edu.unal.tictactoe.ui.game.GameViewModelTest" time="0.0"/>
+  <testcase name="computerVictoryLeavesComputerTurnAndDoesNotEnableHumanMoves" classname="com.edu.unal.tictactoe.ui.game.GameViewModelTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

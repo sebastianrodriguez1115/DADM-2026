@@ -1,0 +1,23 @@
+{
+  "class": "AndroidMoveSoundPlayerLoadingTest",
+  "expected": 1,
+  "passed": 1,
+  "status_codes": [
+    1,
+    0
+  ],
+  "instrumentation_result_codes": [
+    "-1"
+  ],
+  "junit_ok_count": 1,
+  "valid": true,
+  "tests": [
+    {
+      "class": "com.edu.unal.tictactoe.AndroidMoveSoundPlayerLoadingTest",
+      "test": "twoLoadsFromOnePoolCompleteIndependentlyWithoutBlockingMain",
+      "status_code": 0,
+      "result": "PASS"
+    }
+  ],
+  "raw_evidence": "AndroidMoveSoundPlayerLoadingTest.log"
+}

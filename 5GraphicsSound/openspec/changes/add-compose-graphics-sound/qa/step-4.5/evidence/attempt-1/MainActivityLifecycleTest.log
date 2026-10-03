@@ -1,0 +1,83 @@
+INSTRUMENTATION_STATUS: class=com.edu.unal.tictactoe.MainActivityLifecycleTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=
+com.edu.unal.tictactoe.MainActivityLifecycleTest:
+INSTRUMENTATION_STATUS: test=recreationDuringPendingOpeningRetainsSessionAndExecutesOneOpening
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.edu.unal.tictactoe.MainActivityLifecycleTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=recreationDuringPendingOpeningRetainsSessionAndExecutesOneOpening
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.edu.unal.tictactoe.MainActivityLifecycleTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=finishingWithPendingTurnCancelsItAndNextActivityStartsFreshSession
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.edu.unal.tictactoe.MainActivityLifecycleTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=finishingWithPendingTurnCancelsItAndNextActivityStartsFreshSession
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.edu.unal.tictactoe.MainActivityLifecycleTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=pauseSuspendsPendingResponseAndResumeCompletesItOnce
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.edu.unal.tictactoe.MainActivityLifecycleTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: measured foreground interval was 1012 ms
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.edu.unal.tictactoe.MainActivityLifecycleTest.pauseSuspendsPendingResponseAndResumeCompletesItOnce(MainActivityLifecycleTest.kt:76)
+
+INSTRUMENTATION_STATUS: stream=
+Error in pauseSuspendsPendingResponseAndResumeCompletesItOnce(com.edu.unal.tictactoe.MainActivityLifecycleTest):
+java.lang.AssertionError: measured foreground interval was 1012 ms
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.edu.unal.tictactoe.MainActivityLifecycleTest.pauseSuspendsPendingResponseAndResumeCompletesItOnce(MainActivityLifecycleTest.kt:76)
+
+INSTRUMENTATION_STATUS: test=pauseSuspendsPendingResponseAndResumeCompletesItOnce
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.edu.unal.tictactoe.MainActivityLifecycleTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=recreationDuringPendingResponseRetainsSessionWithoutDuplicatingTurn
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.edu.unal.tictactoe.MainActivityLifecycleTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=recreationDuringPendingResponseRetainsSessionWithoutDuplicatingTurn
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_RESULT: stream=
+
+Time: 72.234
+There was 1 failure:
+1) pauseSuspendsPendingResponseAndResumeCompletesItOnce(com.edu.unal.tictactoe.MainActivityLifecycleTest)
+java.lang.AssertionError: measured foreground interval was 1012 ms
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.edu.unal.tictactoe.MainActivityLifecycleTest.pauseSuspendsPendingResponseAndResumeCompletesItOnce(MainActivityLifecycleTest.kt:76)
+
+FAILURES!!!
+Tests run: 4,  Failures: 1
+
+
+INSTRUMENTATION_CODE: -1

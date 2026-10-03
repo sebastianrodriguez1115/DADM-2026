@@ -1,0 +1,16 @@
+{
+  "result": "PASS",
+  "checks": [
+    "nine empty descriptions",
+    "native tap produces one X and one synchronous O",
+    "no visible Text X/O",
+    "occupied cell disabled; repeat tap unchanged"
+  ],
+  "screenshots": [
+    "board-empty.png",
+    "board-vector-marks.png"
+  ],
+  "privacy": "Own-app hierarchy only; board-only crops; no identifiers",
+  "settings_changes": "none",
+  "installation": "Only project debug APK"
+}

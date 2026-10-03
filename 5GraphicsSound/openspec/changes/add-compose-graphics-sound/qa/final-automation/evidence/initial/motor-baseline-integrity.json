@@ -1,0 +1,78 @@
+{
+  "baseline": "3119001",
+  "all_unchanged": true,
+  "files": [
+    {
+      "path": "app/src/main/java/com/edu/unal/tictactoe/game/MoveRandomizer.kt",
+      "baseline_sha256": "fba26f35679e2587f5ea381393961cf92cbf0afe56e37010a7f0fcefd246948f",
+      "current_sha256": "fba26f35679e2587f5ea381393961cf92cbf0afe56e37010a7f0fcefd246948f",
+      "unchanged": true
+    },
+    {
+      "path": "app/src/main/java/com/edu/unal/tictactoe/game/TicTacToeGame.kt",
+      "baseline_sha256": "4665c40d8b2ea0071a0be51ad02018eefe657238a05d5bc7228e9300980eea57",
+      "current_sha256": "4665c40d8b2ea0071a0be51ad02018eefe657238a05d5bc7228e9300980eea57",
+      "unchanged": true
+    },
+    {
+      "path": "app/src/main/java/com/edu/unal/tictactoe/game/models/ComputerMoveResult.kt",
+      "baseline_sha256": "6524466d01faa0050ad6631bce2ea3ed395c52f1259034f155aedeb7faa2fa75",
+      "current_sha256": "6524466d01faa0050ad6631bce2ea3ed395c52f1259034f155aedeb7faa2fa75",
+      "unchanged": true
+    },
+    {
+      "path": "app/src/main/java/com/edu/unal/tictactoe/game/models/DifficultyLevel.kt",
+      "baseline_sha256": "fc6cd9330a3fccd4850b29a74fa31de11db2585a8de225573cc201f8bb4b0be7",
+      "current_sha256": "fc6cd9330a3fccd4850b29a74fa31de11db2585a8de225573cc201f8bb4b0be7",
+      "unchanged": true
+    },
+    {
+      "path": "app/src/main/java/com/edu/unal/tictactoe/game/models/GameResult.kt",
+      "baseline_sha256": "fb8ee427969a9a7a384f391561254c0ab2db7a9a34d314f46443c000daea9f16",
+      "current_sha256": "fb8ee427969a9a7a384f391561254c0ab2db7a9a34d314f46443c000daea9f16",
+      "unchanged": true
+    },
+    {
+      "path": "app/src/main/java/com/edu/unal/tictactoe/game/models/Mark.kt",
+      "baseline_sha256": "911479f786cec096b957b17ccf851c88deb7ce0b1f6fe3ee639cead0161e2491",
+      "current_sha256": "911479f786cec096b957b17ccf851c88deb7ce0b1f6fe3ee639cead0161e2491",
+      "unchanged": true
+    },
+    {
+      "path": "app/src/main/java/com/edu/unal/tictactoe/game/models/MoveResult.kt",
+      "baseline_sha256": "aa0bc9061658593801a5664936df77c3838ec0c4f521adf5a4642c100f48d74b",
+      "current_sha256": "aa0bc9061658593801a5664936df77c3838ec0c4f521adf5a4642c100f48d74b",
+      "unchanged": true
+    },
+    {
+      "path": "app/src/main/java/com/edu/unal/tictactoe/game/models/Player.kt",
+      "baseline_sha256": "001ac63f30d7bfcbb6034923391ce0961bf1c8fffebc63ee74e9753d2d7c9193",
+      "current_sha256": "001ac63f30d7bfcbb6034923391ce0961bf1c8fffebc63ee74e9753d2d7c9193",
+      "unchanged": true
+    },
+    {
+      "path": "app/src/main/java/com/edu/unal/tictactoe/game/models/Score.kt",
+      "baseline_sha256": "46727204b85c79f7d41f8899431d7e5c9264af410a3b27cb8a9dc56f78cd0b3d",
+      "current_sha256": "46727204b85c79f7d41f8899431d7e5c9264af410a3b27cb8a9dc56f78cd0b3d",
+      "unchanged": true
+    },
+    {
+      "path": "app/src/main/java/com/edu/unal/tictactoe/game/models/Turn.kt",
+      "baseline_sha256": "8ca0735943e38c9ff56f7c64280c063f5c190af1717cde33ea4ef387bc6b7e43",
+      "current_sha256": "8ca0735943e38c9ff56f7c64280c063f5c190af1717cde33ea4ef387bc6b7e43",
+      "unchanged": true
+    },
+    {
+      "path": "app/src/test/java/com/edu/unal/tictactoe/game/ImpossibleExhaustiveTest.kt",
+      "baseline_sha256": "5e3c047b34722721bacfd83ab350870e7905c6cdcfdc4790a670cb7afd67fe88",
+      "current_sha256": "5e3c047b34722721bacfd83ab350870e7905c6cdcfdc4790a670cb7afd67fe88",
+      "unchanged": true
+    },
+    {
+      "path": "app/src/test/java/com/edu/unal/tictactoe/game/ImpossiblePolicyTest.kt",
+      "baseline_sha256": "fac1ba8c137a776f932463f73937173d765692cfe87f1047aac70744657811c1",
+      "current_sha256": "fac1ba8c137a776f932463f73937173d765692cfe87f1047aac70744657811c1",
+      "unchanged": true
+    }
+  ]
+}

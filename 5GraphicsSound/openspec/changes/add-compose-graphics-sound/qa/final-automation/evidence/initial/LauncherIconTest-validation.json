@@ -1,0 +1,46 @@
+{
+  "clazz": "com.edu.unal.tictactoe.LauncherIconTest",
+  "expected": 2,
+  "adb_exit": 0,
+  "complete_inventory": true,
+  "starts": 2,
+  "passed": 2,
+  "failed": 0,
+  "other_results": 0,
+  "status_counts": {
+    "1": 2,
+    "0": 2
+  },
+  "ok_summary": true,
+  "final_codes": [
+    "-1"
+  ],
+  "failure_marker": false,
+  "verified_pass": true,
+  "events": [
+    {
+      "class": "com.edu.unal.tictactoe.LauncherIconTest",
+      "numtests": "2",
+      "test": "monochromeLayerRendersWhiteForegroundOverBackground",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.LauncherIconTest",
+      "numtests": "2",
+      "test": "monochromeLayerRendersWhiteForegroundOverBackground",
+      "code": 0
+    },
+    {
+      "class": "com.edu.unal.tictactoe.LauncherIconTest",
+      "numtests": "2",
+      "test": "adaptiveMipmapsResolveAndRenderOwnMotif",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.LauncherIconTest",
+      "numtests": "2",
+      "test": "adaptiveMipmapsResolveAndRenderOwnMotif",
+      "code": 0
+    }
+  ]
+}

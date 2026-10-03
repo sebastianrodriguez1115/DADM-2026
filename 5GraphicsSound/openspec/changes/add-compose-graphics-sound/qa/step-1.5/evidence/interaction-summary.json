@@ -1,0 +1,46 @@
+{
+  "run": "interaction",
+  "command": [
+    "./gradlew",
+    "connectedDebugAndroidTest",
+    "-Pandroid.testInstrumentationRunnerArguments.class=com.edu.unal.tictactoe.GameBoardInteractionTest",
+    "--no-configuration-cache",
+    "--console=plain"
+  ],
+  "exit": 0,
+  "seconds": 18.27,
+  "expected_count": 5,
+  "verified": true,
+  "cases": [
+    {
+      "class": "com.edu.unal.tictactoe.GameBoardInteractionTest",
+      "name": "keyboardTabSkipsOccupiedCellAndEnterActivatesTheFocusedAvailableCell",
+      "result": "PASS",
+      "evidence": "interaction-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameBoardInteractionTest",
+      "name": "availableCellAcceptsKeyboardEnterAndDisabledCellHasNoActivationAction",
+      "result": "PASS",
+      "evidence": "interaction-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameBoardInteractionTest",
+      "name": "computerTurnAndTerminalStateExposeDisabledCellsWithoutCallbacks",
+      "result": "PASS",
+      "evidence": "interaction-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameBoardInteractionTest",
+      "name": "availableCellClickRequestsExactlyOneMove",
+      "result": "PASS",
+      "evidence": "interaction-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameBoardInteractionTest",
+      "name": "exposesNineLabeledButtonHitboxesAndEachTouchRequestsOneMove",
+      "result": "PASS",
+      "evidence": "interaction-results-0.xml"
+    }
+  ]
+}

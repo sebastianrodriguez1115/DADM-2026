@@ -1,0 +1,3 @@
+PASS: 18 Android tests and 108 JVM tests; first/median agree with five measured samples
+3.7 UI menu/stale-selection remains PENDING; audio/manual accessibility NOT TESTED
+validator_exit_code=0

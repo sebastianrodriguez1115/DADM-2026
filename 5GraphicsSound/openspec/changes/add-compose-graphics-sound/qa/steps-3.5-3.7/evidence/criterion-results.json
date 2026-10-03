@@ -1,0 +1,247 @@
+{
+  "QA01": {
+    "status": "PASS",
+    "tests": 1,
+    "cases": [
+      {
+        "test": "GameViewModelLifecycleTest.pausedInitiallyForBothResponseAndOpening",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelLifecycleTest.xml"
+      }
+    ]
+  },
+  "QA02": {
+    "status": "PASS",
+    "tests": 2,
+    "cases": [
+      {
+        "test": "GameViewModelCoroutineHarnessTest.acceptedXPublishesComputerTurnAndWaitsWithoutAcceptingMoreHumanInput",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest.xml"
+      },
+      {
+        "test": "GameViewModelCoroutineHarnessTest.OOpeningUsesSameOneSecondWaitAndIsCancelledByNewXGame",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest.xml"
+      }
+    ]
+  },
+  "QA03": {
+    "status": "PASS",
+    "tests": 2,
+    "cases": [
+      {
+        "test": "GameViewModelCoroutineHarnessTest.earlySubMillisecondWakeIsRoundedUpAndNeverMovesBeforeMonotonicDeadline",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest.xml"
+      },
+      {
+        "test": "GameViewModelCoroutineHarnessTest.coroutineDispatchDelayConsumesTimeFromAcceptanceBeforeSchedulingDelay",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest.xml"
+      }
+    ]
+  },
+  "QA04": {
+    "status": "PASS",
+    "tests": 1,
+    "cases": [
+      {
+        "test": "GameViewModelLifecycleTest.pauseRetainsTimeAndRepeatedResumeDoesNotResetIt",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelLifecycleTest.xml"
+      }
+    ]
+  },
+  "QA05": {
+    "status": "PASS",
+    "tests": 1,
+    "cases": [
+      {
+        "test": "GameViewModelLifecycleTest.repeatedPauseDoesNotOverConsumeRemainingTime",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelLifecycleTest.xml"
+      }
+    ]
+  },
+  "QA06": {
+    "status": "PASS",
+    "tests": 1,
+    "cases": [
+      {
+        "test": "GameViewModelLifecycleTest.zeroRemainingFiresOnceAndRemainsStableAcrossPauseAndResume",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelLifecycleTest.xml"
+      }
+    ]
+  },
+  "QA07": {
+    "status": "PASS",
+    "tests": 1,
+    "cases": [
+      {
+        "test": "GameViewModelLifecycleTest.newGameWhilePausedInvalidatesPendingAndRotationUsesSameViewModel",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelLifecycleTest.xml"
+      }
+    ]
+  },
+  "QA08": {
+    "status": "PASS",
+    "tests": 1,
+    "cases": [
+      {
+        "test": "GameViewModelLifecycleTest.clearingViewModelStoreCancelsQueuedDeadlineAndLeavesStateStable",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelLifecycleTest.xml"
+      }
+    ]
+  },
+  "QA09": {
+    "status": "PASS",
+    "tests": 3,
+    "cases": [
+      {
+        "test": "GameViewModelCoroutineHarnessTest.startingANewGameCancelsThePendingResponseJob",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest.xml"
+      },
+      {
+        "test": "GameViewModelCoroutineHarnessTest.newOpeningDoesNotRunAtDeadlineOfCancelledResponse",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest.xml"
+      },
+      {
+        "test": "GameViewModelCoroutineHarnessTest.newGameAtOldDeadlineCancelsCallbackNotYetDispatched",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest.xml"
+      }
+    ]
+  },
+  "QA10": {
+    "status": "PASS",
+    "tests": 2,
+    "cases": [
+      {
+        "test": "GameViewModelDifficultyTest.staleEasySelectionIsDiscardedAfterReentrantDifficultyChange",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest.xml"
+      },
+      {
+        "test": "GameViewModelDifficultyTest.reentrantNewGamesDiscardTheOldOpeningSelectionAndKeepTheNewOpeningDeadline",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest.xml"
+      }
+    ]
+  },
+  "QA11": {
+    "status": "PASS",
+    "tests": 1,
+    "cases": [
+      {
+        "test": "GameViewModelLifecycleTest.pauseDuringSynchronousSelectionDiscardsItAndResumeCompletesExactlyOnce",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelLifecycleTest.xml"
+      }
+    ]
+  },
+  "QA12": {
+    "status": "PASS",
+    "tests": 2,
+    "cases": [
+      {
+        "test": "GameViewModelDifficultyTest.difficultyChangedAt400MillisecondsDoesNotRestartOpeningDeadline",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest.xml"
+      },
+      {
+        "test": "GameViewModelDifficultyTest.openingMoveUsesTheCanonicalDifficultyAndAvoidsTheRandomizerForImpossible",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest.xml"
+      }
+    ]
+  },
+  "QA13": {
+    "status": "PASS",
+    "tests": 2,
+    "cases": [
+      {
+        "test": "GameViewModelDifficultyTest.setDifficultyDuringAnActiveGameIsRejectedWithoutPublishingOrMoving",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest.xml"
+      },
+      {
+        "test": "GameViewModelDifficultyTest.aStaleRequestCapturedWhileEditableIsRejectedOnceTheGameIsActive",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest.xml"
+      }
+    ]
+  },
+  "QA14": {
+    "status": "PASS",
+    "tests": 5,
+    "cases": [
+      {
+        "test": "GameViewModelTest.humanVictoryIsDetectedBeforeComputerCanMove",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelTest.xml"
+      },
+      {
+        "test": "GameViewModelTest.humanFillingTheLastCellWithNoWinProducesATieWithoutComputerMove",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelTest.xml"
+      },
+      {
+        "test": "GameViewModelTest.computerVictoryLeavesComputerTurnAndDoesNotEnableHumanMoves",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelTest.xml"
+      },
+      {
+        "test": "GameViewModelCoroutineHarnessTest.terminalHumanWinAndTieNeverSelectOrScheduleAComputerMove",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest.xml"
+      },
+      {
+        "test": "GameViewModelTest.newGamesPreserveScoresAcrossTerminalGamesAndKeepOldSnapshotsIntact",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelTest.xml"
+      }
+    ]
+  },
+  "QA15": {
+    "status": "PASS",
+    "tests": 3,
+    "cases": [
+      {
+        "test": "GameViewModelSoundTest.mutedPreferenceSurvivesAcceptedComputerAndTerminalHumanMoves",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelSoundTest.xml"
+      },
+      {
+        "test": "GameViewModelSoundTest.soundTogglesDuringOpeningWaitPreserveStateAndOriginalDeadline",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelSoundTest.xml"
+      },
+      {
+        "test": "GameViewModelSoundTest.mutePersistsAcrossNewGamesMovesAndDifficultyChangesWithoutChangingOtherState",
+        "status": "PASS",
+        "xml": "evidence/jvm-xml/TEST-com.edu.unal.tictactoe.ui.game.GameViewModelSoundTest.xml"
+      }
+    ]
+  },
+  "QA16": {
+    "status": "BLOCKED",
+    "tests": 0,
+    "reason": "No Android device; JVM cannot validate Activity/UI integration"
+  },
+  "QA17": {
+    "status": "BLOCKED",
+    "tests": 0,
+    "reason": "No Android device; JVM cannot validate Activity/UI integration"
+  },
+  "QA18": {
+    "status": "BLOCKED",
+    "tests": 0,
+    "reason": "No Android device; JVM cannot validate Activity/UI integration"
+  }
+}

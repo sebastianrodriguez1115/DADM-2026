@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="1" failures="0" errors="0" skipped="0" time="0.000" timestamp="2026-10-03T12:52:01" hostname="REDACTED">
+  <testsuite name="com.edu.unal.tictactoe.ImpossibleOpeningTimingTest" tests="1" failures="0" errors="0" skipped="0" time="0.300" timestamp="2026-10-03T12:52:01" hostname="REDACTED">
+    <properties>
+      <property name="device" value="DEVICE_REDACTED" />
+    </properties>
+    <testcase name="impossibleOpeningFromEmptyBoardRunsOneMoveAndRecordsSamples" classname="com.edu.unal.tictactoe.ImpossibleOpeningTimingTest" time="0.300" />
+  </testsuite>
+</testsuites>
