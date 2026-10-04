@@ -6,7 +6,7 @@ Ver `proposal.md` para motivación y alcance; los requisitos observables pertene
 
 El UI actual usa `Scaffold` con `TopAppBar` y un contenido Compose vertical que calcula un tablero cuadrado, con controles debajo. Los objetivos de accesibilidad de casilla son al menos 48 dp. `DifficultyLevel` enum está ordenado Easy, Hard, Expert, Impossible, pero ese orden no se usará como identificador persistente. Expert es el default real en `GameUiState`, VM y motor.
 
-Hay conflicto documental que debe resolverse al integrar, no mediante edición de cambios ajenos en esta tarea: `openspec/specs/game-session` prohíbe hoy persistencia y descarta la sesión al perder proceso/terminar tarea; `add-compose-menus-dialogs` aporta la capacidad game-options y especifica menú con Salir, mientras `add-compose-graphics-sound` tiene deltas de sesión/audio y QA todavía pendiente. Los requisitos de este cambio actualizan esos límites funcionales. Antes de sincronizar/archivear se deben integrar y reconciliar esos cambios previos contra estos deltas; no modificar ni archivar ninguno como parte de este diseño.
+La base de `game-options` procedente de `add-compose-menus-dialogs` ya fue sincronizada y archivada; por ello este delta la modifica directamente y reemplaza su menú con Salir. `openspec/specs/game-session` aún aporta los límites heredados que este cambio ajusta. La integración de `add-compose-graphics-sound`, incluidos sus deltas de sesión/audio y su estado de QA, sigue siendo independiente y no se modifica ni se archiva en este cambio.
 
 ## Goals / Non-Goals
 
@@ -69,7 +69,7 @@ Instrumentación de `MainActivity`: test separado de rotación ordinaria (mismo 
 - [Creación incorrecta de SavedStateHandle en Activity o tests] → factory/CreationExtras conectada al registry real, prueba de Activity con VM nuevo y registry restaurado; mantener constructor seam para tests unitarios sin confundirlo con la integración.
 - [Scores/dificultad perdidos en reset/terminal o duplicados en restore] → preferencias como autoridad, escrituras en transiciones/eventos concretos, restauración terminal sin paso de puntuación, y tests de fake. `apply()` conserva el límite de no atomicidad/durabilidad ante kill indicado.
 - [Narrow landscape/fontScale/insets recortan tablero o botones] → responsive constraints, fallback scroll/columna cuando no haya ancho, mínimos táctiles y pruebas a tamaños compactos con fontScale/insets.
-- [Incompatibilidad al integrar deltas antiguos] → resolver explícitamente la prohibición previa de persistencia y menú con Salir, integrar primero dependencias y QA pendiente, no sync/archive hasta revisión coordinada.
+- [Incompatibilidad con la base integrada o con la integración independiente de gráficos/sonido] → el delta conserva íntegramente los contratos heredados no sustituidos, declara de forma explícita los reemplazos de persistencia y Salir, y no modifica ni archiva el cambio de gráficos/sonido ni afirma su QA.
 - [Cambio de código enum con prefs antiguas] → IDs persistentes explícitos independientes del ordinal; desconocido vuelve a Expert y cobertura de compatibilidad.
 
 ## Migration Plan
@@ -78,7 +78,7 @@ Instrumentación de `MainActivity`: test separado de rotación ordinaria (mismo 
 2. Implementar snapshot bundle-compatible versionado, validación/restauración acotada del motor y manejo de espera restante; integrar factory `SavedStateHandle`/CreationExtras real con `MainActivity` y mantener intacto el camino de VM retenido en rotación.
 3. Persistir score en transición terminal y reset; persistir dificultad solo ante selección aceptada; reemplazar menú con barra superior por controles integrados sin titlebar, añadir reset y retirar opción/diálogo de salida. No requiere migración de preferencias existentes porque aún no hay datos durables previos para estas claves; defaults gestionan instalación nueva.
 4. Adaptar layout a portrait/landscape con constraints e insets, y cubrir accesibilidad, fontScale y tamaños compactos.
-5. Ejecutar pruebas unitarias, Compose e instrumentación con restauración real del registry y validar por separado rotación retenida, recreación por proceso soportada y apertura deliberadamente nueva. Integrar/revisar cambios OpenSpec de menús y gráficos/sonido antes de sincronizar deltas con specs principales o archivar.
+5. Ejecutar pruebas unitarias, Compose e instrumentación con restauración real del registry y validar por separado rotación retenida, recreación por proceso soportada y apertura deliberadamente nueva. La base de menús ya está sincronizada/archivada; no modificar ni archivar en este trabajo la integración independiente de gráficos/sonido ni presentar su QA como completada.
 
 Rollback: revertir en conjunto la factory/snapshot y el adaptador de preferencias si la recuperación rompe estados; mantener el layout funcional y cambios de menú como unidad independiente solo si sus requisitos siguen cubiertos. Las claves SharedPreferences nuevas pueden permanecer ignoradas por una versión revertida; no hay migración destructiva ni necesidad de borrar preferencias. No modificar ahora artefactos principales ni cambios previos.
 

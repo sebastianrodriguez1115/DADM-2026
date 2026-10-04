@@ -1,183 +1,241 @@
 # Spec Delta
 
-> Precondición de integración: `game-options` se define en `add-compose-menus-dialogs` y se amplía en `add-compose-graphics-sound`. Integrar ambas bases antes de sincronizar; no se modifican aquí.
+> Base integrada: `game-options` ya está disponible en las especificaciones principales tras la sincronización y archivo de `add-compose-menus-dialogs`. Este delta modifica esa base; no modifica el cambio archivado ni la integración independiente de gráficos/sonido.
 
 ## MODIFIED Requirements
 
 ### Requirement: Menú principal de opciones
-La interfaz SHALL ofrecer menú Compose visible y accesible con exactamente cinco entradas: Nueva partida, Dificultad, Sonido, Reiniciar puntajes y Acerca de. Cada entrada MUST tener etiqueta de recurso e icono asociado. Nueva partida MUST equivaler a la acción existente y el botón existente permanece accesible. Al elegir una opción habilitada, el menú se cierra antes de acción/diálogo; Dificultad deshabilitada no actúa. No habrá Salir ni confirmación de salida. Back SHALL descartar menú/diálogo ordinario si corresponde y, si no hay overlay, seguir navegación normal del sistema.
 
-#### Scenario: Menú con cinco entradas
-- **GIVEN** que se muestra partida activa o terminada
-- **WHEN** se abre menú
-- **THEN** aparecen exactamente Nueva partida, Dificultad, Sonido, Reiniciar puntajes y Acerca de, con label e icono
+La interfaz SHALL ofrecer un menú principal en Compose, visible y accesible durante la partida, con exactamente cinco entradas: Nueva partida, Dificultad, Sonido, Reiniciar puntajes y Acerca de. Cada entrada MUST mostrar una etiqueta proveniente de recursos y SHALL disponer de un icono asociado. La entrada Nueva partida MUST ejecutar la misma acción que el botón de nueva partida existente; ese botón SHALL permanecer visible y accesible como atajo y MUST mantener las reglas previas de nueva partida. Al elegir una entrada habilitada, el menú SHALL cerrarse antes de ejecutar su acción o mostrar el diálogo correspondiente, evitando ventanas apiladas; una entrada deshabilitada MUST NOT ejecutar acción alguna ni abrir diálogo. No habrá Salir ni confirmación de salida. Back SHALL descartar un menú o diálogo ordinario según el comportamiento normal y, sin overlay, aplicar la navegación normal del sistema sin interceptación global ni garantía de finalizar la tarea.
 
-#### Scenario: Nueva partida desde menú
-- **GIVEN** que menú está abierto
-- **WHEN** se elige Nueva partida
-- **THEN** se ejecuta acción equivalente al botón: tablero limpio, marcador conservado e iniciador alternado
+#### Scenario: Menú con las cinco entradas
 
-#### Scenario: Atajo existente
-- **GIVEN** que se muestra juego
-- **WHEN** se busca iniciar partida
-- **THEN** el botón visible y accesible ejecuta la misma acción que menú
+- **GIVEN** que la interfaz muestra una partida activa o terminada
+- **WHEN** la persona abre el menú principal
+- **THEN** aparecen las cinco entradas Nueva partida, Dificultad, Sonido, Reiniciar puntajes y Acerca de, cada una con su etiqueta y su icono
 
-#### Scenario: Menú cierra antes de la acción
-- **GIVEN** que se elige opción habilitada
-- **WHEN** se realiza acción o se abre diálogo
-- **THEN** menú ya está cerrado, sin ventanas apiladas
+#### Scenario: Nueva partida desde el menú respeta las reglas previas
 
-#### Scenario: Dificultad deshabilitada
-- **GIVEN** partida activa con marca en tablero
-- **WHEN** se intenta elegir Dificultad
-- **THEN** no se abre diálogo y sesión no cambia
+- **GIVEN** que el menú principal está abierto
+- **WHEN** la persona elige Nueva partida
+- **THEN** se ejecuta la misma acción que el botón existente: se limpia el tablero, se conserva el marcador y se alterna el iniciador según las reglas vigentes
 
-#### Scenario: Menú no afecta espera O
-- **GIVEN** que O tiene turno pendiente
-- **WHEN** se abre/cierra menú o se elige Sonido o dificultad permitida
-- **THEN** no se reinicia ni adelanta el reloj; O puede completar su turno normal al vencer el tiempo de primer plano
+#### Scenario: El botón existente permanece como atajo
+
+- **GIVEN** que la interfaz muestra el juego
+- **WHEN** la persona busca iniciar una nueva partida
+- **THEN** encuentra el botón de nueva partida visible y accesible y, al usarlo, ejecuta la misma acción que la entrada del menú
+
+#### Scenario: El menú se cierra antes de la acción
+
+- **GIVEN** que el menú principal está abierto
+- **WHEN** la persona elige una de sus entradas habilitadas
+- **THEN** el menú se cierra antes de ejecutar la acción o de abrir el diálogo correspondiente, sin ventanas apiladas
+
+#### Scenario: Entrada deshabilitada no ejecuta acción
+
+- **GIVEN** que el menú principal está abierto con la entrada Dificultad deshabilitada
+- **WHEN** la persona intenta elegir Dificultad
+- **THEN** no se abre ningún diálogo, no se ejecuta ninguna acción y la partida y la sesión permanecen sin cambios
+
+#### Scenario: Sonido está disponible durante la partida
+
+- **GIVEN** que la interfaz muestra una partida activa o terminada
+- **WHEN** la persona abre el menú principal
+- **THEN** encuentra la entrada Sonido entre las cinco opciones para cambiar el sonido sin reiniciar la partida
+
+#### Scenario: Menú y opciones no alteran la espera de O
+
+- **GIVEN** que O tiene una jugada pendiente
+- **WHEN** la persona abre o cierra el menú, o selecciona Sonido o una dificultad permitida
+- **THEN** esas acciones no reinician ni adelantan el contador ni causan la jugada; la ejecución normal de O puede ocurrir durante el menú al completarse el tiempo de primer plano
 
 #### Scenario: Sin acción Salir
-- **GIVEN** que se abre menú
+
+- **GIVEN** que se abre el menú principal
 - **WHEN** se recorren sus entradas
-- **THEN** no existe Salir ni diálogo de confirmación
+- **THEN** no existe Salir ni diálogo de confirmación de salida
 
 #### Scenario: Back con overlay
+
 - **GIVEN** que un menú o diálogo ordinario está abierto
 - **WHEN** se pulsa Back
 - **THEN** se descarta según navegación normal sin cambiar partida
 
 #### Scenario: Back sin overlay
+
 - **GIVEN** que no hay menú ni diálogo
 - **WHEN** se pulsa Back
 - **THEN** se aplica navegación normal del sistema sin interceptación global ni garantía de finalizar tarea
 
 ### Requirement: Selección de dificultad
-Al abrir Dificultad SHALL presentar Easy, Hard, Expert, Impossible como Fácil, Difícil, Experto, Imposible, en ese orden, con radio vigente seleccionado. Será editable con tablero vacío antes de primera jugada (también apertura O pendiente) o tras resultado terminal; no durante juego activo con marcas, incluida apertura O ya efectuada. Una selección aceptada persiste el código estable 0/1/2/3 en SharedPreferences, cierra y emite exactamente un Toast visible; elegir nivel actual también notifica una vez. Cancelar no cambia nada. Selección no altera partida ni timer pendiente; O usa nivel vigente al jugar. Solicitudes obsoletas se rechazan.
 
-#### Scenario: Apertura muestra nivel vigente
-- **GIVEN** que la dificultad es editable y vigente es Y
-- **WHEN** se abre diálogo
-- **THEN** radio de Y aparece seleccionado
+Al abrir la entrada Dificultad, el sistema SHALL mostrar un diálogo de selección con los cuatro niveles Easy, Hard, Expert e Impossible presentados mediante etiquetas de recursos en español: Fácil, Difícil, Experto e Imposible, en ese orden y con la dificultad vigente marcada como opción de radio seleccionada. La dificultad SHALL ser editable únicamente con el tablero vacío antes de la primera jugada, incluido un inicio de partida con O cuya apertura permanece pendiente, o después de un resultado terminal. Durante una partida activa, entendida como resultado InProgress con al menos una marca, incluida la apertura automática de O ya efectuada, la entrada Dificultad MUST permanecer visible pero deshabilitada, MUST NOT abrir el diálogo y MUST NOT aceptar selecciones. Al elegir un nivel aceptado, SHALL actualizar la dificultad vigente, persistir su código estable en SharedPreferences, cerrar el diálogo y emitir exactamente un Toast con la etiqueta visible del nivel seleccionado, incluso al elegir el nivel ya vigente. Si el diálogo se descarta sin confirmar por Atrás o por toque fuera cuando proceda, la dificultad vigente y su preferencia MUST permanecer sin cambios. Una selección aceptada MUST NOT reiniciar la partida ni alterar tablero, resultado, marcador, turnos o iniciadores, ni disparar, reiniciar o adelantar un movimiento o temporizador pendiente de la computadora. Si la selección ocurre con el tablero vacío antes de la primera jugada, el nivel elegido SHALL regir esa misma partida, incluida su eventual apertura de O; si ocurre tras un resultado terminal, SHALL aplicarse desde la próxima partida, incluida su apertura de O. El ViewModel MUST rechazar cualquier solicitud de cambio de dificultad durante una partida activa, incluidas solicitudes directas u obsoletas, sin alterar la dificultad, preferencias, timer ni ningún otro estado y sin emitir un Toast de confirmación.
 
-#### Scenario: Selector ofrece cuatro niveles
-- **GIVEN** que se abre diálogo editable
-- **WHEN** se muestra
-- **THEN** aparecen exactamente Fácil, Difícil, Experto, Imposible en ese orden y un radio seleccionado
+#### Scenario: Apertura muestra el nivel vigente
 
-#### Scenario: Reapertura tras Impossible
-- **GIVEN** que vigente es Impossible y editable
-- **WHEN** se reabre diálogo
-- **THEN** Imposible está seleccionado
+- **GIVEN** que la dificultad vigente es el nivel Y y que la dificultad es editable
+- **WHEN** la persona abre el diálogo de dificultad
+- **THEN** el radio de la etiqueta visible de Y aparece marcado como seleccionado
 
-#### Scenario: Cambiar nivel notifica una vez
-- **GIVEN** que Y está seleccionado y se elige Z
-- **WHEN** la selección se acepta
-- **THEN** vigente y SharedPreferences pasan a Z, diálogo cierra y hay exactamente un Toast con etiqueta Z
+#### Scenario: El selector ofrece los cuatro niveles
 
-#### Scenario: Elegir nivel ya seleccionado
-- **GIVEN** que Y ya está seleccionado
-- **WHEN** se elige Y
-- **THEN** se cierra diálogo y emite un Toast de Y, sin duplicado por recomposición/recreación
+- **GIVEN** que la dificultad es editable y la persona abre el diálogo de dificultad
+- **WHEN** el diálogo se muestra
+- **THEN** aparecen exactamente cuatro radios con las etiquetas Fácil, Difícil, Experto e Imposible en ese orden, con un solo radio marcado
 
-#### Scenario: Cancelar selección
-- **GIVEN** que diálogo muestra Y
-- **WHEN** se descarta por Back o toque fuera cuando proceda
-- **THEN** estado y preferencia siguen Y y no hay Toast de selección
+#### Scenario: Reapertura tras elegir Imposible
 
-#### Scenario: Editable antes de primera jugada X
-- **GIVEN** partida X con tablero vacío
-- **WHEN** se elige Dificultad
-- **THEN** diálogo permite elegir nivel sin colocar marca
+- **GIVEN** que la dificultad vigente es Imposible y que la dificultad es editable
+- **WHEN** la persona reabre el diálogo de dificultad
+- **THEN** el radio de la etiqueta visible Imposible aparece marcado como seleccionado
 
-#### Scenario: Editable durante apertura O pendiente
-- **GIVEN** partida iniciada por O, tablero aún vacío y temporizador de apertura pendiente
-- **WHEN** se abre selector y se elige Z
-- **THEN** entrada permite el cambio y persiste Z sin colocar O, anticipar/reiniciar el reloj ni alterar turno/iniciadores; O utilizará Z al vencer el tiempo original
+#### Scenario: La selección actualiza, cierra y notifica una sola vez
 
-#### Scenario: Editable después de resultado
-- **GIVEN** que la partida terminó
-- **WHEN** se elige Dificultad
-- **THEN** diálogo abre con nivel vigente y el cambio persistido regirá próxima partida incluida apertura O
+- **GIVEN** que la dificultad es editable y el diálogo está abierto con el nivel Y marcado
+- **WHEN** la persona pulsa otro nivel Z
+- **THEN** la dificultad vigente y su preferencia pasan a Z, el diálogo se cierra y se emite exactamente un Toast con la etiqueta visible del nivel Z
 
-#### Scenario: Rechazo durante partida con marcas
-- **GIVEN** partida activa con al menos una marca y dificultad Y
-- **WHEN** usuario o solicitud directa/obsoleta intenta Z
-- **THEN** se rechaza sin cambiar dificultad, preferencia, estado, timer, movimiento o Toast
+#### Scenario: Elegir el radio ya seleccionado
 
-#### Scenario: Apertura O cierra edición
-- **GIVEN** tablero vacío con apertura O pendiente
-- **WHEN** transcurren 1000 ms acumulados de primer plano y O juega
-- **THEN** se usa nivel vigente y Dificultad queda deshabilitada mientras haya marcas y juego activo
+- **GIVEN** que la dificultad es editable y el diálogo está abierto con el nivel Y ya marcado
+- **WHEN** la persona pulsa ese mismo radio Y
+- **THEN** la dificultad permanece en Y, el diálogo se cierra y se emite exactamente un Toast con la etiqueta visible de Y, sin repetirse por recomposición ni recreación
 
-#### Scenario: Notificación no se repite
-- **GIVEN** que se notificó una elección
-- **WHEN** hay recomposición o recreación
-- **THEN** no se reemite Toast
+#### Scenario: Cancelar no cambia la dificultad
 
-#### Scenario: Ventana de edición no mueve O
-- **GIVEN** que O espera con tablero vacío y resta tiempo
-- **WHEN** se abre o cierra selector o cambia dificultad permitida
-- **THEN** O no juega por esas acciones y conserva reloj restante
+- **GIVEN** que la dificultad es editable y el diálogo está abierto con el nivel Y
+- **WHEN** se descarta por Atrás o por toque fuera cuando proceda
+- **THEN** la dificultad vigente y su preferencia siguen en Y y no se emite un Toast de nivel seleccionado
 
-### Requirement: Conservación de la dificultad en la sesión
-SharedPreferences SHALL ser la autoridad única y permanente de dificultad, incluso ante recreación/restauración temporal; el código entero estable 0 Easy, 1 Hard, 2 Expert, 3 Impossible se carga tanto al iniciar como al restaurar. Valor ausente, corrupto o desconocido usa Expert. Solo selección aceptada se persiste. El snapshot temporal MUST NOT contener segunda copia de dificultad. La dificultad SHALL conservarse en nuevas partidas y el diálogo no necesita quedar abierto al recrear.
+#### Scenario: La entrada está habilitada antes de la primera jugada
+
+- **GIVEN** una partida nueva con el tablero vacío y O aún no ha abierto
+- **WHEN** la persona abre el menú y elige Dificultad
+- **THEN** la entrada está habilitada, el diálogo se abre y una selección aceptada actualiza y persiste la dificultad sin colocar ninguna marca
+
+#### Scenario: La entrada está habilitada tras un desenlace
+
+- **GIVEN** una partida ya terminada por victoria o empate
+- **WHEN** la persona abre el menú y elige Dificultad
+- **THEN** la entrada está habilitada y el diálogo se abre mostrando el nivel vigente; una selección aceptada persistida rige la próxima partida incluida su apertura de O
+
+#### Scenario: Rechazo durante una partida activa
+
+- **GIVEN** una partida activa con al menos una marca, con la dificultad vigente Y y el tablero, marcador, turnos e iniciador definidos
+- **WHEN** la persona intenta cambiar la dificultad, o el ViewModel recibe una solicitud directa u obsoleta
+- **THEN** la dificultad y su preferencia siguen siendo Y, no se altera ningún otro estado ni el timer, no se emite Toast de confirmación y no se dispara un movimiento de la computadora
+
+#### Scenario: La apertura automática de O cierra la ventana de edición
+
+- **GIVEN** que la dificultad es editable y la alternancia determina que O inicia la nueva partida
+- **WHEN** transcurren 1000 ms de primer plano y O realiza su única jugada inicial
+- **THEN** la apertura usa la dificultad vigente y, tras ella, la entrada Dificultad queda deshabilitada durante el resto de la partida activa
+
+#### Scenario: El nivel elegido rige la partida iniciada con él
+
+- **GIVEN** que la dificultad vigente cambió a Z en una ventana permitida (tablero vacío antes de la primera jugada o tras un desenlace)
+- **WHEN** la computadora juega en una partida iniciada con ese nivel, incluida la apertura de O de esa partida
+- **THEN** la selección del movimiento usa el nivel Z
+
+#### Scenario: Sin repetición de la notificación por recomposición o recreación
+
+- **GIVEN** que se emitió un Toast por una selección de dificultad
+- **WHEN** la interfaz se recompone o la pantalla se recrea
+- **THEN** no se vuelve a emitir la notificación de esa selección
+
+#### Scenario: Dificultad editable durante espera de apertura
+
+- **GIVEN** que una partida nueva con O iniciador tiene el tablero vacío y su apertura está pendiente
+- **WHEN** la persona elige una dificultad permitida antes de la primera jugada
+- **THEN** la entrada está habilitada, la selección persiste el nivel, no realiza ni reinicia la apertura anticipadamente y la jugada de O usa la dificultad vigente al ejecutarse con su tiempo restante original
+
+#### Scenario: Selección obsoleta durante apertura pendiente
+
+- **GIVEN** que el tablero ya no está vacío cuando llega una solicitud de cambio de dificultad
+- **WHEN** el ViewModel recibe la selección obsoleta
+- **THEN** la rechaza sin alterar la dificultad, la preferencia ni el estado, sin reiniciar el timer y sin disparar el movimiento de O
+
+### Requirement: Accesibilidad de opciones y diálogos
+
+Las cinco entradas del menú y los controles de los diálogos SHALL ser visibles y alcanzables, y MUST exponer una etiqueta textual proveniente de recursos para su uso con tecnologías de asistencia, sin requerir gestos especiales ni botones físicos. Cuando una entrada del menú esté deshabilitada, MUST exponer su estado deshabilitado a las tecnologías de asistencia y MUST NOT presentarse como accionable.
+
+#### Scenario: Entradas del menú etiquetadas
+
+- **GIVEN** que el menú principal está abierto
+- **WHEN** se recorre con una tecnología de asistencia
+- **THEN** cada una de las cinco entradas expone su etiqueta textual y su estado (habilitada o deshabilitada), y expone su acción ejecutable solo cuando está habilitada
+
+#### Scenario: Controles de diálogo alcanzables
+
+- **GIVEN** que un diálogo del menú está abierto
+- **WHEN** se recorre con una tecnología de asistencia
+- **THEN** sus opciones y botones son alcanzables y exponen una etiqueta textual
+
+#### Scenario: Entrada deshabilitada no accionable
+
+- **GIVEN** que la entrada Dificultad está deshabilitada durante una partida activa
+- **WHEN** se recorre el menú con una tecnología de asistencia
+- **THEN** la entrada expone su etiqueta y su estado deshabilitado y no se ofrece como acción ejecutable
+
+## ADDED Requirements
+
+### Requirement: Persistencia de la dificultad
+
+SharedPreferences SHALL ser la autoridad única y permanente de dificultad. El código entero estable 0 representa Easy, 1 Hard, 2 Expert y 3 Impossible; se carga al iniciar una sesión nueva y al restaurar una sesión soportada. Un valor ausente, corrupto o desconocido usa Expert. Solo una selección aceptada se persiste. El snapshot temporal MUST NOT contener una segunda copia de dificultad. La dificultad SHALL conservarse al solicitar nuevas partidas y no se exige conservar abierto el diálogo de dificultad durante una recreación.
 
 #### Scenario: Se retiene al pedir nueva partida
+
 - **GIVEN** que dificultad Y está persistida
 - **WHEN** se solicita nueva partida
 - **THEN** Y sigue vigente
 
 #### Scenario: Se carga al recrear o volver
+
 - **GIVEN** que SharedPreferences contiene Y
 - **WHEN** hay rotación, restauración soportada o regreso a primer plano
 - **THEN** dificultad vigente es Y sin duplicar Toast
 
 #### Scenario: Imposible persiste
+
 - **GIVEN** que se aceptó Impossible
 - **WHEN** se abre nueva partida o se recrea host
 - **THEN** se carga Impossible
 
 #### Scenario: Códigos estables
+
 - **GIVEN** una preferencia entera 0, 1, 2 o 3
 - **WHEN** se carga dificultad
 - **THEN** se interpreta respectivamente Easy, Hard, Expert o Impossible
 
 #### Scenario: Ausente o corrupta usa Expert
+
 - **GIVEN** que falta preferencia o no contiene código conocido
 - **WHEN** se inicia o restaura
 - **THEN** se usa Expert sin crash
 
 #### Scenario: Cambio rechazado no persiste
+
 - **GIVEN** que estado no permite cambiar dificultad
 - **WHEN** se recibe solicitud
 - **THEN** ni valor vigente ni SharedPreferences cambian
 
 #### Scenario: No se requiere restaurar diálogo abierto
+
 - **GIVEN** que diálogo de Y estaba abierto
 - **WHEN** host se recrea
 - **THEN** SharedPreferences determina Y y no se requiere mantener diálogo abierto
 
-### Requirement: Accesibilidad de opciones y diálogos
-Las cinco entradas y controles SHALL ser visibles/alcanzables y exponer etiquetas textuales de recursos para tecnologías de asistencia; las opciones deshabilitadas exponen su estado y no una acción.
-
-#### Scenario: Entradas etiquetadas
-- **GIVEN** que menú está abierto
-- **WHEN** se recorre con tecnología asistiva
-- **THEN** cada una de cinco opciones expone etiqueta y estado y acción solo si habilitada
-
-#### Scenario: Controles de diálogo alcanzables
-- **GIVEN** que un diálogo está abierto
-- **WHEN** se navega con tecnología asistiva
-- **THEN** sus opciones y botones son alcanzables y etiquetados
-
-#### Scenario: Dificultad deshabilitada accesible
-- **GIVEN** que Dificultad está deshabilitada por partida activa con marcas
-- **WHEN** se recorre menú
-- **THEN** expone etiqueta/estado deshabilitado sin acción ejecutable
-
 ## REMOVED Requirements
 
+### Requirement: Conservación de la dificultad en la sesión
+
+**Reason**: La regla heredada de conservar dificultad solo en memoria, iniciar toda sesión nueva en Expert y no consultar almacenamiento permanente queda reemplazada por persistencia explícita en SharedPreferences.
+
+**Migration**: Retirar la fuente de dificultad exclusivamente en memoria y usar los códigos estables 0=Easy, 1=Hard, 2=Expert y 3=Impossible. Una preferencia ausente, corrupta o desconocida migra de forma segura al valor Expert.
+
 ### Requirement: Confirmación de salida
+
 **Reason**: Se elimina la opción Salir y su confirmación obsoleta; no debe ofrecerse salida explícita desde el menú.
+
 **Migration**: Abandonar la pantalla mediante Back/navegación normal del sistema; no se intercepta Back ni se garantiza que finalice tarea.

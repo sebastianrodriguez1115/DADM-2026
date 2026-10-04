@@ -1,6 +1,0 @@
-{
-  "start_utc": "2026-10-02T00:23:51.109237+00:00",
-  "end_utc": "2026-10-02T00:25:30.810304+00:00",
-  "command": "./gradlew connectedDebugAndroidTest --rerun-tasks -Pandroid.builder.sdkDownload=false --console=plain",
-  "exit_code": 0
-}

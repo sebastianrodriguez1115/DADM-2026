@@ -16,13 +16,13 @@ El juego debe seguir siendo funcional en orientación vertical y horizontal y no
 ## Capabilities
 
 ### New Capabilities
-- Ninguna. Las conductas se incorporan a capacidades existentes o a `game-options`, ya introducida por cambios OpenSpec en curso.
+- Ninguna. Las conductas se incorporan a capacidades existentes o a `game-options`, ya integrada en las especificaciones principales.
 
 ### Modified Capabilities
 - `game-session`: definir restauración del estado de partida tras recreaciones soportadas, persistencia independiente de marcador y dificultad, y límites entre restauración temporal y nuevo lanzamiento; retirar la prohibición general de persistencia y precisar sus fronteras.
 - `tic-tac-toe-game`: definir presentación adaptativa portrait/landscape, accesibilidad de controles y reset inmediato/persistente del marcador sin afectar la partida.
-- `game-options` (capacidad introducida por `add-compose-menus-dialogs`): retirar Salir y su diálogo, conservar las demás opciones e incorporar reset de marcador y persistencia de dificultad.
+- `game-options` (capacidad integrada desde `add-compose-menus-dialogs`): retirar Salir y su diálogo, conservar las demás opciones e incorporar reset de marcador y persistencia de dificultad.
 
 ## Impact
 
-Afecta `GameViewModel`/`GameUiState`, `TicTacToeScreen`/`GameScreen`, `GameMenu`, el host de actividad, preferencias y sus pruebas de ciclo de vida, restauración y UI. Se integra con requisitos existentes en `openspec/specs/game-session` y `openspec/specs/tic-tac-toe-game`, y con `game-options` definido en `add-compose-menus-dialogs`; la coordinación con cambios OpenSpec previos en curso es necesaria antes de sincronizar a las especificaciones principales. No se pretende modificar ni archivar esos cambios previos.
+Afecta `GameViewModel`/`GameUiState`, `TicTacToeScreen`/`GameScreen`, `GameMenu`, el host de actividad, preferencias y sus pruebas de ciclo de vida, restauración y UI. Se integra con requisitos existentes en `openspec/specs/game-session`, `openspec/specs/tic-tac-toe-game` y `game-options`, cuya base de menús ya fue sincronizada y archivada. No se modifica ni archiva esa base ni la integración independiente de gráficos/sonido.

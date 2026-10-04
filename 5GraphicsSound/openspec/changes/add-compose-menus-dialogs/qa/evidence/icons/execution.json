@@ -1,6 +1,0 @@
-{
-  "start_utc": "2026-10-02T00:27:32.474311+00:00",
-  "end_utc": "2026-10-02T00:27:34.184442+00:00",
-  "command": "adb -s \"$DEVICE_SERIAL\" shell am instrument -w -e class com.edu.unal.tictactoe.LauncherIconTest com.edu.unal.tictactoe.test/androidx.test.runner.AndroidJUnitRunner",
-  "exit_code": 0
-}

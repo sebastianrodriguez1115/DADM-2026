@@ -1,8 +1,0 @@
-build_exit=0
-install-app_exit=0
-install-test_exit=0
-GameScreenSoundIntegrationTest_exit=0
-GameScreenSoundIntegrationTest_verified_pass=1
-GameMenuTest_exit=0
-GameMenuTest_verified_pass=6
-protected_files_unchanged=1

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.edu.unal.tictactoe.ui.game.audio.MoveSoundHostTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-03T14:25:19.302Z" hostname="Mac-Studio-de-Juan.local" time="0.002">
-  <properties/>
-  <testcase name="viewModelMuteStopsActiveStreamImmediatelyAndKeepsPendingTurn" classname="com.edu.unal.tictactoe.ui.game.audio.MoveSoundHostTest" time="0.0"/>
-  <testcase name="zeroRemainingTurnCompletesOnReplacementResumeWithoutAudioReplay" classname="com.edu.unal.tictactoe.ui.game.audio.MoveSoundHostTest" time="0.002"/>
-  <testcase name="preparesRegistersThenResumesAndStaleHostCannotAffectReplacement" classname="com.edu.unal.tictactoe.ui.game.audio.MoveSoundHostTest" time="0.0"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

@@ -1,7 +1,0 @@
-Starting: Intent { cmp=com.edu.unal.tictactoe/.MainActivity }
-Status: ok
-LaunchState: COLD
-Activity: com.edu.unal.tictactoe/.MainActivity
-TotalTime: 2527
-WaitTime: 2529
-Complete

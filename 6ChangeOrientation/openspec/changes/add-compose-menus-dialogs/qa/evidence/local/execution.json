@@ -1,6 +1,0 @@
-{
-  "start_utc": "2026-10-02T00:23:00.808094+00:00",
-  "end_utc": "2026-10-02T00:23:34.596394+00:00",
-  "command": "./gradlew testDebugUnitTest lintDebug assembleDebug --rerun-tasks -Pandroid.builder.sdkDownload=false --console=plain",
-  "exit_code": 0
-}

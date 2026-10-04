@@ -1,6 +1,6 @@
 # Tasks
 
-> **Precondición de integración OpenSpec (no ejecutable en este plan):** las deltas dependen de `game-options` introducida por `add-compose-menus-dialogs` y ampliada por `add-compose-graphics-sound`. La implementación de este cambio puede avanzar contra el código actual sin sincronizar ni archivar esos cambios. La reconciliación/sync/archive requiere otro workflow y permiso explícito; no forma parte de estas tareas.
+> **Contexto de integración OpenSpec (no ejecutable en este plan):** la base de `game-options` de `add-compose-menus-dialogs` ya fue sincronizada y archivada. La integración de `add-compose-graphics-sound`, incluidos sus deltas de sesión/audio y QA, es independiente: estas 33 tareas no la modifican, archivan ni declaran completada.
 
 ## 1. Preferencias durables de marcador y dificultad
 

@@ -1,5 +1,0 @@
-E01 PASS: real Activity menu has five labels in order, sound Habilitado and empty-board difficulty enabled.
-E02 PASS: real Activity mute closes menu, preserves board/score, displays Deshabilitado and stays actionable.
-E03 PASS: real Activity mute→unmute displays Habilitado (callback wiring works).
-E04 PASS: terminal {'Victoria de la computadora'}, difficulty enabled and opens four-level dialog with menu closed.
-Completed; no background QA process spawned, no audio/TalkBack/persistence certification.
