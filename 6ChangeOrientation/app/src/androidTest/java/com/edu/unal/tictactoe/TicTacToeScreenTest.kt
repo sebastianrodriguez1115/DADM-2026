@@ -1,15 +1,15 @@
 package com.edu.unal.tictactoe
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.testTag
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsDisplayed
@@ -29,7 +29,6 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -54,12 +53,15 @@ private const val BOARD_TAG = "tic_tac_toe_board"
 private const val STATUS_TAG = "tic_tac_toe_status"
 private const val SCORE_TAG = "tic_tac_toe_score"
 private const val NEW_GAME_TAG = "tic_tac_toe_new_game"
+private const val MENU_STUB_TAG = "tic_tac_toe_test_menu"
 private const val UI_STATE_TIMEOUT_MILLIS = 5_000L
 
 @RunWith(AndroidJUnit4::class)
 class TicTacToeScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
+
+    private val viewport = FixedViewport(composeTestRule)
 
     private val context
         get() = androidx.test.platform.app.InstrumentationRegistry
@@ -84,7 +86,13 @@ class TicTacToeScreenTest {
             result = GameResult.Won(Player.X),
             score = Score(xWins = 2, oWins = 3, ties = 4),
         )
-        setScreen(state)
+        viewport.setContent(360, 640) {
+            TicTacToeTheme(dynamicColor = false) {
+                Surface {
+                    TicTacToeScreen(uiState = state, onCellClick = {}, onNewGame = {})
+                }
+            }
+        }
 
         composeTestRule.onNodeWithTag(BOARD_TAG).assertExists()
         composeTestRule.onNodeWithTag(STATUS_TAG).assertExists()
@@ -157,8 +165,10 @@ class TicTacToeScreenTest {
 
         assertEquals(null, clickedLocation)
         assertEquals(0, newGameClicks)
-        composeTestRule.onNodeWithTag("tic_tac_toe_cell_4").performClick()
-        composeTestRule.onNodeWithText(context.getString(R.string.new_game)).performClick()
+        composeTestRule.onNodeWithTag("tic_tac_toe_cell_4").performScrollTo().performClick()
+        composeTestRule.onNodeWithText(context.getString(R.string.new_game))
+            .performScrollTo()
+            .performClick()
         assertEquals(4, clickedLocation)
         assertEquals(1, newGameClicks)
     }
@@ -193,16 +203,14 @@ class TicTacToeScreenTest {
 
     @Test
     fun cellsArePositiveSquareAndStayInsideTheBoard() {
-        composeTestRule.setContent {
+        viewport.setContent(320, 480) {
             TicTacToeTheme(dynamicColor = false) {
                 Surface {
-                    Box(modifier = Modifier.size(320.dp, 480.dp)) {
-                        TicTacToeScreen(
-                            uiState = GameUiState(),
-                            onCellClick = {},
-                            onNewGame = {},
-                        )
-                    }
+                    TicTacToeScreen(
+                        uiState = GameUiState(),
+                        onCellClick = {},
+                        onNewGame = {},
+                    )
                 }
             }
         }
@@ -230,29 +238,23 @@ class TicTacToeScreenTest {
     }
 
     @Test
-    fun boardAndControlsAdaptToPortraitAndLandscapeConstraints() {
-        var screenSize by mutableStateOf(320 to 480)
+    fun verticalFlowAdaptsToPortraitAndShortLandscapeConstraints() {
         var newGameClicks = 0
-        composeTestRule.setContent {
+        viewport.setContent(320, 480) {
             TicTacToeTheme(dynamicColor = false) {
                 Surface {
-                    Box(modifier = Modifier.size(screenSize.first.dp, screenSize.second.dp)) {
-                        TicTacToeScreen(
-                            uiState = GameUiState(),
-                            onCellClick = {},
-                            onNewGame = { newGameClicks++ },
-                        )
-                    }
+                    TicTacToeScreen(
+                        uiState = GameUiState(),
+                        onCellClick = {},
+                        onNewGame = { newGameClicks++ },
+                    )
                 }
             }
         }
 
         val boardWidths = mutableListOf<Dp>()
         listOf(320 to 480, 360 to 260).forEach { (width, height) ->
-            composeTestRule.runOnIdle {
-                screenSize = width to height
-            }
-            composeTestRule.waitForIdle()
+            viewport.show(width, height)
 
             val boardBeforeScroll = composeTestRule
                 .onNodeWithTag(BOARD_TAG)
@@ -283,6 +285,68 @@ class TicTacToeScreenTest {
             assertEquals(boardWidths.size, newGameClicks)
         }
         assertTrue("landscape board should use the reduced height", boardWidths[1] < boardWidths[0])
+    }
+
+    @Test
+    fun portraitViewportsKeepVerticalOrderWithMenuBesideNewGameAndEverythingReachable() {
+        setMenuScreen(320, 480)
+
+        listOf(ViewportCase(320, 480), ViewportCase(360, 640)).forEach { next ->
+            viewport.show(next.width, next.height)
+
+            val board = bounds(BOARD_TAG)
+            val status = bounds(STATUS_TAG)
+            val score = bounds(SCORE_TAG)
+            val newGame = bounds(NEW_GAME_TAG)
+            val menu = bounds(MENU_STUB_TAG)
+            assertTrue("board above status", board.bottom <= status.top)
+            assertTrue("status above score", status.bottom <= score.top)
+            assertTrue("score above controls", score.bottom <= minOf(newGame.top, menu.top))
+            assertTrue("menu shares the row of New game", menu.top < newGame.bottom && newGame.top < menu.bottom)
+            assertTrue("menu right of New game", menu.left >= newGame.right)
+
+            assertDisplayedSquareBoard(viewportWidth = next.width)
+            assertControlsReachable(next)
+        }
+    }
+
+    @Test
+    fun extremeViewportsAndFontScalesKeepBoardAndControlsReachableAndNeverShrinkThePanel() {
+        setMenuScreen(320, 192)
+
+        // Compact height, narrow landscape at fontScale 2 (panel does not fit: vertical flow),
+        // wide landscape at fontScale 2 (panel fits at its enlarged minimum) and the worst case.
+        listOf(
+            ViewportCase(320, 192, wide = false),
+            ViewportCase(560, 320, fontScale = 2f, wide = false),
+            ViewportCase(640, 360, fontScale = 2f, wide = true),
+            ViewportCase(320, 192, fontScale = 2f, wide = false),
+        ).forEach { next ->
+            viewport.show(next.width, next.height, next.fontScale)
+
+            assertDisplayedSquareBoard(viewportWidth = next.width)
+            assertControlsReachable(next)
+
+            val board = bounds(BOARD_TAG)
+            val status = bounds(STATUS_TAG)
+            val score = bounds(SCORE_TAG)
+            val newGame = bounds(NEW_GAME_TAG)
+            val menu = bounds(MENU_STUB_TAG)
+            val tolerance = 1f
+            if (next.wide) {
+                assertTrue("wide: board left of the panel", board.right.value <= status.left.value + tolerance)
+                assertTrue("wide: board left of the panel", board.right.value <= newGame.left.value + tolerance)
+                val panelWidth = menu.right.value - newGame.left.value
+                assertTrue(
+                    "wide panel must keep its minimum ($panelWidth dp)",
+                    panelWidth >= 200f * next.fontScale - tolerance,
+                )
+            } else {
+                assertTrue("compact: vertical flow", board.bottom <= status.top)
+                assertTrue("compact: vertical flow", status.bottom <= score.top)
+                assertTrue("compact: vertical flow", score.bottom <= newGame.top)
+            }
+        }
     }
 
     @Test
@@ -325,35 +389,27 @@ class TicTacToeScreenTest {
     fun largeFontKeepsTerminalMarksVisibleAndControlsReachableInBothThemes() {
         var darkTheme by mutableStateOf(false)
         var newGameClicks = 0
-        val testDensity = Density(
-            density = composeTestRule.density.density,
-            fontScale = 2f,
-        )
-        composeTestRule.setContent {
-            CompositionLocalProvider(LocalDensity provides testDensity) {
-                TicTacToeTheme(darkTheme = darkTheme, dynamicColor = false) {
-                    Surface {
-                        Box(modifier = Modifier.size(320.dp, 260.dp)) {
-                            TicTacToeScreen(
-                                uiState = GameUiState(
-                                    board = listOf(
-                                        Mark.X,
-                                        Mark.O,
-                                        Mark.Empty,
-                                        Mark.Empty,
-                                        Mark.Empty,
-                                        Mark.Empty,
-                                        Mark.Empty,
-                                        Mark.Empty,
-                                        Mark.Empty,
-                                    ),
-                                    result = GameResult.Won(Player.X),
-                                ),
-                                onCellClick = {},
-                                onNewGame = { newGameClicks++ },
-                            )
-                        }
-                    }
+        viewport.setContent(320, 260, fontScale = 2f) {
+            TicTacToeTheme(darkTheme = darkTheme, dynamicColor = false) {
+                Surface {
+                    TicTacToeScreen(
+                        uiState = GameUiState(
+                            board = listOf(
+                                Mark.X,
+                                Mark.O,
+                                Mark.Empty,
+                                Mark.Empty,
+                                Mark.Empty,
+                                Mark.Empty,
+                                Mark.Empty,
+                                Mark.Empty,
+                                Mark.Empty,
+                            ),
+                            result = GameResult.Won(Player.X),
+                        ),
+                        onCellClick = {},
+                        onNewGame = { newGameClicks++ },
+                    )
                 }
             }
         }
@@ -527,7 +583,7 @@ class TicTacToeScreenTest {
             renderedState = GameUiState(result = GameResult.Tie)
         }
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag(NEW_GAME_TAG).performClick()
+        composeTestRule.onNodeWithTag(NEW_GAME_TAG).performScrollTo().performClick()
         assertEquals(1, newGameCallbacks)
     }
 
@@ -550,6 +606,8 @@ class TicTacToeScreenTest {
     }
 
     private fun controlledViewModel(): GameViewModel = GameViewModel(
+        InMemoryGamePreferences(),
+        SavedStateHandle(),
         TicTacToeGame(MoveRandomizer { 0 }),
     )
 
@@ -651,6 +709,42 @@ class TicTacToeScreenTest {
                 context.getString(R.string.cell_empty, location / 3 + 1, location % 3 + 1),
             ).assertExists()
         }
+    }
+
+    private data class ViewportCase(
+        val width: Int,
+        val height: Int,
+        val fontScale: Float = 1f,
+        val wide: Boolean = false,
+    )
+
+    private fun setMenuScreen(width: Int, height: Int) {
+        viewport.setContent(width, height) {
+            TicTacToeTheme(dynamicColor = false) {
+                Surface {
+                    TicTacToeScreen(
+                        uiState = GameUiState(),
+                        onCellClick = {},
+                        onNewGame = {},
+                        menu = { Box(Modifier.size(48.dp).testTag(MENU_STUB_TAG)) },
+                    )
+                }
+            }
+        }
+    }
+
+    private fun bounds(tag: String) = composeTestRule.onNodeWithTag(tag).getUnclippedBoundsInRoot()
+
+    private fun assertControlsReachable(spec: ViewportCase) {
+        listOf(STATUS_TAG, SCORE_TAG, NEW_GAME_TAG, MENU_STUB_TAG).forEach { tag ->
+            composeTestRule.onNodeWithTag(tag).performScrollTo().assertIsDisplayed()
+            val box = bounds(tag)
+            assertTrue("$tag must not be clipped horizontally", box.left >= 0.dp - 1.dp)
+            assertTrue("$tag must not be clipped horizontally", box.right <= spec.width.dp + 1.dp)
+        }
+        composeTestRule.onNodeWithTag(NEW_GAME_TAG).assertIsEnabled()
+        val newGame = bounds(NEW_GAME_TAG)
+        assertTrue("New game must be at least 48 dp tall", newGame.bottom - newGame.top >= 48.dp - 1.dp)
     }
 
     private fun assertDisplayedSquareBoard(viewportWidth: Int): Dp {

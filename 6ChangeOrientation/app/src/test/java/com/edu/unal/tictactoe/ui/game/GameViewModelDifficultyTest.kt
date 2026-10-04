@@ -1,5 +1,6 @@
 package com.edu.unal.tictactoe.ui.game
 
+import com.edu.unal.tictactoe.data.preferences.FakeGamePreferences
 import com.edu.unal.tictactoe.game.MoveRandomizer
 import com.edu.unal.tictactoe.game.TicTacToeGame
 import com.edu.unal.tictactoe.game.models.DifficultyLevel
@@ -361,6 +362,182 @@ class GameViewModelDifficultyTest {
         assertTrue(viewModel.uiState.value.canChangeDifficulty)
     }
 
+    @Test
+    fun acceptedSelectionOnAnEmptyBoardPersistsExactlyOnce() {
+        val store = FakeGamePreferences()
+        val viewModel = newViewModel(preferences = store)
+
+        assertTrue(viewModel.setDifficulty(DifficultyLevel.Impossible))
+
+        assertEquals(DifficultyLevel.Impossible, viewModel.uiState.value.difficulty)
+        assertEquals(DifficultyLevel.Impossible, store.readDifficulty())
+        assertEquals(1, store.difficultyWrites)
+    }
+
+    @Test
+    fun selectionDuringThePendingOOpeningPersistsWithoutMovingTheDeadline() {
+        val store = FakeGamePreferences(difficulty = DifficultyLevel.Easy)
+        val randomizer = RecordingRandomizer(selectedIndex = 0)
+        val viewModel = newViewModel(randomizer, store)
+        viewModel.newGame()
+        harness.scheduler.advanceTimeBy(400)
+        harness.scheduler.runCurrent()
+        val pending = viewModel.uiState.value
+        assertEquals(Player.O, pending.starter)
+        assertEquals(List(9) { Mark.Empty }, pending.board)
+
+        assertTrue(viewModel.setDifficulty(DifficultyLevel.Impossible))
+
+        assertEquals(DifficultyLevel.Impossible, store.readDifficulty())
+        assertEquals(1, store.difficultyWrites)
+        assertEquals(pending.turn, viewModel.uiState.value.turn)
+        harness.scheduler.advanceTimeBy(599)
+        harness.scheduler.runCurrent()
+        assertEquals(List(9) { Mark.Empty }, viewModel.uiState.value.board)
+        harness.scheduler.advanceTimeBy(1)
+        harness.scheduler.runCurrent()
+        assertEquals(1, viewModel.uiState.value.board.count { it == Mark.O })
+        assertEquals(0, randomizer.calls)
+        harness.scheduler.advanceTimeBy(5_000)
+        harness.scheduler.runCurrent()
+        assertEquals(1, viewModel.uiState.value.board.count { it == Mark.O })
+        assertEquals(1, store.difficultyWrites)
+    }
+
+    @Test
+    fun selectionAfterATerminalResultPersistsAndLeavesTheFinishedGameUntouched() {
+        val store = FakeGamePreferences()
+        val viewModel = newViewModel(preferences = store)
+        playFirstEmptyUntilTerminal(viewModel)
+        val terminal = viewModel.uiState.value
+
+        assertTrue(viewModel.setDifficulty(DifficultyLevel.Easy))
+
+        val after = viewModel.uiState.value
+        assertEquals(DifficultyLevel.Easy, store.readDifficulty())
+        assertEquals(1, store.difficultyWrites)
+        assertEquals(terminal.board, after.board)
+        assertEquals(terminal.result, after.result)
+        assertEquals(terminal.score, after.score)
+        assertEquals(terminal.turn, after.turn)
+        assertEquals(terminal.starter, after.starter)
+        assertEquals(terminal.nextStarter, after.nextStarter)
+        viewModel.newGame()
+        assertEquals(DifficultyLevel.Easy, viewModel.uiState.value.difficulty)
+        assertEquals(1, store.difficultyWrites)
+    }
+
+    @Test
+    fun selectingTheCurrentLevelIsAcceptedAndWrittenOnce() {
+        val store = FakeGamePreferences(difficulty = DifficultyLevel.Easy)
+        val viewModel = newViewModel(preferences = store)
+
+        assertTrue(viewModel.setDifficulty(DifficultyLevel.Easy))
+
+        assertEquals(DifficultyLevel.Easy, viewModel.uiState.value.difficulty)
+        assertEquals(DifficultyLevel.Easy, store.readDifficulty())
+        assertEquals(1, store.difficultyWrites)
+    }
+
+    @Test
+    fun rejectionWhileTheComputerReplyIsPendingDoesNotTouchTheStoreOrTheTimer() {
+        val store = FakeGamePreferences()
+        val viewModel = newViewModel(preferences = store)
+        viewModel.onHumanMove(0)
+        harness.scheduler.advanceTimeBy(300)
+        harness.scheduler.runCurrent()
+        val active = viewModel.uiState.value
+        val readsBefore = store.difficultyReads
+
+        assertFalse(viewModel.setDifficulty(DifficultyLevel.Easy))
+
+        assertSame(active, viewModel.uiState.value)
+        assertEquals(0, store.difficultyWrites)
+        assertEquals(readsBefore, store.difficultyReads)
+        assertEquals(DifficultyLevel.Expert, store.readDifficulty())
+        harness.scheduler.advanceTimeBy(699)
+        harness.scheduler.runCurrent()
+        assertEquals(1, viewModel.uiState.value.board.count { it != Mark.Empty })
+        harness.scheduler.advanceTimeBy(1)
+        harness.scheduler.runCurrent()
+        assertEquals(2, viewModel.uiState.value.board.count { it != Mark.Empty })
+        assertEquals(1, viewModel.uiState.value.board.count { it == Mark.O })
+        assertEquals(0, store.difficultyWrites)
+    }
+
+    @Test
+    fun rejectionAfterTheComputerRepliedDoesNotWrite() {
+        val store = FakeGamePreferences(difficulty = DifficultyLevel.Easy)
+        val viewModel = newViewModel(preferences = store)
+        playMove(viewModel, 0)
+        val active = viewModel.uiState.value
+
+        assertFalse(viewModel.setDifficulty(DifficultyLevel.Impossible))
+
+        assertSame(active, viewModel.uiState.value)
+        assertEquals(0, store.difficultyWrites)
+        assertEquals(DifficultyLevel.Easy, store.readDifficulty())
+    }
+
+    @Test
+    fun aStaleRequestAfterTheAutomaticOOpeningIsRejectedWithoutWriteOrNewMoves() {
+        val store = FakeGamePreferences()
+        val viewModel = newViewModel(preferences = store)
+        viewModel.newGame()
+        assertTrue(viewModel.uiState.value.canChangeDifficulty)
+        harness.scheduler.advanceTimeBy(1_000)
+        harness.scheduler.runCurrent()
+        val afterOpening = viewModel.uiState.value
+        assertEquals(1, afterOpening.board.count { it == Mark.O })
+
+        assertFalse(viewModel.setDifficulty(DifficultyLevel.Easy))
+
+        assertSame(afterOpening, viewModel.uiState.value)
+        assertEquals(0, store.difficultyWrites)
+        assertEquals(DifficultyLevel.Expert, store.readDifficulty())
+        harness.scheduler.advanceTimeBy(5_000)
+        harness.scheduler.runCurrent()
+        assertSame(afterOpening, viewModel.uiState.value)
+    }
+
+    @Test
+    fun anAcceptedSelectionSurvivesInANewViewModelOnTheSameStore() {
+        val store = FakeGamePreferences()
+        val first = newViewModel(preferences = store)
+        assertTrue(first.setDifficulty(DifficultyLevel.Impossible))
+
+        val second = newViewModel(preferences = store)
+
+        assertEquals(DifficultyLevel.Impossible, second.uiState.value.difficulty)
+    }
+
+    @Test
+    fun aRejectedSelectionLeavesThePreviousLevelForANewViewModel() {
+        val store = FakeGamePreferences(difficulty = DifficultyLevel.Easy)
+        val first = newViewModel(preferences = store)
+        playMove(first, 0)
+        assertFalse(first.setDifficulty(DifficultyLevel.Impossible))
+
+        val second = newViewModel(preferences = store)
+
+        assertEquals(DifficultyLevel.Easy, second.uiState.value.difficulty)
+        assertEquals(0, store.difficultyWrites)
+    }
+
+    @Test
+    fun newGameDoesNotWriteDifficultyAndKeepsIt() {
+        val store = FakeGamePreferences()
+        val viewModel = newViewModel(preferences = store)
+        assertTrue(viewModel.setDifficulty(DifficultyLevel.Easy))
+
+        viewModel.newGame()
+        viewModel.newGame()
+
+        assertEquals(DifficultyLevel.Easy, viewModel.uiState.value.difficulty)
+        assertEquals(1, store.difficultyWrites)
+        assertEquals(DifficultyLevel.Easy, store.readDifficulty())
+    }
+
     private fun playFirstEmptyUntilTerminal(viewModel: GameViewModel) {
         var humanMoves = 0
         while (viewModel.uiState.value.result == GameResult.InProgress && humanMoves < 5) {
@@ -379,7 +556,8 @@ class GameViewModelDifficultyTest {
 
     private fun newViewModel(
         randomizer: MoveRandomizer = RecordingRandomizer(selectedIndex = 0),
-    ): GameViewModel = harness.createViewModelResumed(TicTacToeGame(randomizer))
+        preferences: FakeGamePreferences = FakeGamePreferences(),
+    ): GameViewModel = harness.createViewModelResumed(TicTacToeGame(randomizer), preferences)
 
     private class RecordingRandomizer(
         private val selectedIndex: Int,

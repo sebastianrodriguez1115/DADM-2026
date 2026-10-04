@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="isolated-07-GameBoardLayoutTest" tests="2" failures="0" errors="0" skipped="0">
+  <testcase classname="com.edu.unal.tictactoe.GameBoardLayoutTest" name="hitTargetsStayAtLeast48DpInCompactAndResponsiveViewports" />
+  <testcase classname="com.edu.unal.tictactoe.GameBoardLayoutTest" name="fractionalDensitiesDoNotRoundHitTargetsBelow48Dp" />
+</testsuite>

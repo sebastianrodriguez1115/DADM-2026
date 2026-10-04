@@ -1,0 +1,24 @@
+{
+  "label": "isolated-17-MainActivityLifecycleTest",
+  "expected": 4,
+  "starts": 4,
+  "ended": 4,
+  "passed": 4,
+  "failed": 0,
+  "complete_inventory": true,
+  "actual_ids": [
+    "com.edu.unal.tictactoe.MainActivityLifecycleTest#recreationDuringPendingOpeningRetainsSessionAndExecutesOneOpening",
+    "com.edu.unal.tictactoe.MainActivityLifecycleTest#finishingWithPendingTurnCancelsItAndNextActivityStartsFreshSession",
+    "com.edu.unal.tictactoe.MainActivityLifecycleTest#pauseSuspendsPendingResponseAndResumeCompletesItOnce",
+    "com.edu.unal.tictactoe.MainActivityLifecycleTest#recreationDuringPendingResponseRetainsSessionWithoutDuplicatingTurn"
+  ],
+  "expected_ids": [
+    "com.edu.unal.tictactoe.MainActivityLifecycleTest#finishingWithPendingTurnCancelsItAndNextActivityStartsFreshSession",
+    "com.edu.unal.tictactoe.MainActivityLifecycleTest#pauseSuspendsPendingResponseAndResumeCompletesItOnce",
+    "com.edu.unal.tictactoe.MainActivityLifecycleTest#recreationDuringPendingOpeningRetainsSessionAndExecutesOneOpening",
+    "com.edu.unal.tictactoe.MainActivityLifecycleTest#recreationDuringPendingResponseRetainsSessionWithoutDuplicatingTurn"
+  ],
+  "ok_count": 4,
+  "failure_marker": false,
+  "verified": true
+}

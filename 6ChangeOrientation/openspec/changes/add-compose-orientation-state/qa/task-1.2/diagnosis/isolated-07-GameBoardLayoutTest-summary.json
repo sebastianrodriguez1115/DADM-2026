@@ -1,0 +1,20 @@
+{
+  "label": "isolated-07-GameBoardLayoutTest",
+  "expected": 2,
+  "starts": 2,
+  "ended": 2,
+  "passed": 2,
+  "failed": 0,
+  "complete_inventory": true,
+  "actual_ids": [
+    "com.edu.unal.tictactoe.GameBoardLayoutTest#hitTargetsStayAtLeast48DpInCompactAndResponsiveViewports",
+    "com.edu.unal.tictactoe.GameBoardLayoutTest#fractionalDensitiesDoNotRoundHitTargetsBelow48Dp"
+  ],
+  "expected_ids": [
+    "com.edu.unal.tictactoe.GameBoardLayoutTest#fractionalDensitiesDoNotRoundHitTargetsBelow48Dp",
+    "com.edu.unal.tictactoe.GameBoardLayoutTest#hitTargetsStayAtLeast48DpInCompactAndResponsiveViewports"
+  ],
+  "ok_count": 2,
+  "failure_marker": false,
+  "verified": true
+}

@@ -1,0 +1,20 @@
+{
+  "label": "isolated-10-GamePreferencesIsolationTest",
+  "expected": 2,
+  "starts": 2,
+  "ended": 2,
+  "passed": 2,
+  "failed": 0,
+  "complete_inventory": true,
+  "actual_ids": [
+    "com.edu.unal.tictactoe.GamePreferencesIsolationTest#preparationAppliesCustomSeedDeterministicallyAndCanLeaveKeysAbsent",
+    "com.edu.unal.tictactoe.GamePreferencesIsolationTest#preparationRemovesResidueSeedsZerosAndExpertAndLeavesOtherFilesAlone"
+  ],
+  "expected_ids": [
+    "com.edu.unal.tictactoe.GamePreferencesIsolationTest#preparationAppliesCustomSeedDeterministicallyAndCanLeaveKeysAbsent",
+    "com.edu.unal.tictactoe.GamePreferencesIsolationTest#preparationRemovesResidueSeedsZerosAndExpertAndLeavesOtherFilesAlone"
+  ],
+  "ok_count": 2,
+  "failure_marker": false,
+  "verified": true
+}

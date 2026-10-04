@@ -1,7 +1,10 @@
 package com.edu.unal.tictactoe.ui.game
 
+import androidx.lifecycle.SavedStateHandle
+import com.edu.unal.tictactoe.data.preferences.FakeGamePreferences
 import com.edu.unal.tictactoe.game.MoveRandomizer
 import com.edu.unal.tictactoe.game.TicTacToeGame
+import com.edu.unal.tictactoe.game.models.DifficultyLevel
 import com.edu.unal.tictactoe.game.models.GameResult
 import com.edu.unal.tictactoe.game.models.Mark
 import com.edu.unal.tictactoe.game.models.MoveResult
@@ -122,7 +125,7 @@ class GameViewModelTest {
         assertEquals(MoveResult.Applied, game.setMove(Player.X, 0))
         assertEquals(MoveResult.Applied, game.setMove(Player.O, 1))
 
-        val viewModel = GameViewModel(game)
+        val viewModel = GameViewModel(FakeGamePreferences(), SavedStateHandle(), game)
 
         assertEquals(List(9) { Mark.Empty }, game.board)
         assertEquals(List(9) { Mark.Empty }, viewModel.uiState.value.board)
@@ -387,6 +390,150 @@ class GameViewModelTest {
         assertEquals(Mark.O, viewModel.uiState.value.board[1])
         assertEquals(Turn.Human, viewModel.uiState.value.turn)
         assertEquals(1, randomizer.calls)
+    }
+
+    private val seededScore = Score(xWins = 3, oWins = 5, ties = 2)
+    private val xWinMoves = listOf(0, 3, 4, 8)
+    private val oWinMoves = listOf(0, 2, 6, 5)
+    private val tieMoves = listOf(0, 4, 2, 7, 5)
+
+    private fun seededViewModel(preferences: FakeGamePreferences): GameViewModel =
+        harness.createViewModelResumed(TicTacToeGame(RecordingRandomizer(selectedIndex = 0)), preferences)
+
+    @Test
+    fun humanVictoryPersistsTheUpdatedScoreExactlyOnce() {
+        val preferences = FakeGamePreferences(score = seededScore)
+        val viewModel = seededViewModel(preferences)
+
+        xWinMoves.forEach { playMove(viewModel, it) }
+
+        val expected = Score(xWins = 4, oWins = 5, ties = 2)
+        assertEquals(expected, viewModel.uiState.value.score)
+        assertEquals(expected, preferences.storedScore)
+        assertEquals(1, preferences.scoreWrites)
+    }
+
+    @Test
+    fun computerVictoryPersistsTheUpdatedScoreExactlyOnce() {
+        val preferences = FakeGamePreferences(score = seededScore)
+        val viewModel = seededViewModel(preferences)
+
+        oWinMoves.forEach { playMove(viewModel, it) }
+
+        val expected = Score(xWins = 3, oWins = 6, ties = 2)
+        assertEquals(expected, viewModel.uiState.value.score)
+        assertEquals(expected, preferences.storedScore)
+        assertEquals(1, preferences.scoreWrites)
+    }
+
+    @Test
+    fun tiePersistsTheUpdatedScoreExactlyOnce() {
+        val preferences = FakeGamePreferences(score = seededScore)
+        val viewModel = seededViewModel(preferences)
+
+        tieMoves.forEach { playMove(viewModel, it) }
+
+        val expected = Score(xWins = 3, oWins = 5, ties = 3)
+        assertEquals(expected, viewModel.uiState.value.score)
+        assertEquals(expected, preferences.storedScore)
+        assertEquals(1, preferences.scoreWrites)
+    }
+
+    @Test
+    fun abandoningAnIncompleteGameDoesNotWriteTheScore() {
+        val preferences = FakeGamePreferences(score = seededScore)
+        val viewModel = seededViewModel(preferences)
+
+        playMove(viewModel, 0)
+        assertEquals(GameResult.InProgress, viewModel.uiState.value.result)
+        viewModel.newGame()
+        harness.scheduler.advanceTimeBy(3_000)
+        harness.scheduler.runCurrent()
+
+        assertEquals(0, preferences.scoreWrites)
+        assertEquals(seededScore, preferences.storedScore)
+        assertEquals(seededScore, viewModel.uiState.value.score)
+    }
+
+    @Test
+    fun nothingAfterTheOutcomeWritesTheScoreAgain() {
+        val preferences = FakeGamePreferences(score = seededScore)
+        val viewModel = seededViewModel(preferences)
+        xWinMoves.forEach { playMove(viewModel, it) }
+        val expected = Score(xWins = 4, oWins = 5, ties = 2)
+
+        listOf(-1, 9).forEach { playMove(viewModel, it) }
+        (0..8).forEach { playMove(viewModel, it) }
+        viewModel.setDifficulty(DifficultyLevel.Hard)
+        viewModel.toggleSound()
+        viewModel.toggleSound()
+        viewModel.onHostPaused()
+        viewModel.onHostResumed()
+        repeat(5) {
+            harness.scheduler.advanceTimeBy(1_000)
+            harness.scheduler.runCurrent()
+        }
+
+        assertEquals(1, preferences.scoreWrites)
+        assertEquals(expected, viewModel.uiState.value.score)
+        assertEquals(expected, preferences.storedScore)
+    }
+
+    @Test
+    fun newGameAfterAnOutcomeDoesNotWriteAndTheNextOutcomeAccumulates() {
+        val preferences = FakeGamePreferences(score = seededScore)
+        val viewModel = seededViewModel(preferences)
+        xWinMoves.forEach { playMove(viewModel, it) }
+        assertEquals(1, preferences.scoreWrites)
+
+        viewModel.newGame()
+        harness.scheduler.advanceTimeBy(1_000)
+        harness.scheduler.runCurrent()
+        assertEquals(1, preferences.scoreWrites)
+        assertEquals(Player.O, viewModel.uiState.value.starter)
+
+        // O opens on the first free cell and the randomizer keeps taking the first free
+        // cell, so O completes the top row at 0, 1, 2 while X plays 3 and 4.
+        playMove(viewModel, 3)
+        playMove(viewModel, 4)
+
+        val state = viewModel.uiState.value
+        assertEquals(GameResult.Won(Player.O), state.result)
+        assertEquals(2, preferences.scoreWrites)
+        assertEquals(Score(xWins = 4, oWins = 6, ties = 2), state.score)
+        assertEquals(state.score, preferences.storedScore)
+    }
+
+    @Test
+    fun newViewModelOnTheSameStoreStartsFreshWithPersistedScoreAndWritesNothing() {
+        val preferences = FakeGamePreferences(score = seededScore)
+        val first = seededViewModel(preferences)
+        xWinMoves.forEach { playMove(first, it) }
+        assertEquals(1, preferences.scoreWrites)
+
+        val second = seededViewModel(preferences)
+
+        val state = second.uiState.value
+        assertEquals(Score(xWins = 4, oWins = 5, ties = 2), state.score)
+        assertEquals(List(9) { Mark.Empty }, state.board)
+        assertEquals(GameResult.InProgress, state.result)
+        assertEquals(Turn.Human, state.turn)
+        assertEquals(Player.X, state.starter)
+        assertEquals(1, preferences.scoreWrites)
+    }
+
+    @Test
+    fun storeIsReadOnlyOnceAtConstructionRegardlessOfPlay() {
+        val preferences = FakeGamePreferences(score = seededScore)
+        val viewModel = seededViewModel(preferences)
+
+        xWinMoves.forEach { playMove(viewModel, it) }
+        viewModel.newGame()
+        viewModel.setDifficulty(DifficultyLevel.Hard)
+        viewModel.toggleSound()
+
+        assertEquals(1, preferences.scoreReads)
+        assertEquals(1, preferences.difficultyReads)
     }
 
     private fun newViewModel(randomizer: RecordingRandomizer): GameViewModel =

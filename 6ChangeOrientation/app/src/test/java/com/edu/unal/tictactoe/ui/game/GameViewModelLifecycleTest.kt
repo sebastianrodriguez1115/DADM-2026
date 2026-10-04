@@ -1,6 +1,8 @@
 package com.edu.unal.tictactoe.ui.game
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelStore
+import com.edu.unal.tictactoe.data.preferences.FakeGamePreferences
 import com.edu.unal.tictactoe.game.MoveRandomizer
 import com.edu.unal.tictactoe.game.TicTacToeGame
 import com.edu.unal.tictactoe.game.models.Mark
@@ -173,6 +175,8 @@ class GameViewModelLifecycleTest {
     }
 
     private fun model() = GameViewModel(
+        preferences = FakeGamePreferences(),
+        savedStateHandle = SavedStateHandle(),
         game = TicTacToeGame(MoveRandomizer { 0 }),
         monotonicClock = harness.clock,
         mainDispatcher = harness.dispatcher,

@@ -7,6 +7,7 @@ import com.edu.unal.tictactoe.game.models.Mark
 import com.edu.unal.tictactoe.game.models.MoveResult
 import com.edu.unal.tictactoe.game.models.Player
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotSame
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
@@ -438,6 +439,146 @@ class TicTacToeGameTest {
     private fun place(game: TicTacToeGame, player: Player, vararg locations: Int) {
         for (location in locations) {
             assertEquals(MoveResult.Applied, game.setMove(player, location))
+        }
+    }
+
+    @Test
+    fun restoreBoardAcceptsLegalBoards() {
+        val legal = listOf(
+            "........." to GameResult.InProgress,
+            "XO.X....." to GameResult.InProgress,
+            "OX.O....." to GameResult.InProgress,
+            "XO.XO...." to GameResult.InProgress,
+            "XXXOO...." to GameResult.Won(Player.X),
+            "XXXOO.O.." to GameResult.Won(Player.X),
+            "OOOXX...." to GameResult.Won(Player.O),
+            "OOOXX.X.." to GameResult.Won(Player.O),
+            "XOXXOOOXX" to GameResult.Tie,
+            "XXXXOOXOO" to GameResult.Won(Player.X),
+        )
+        for ((layout, expected) in legal) {
+            val game = TicTacToeGame()
+            val marks = boardOf(layout)
+
+            assertTrue(layout, game.restoreBoard(marks))
+            assertEquals(layout, marks, game.board)
+            assertEquals(layout, expected, game.checkForWinner())
+        }
+    }
+
+    @Test
+    fun restoreBoardRejectsIllegalBoardsAndLeavesAnEmptyBoardUntouched() {
+        val illegal = listOf(
+            "XX.......", // X leads by two
+            "OO.......", // O leads by two
+            "XXX......", // X leads by three
+            "XXXOOO...", // both players have a line
+            "XXXOO..OO", // X wins with fewer marks than O
+            "OOOXX..XX", // O wins with fewer marks than X
+        )
+        for (layout in illegal) {
+            val game = TicTacToeGame()
+
+            assertFalse(layout, game.restoreBoard(boardOf(layout)))
+            assertEquals(layout, List(9) { Mark.Empty }, game.board)
+        }
+    }
+
+    @Test
+    fun restoreBoardRejectsWrongSizes() {
+        for (size in listOf(0, 8, 10)) {
+            assertFalse(size.toString(), TicTacToeGame().restoreBoard(List(size) { Mark.Empty }))
+        }
+    }
+
+    @Test
+    fun rejectedRestoreKeepsThePreviousNonEmptyBoard() {
+        val game = TicTacToeGame()
+        val previous = boardOf("XO.X.....")
+        assertTrue(game.restoreBoard(previous))
+
+        assertFalse(game.restoreBoard(boardOf("XXXOOO...")))
+        assertEquals(previous, game.board)
+        assertFalse(game.restoreBoard(List(8) { Mark.Empty }))
+        assertEquals(previous, game.board)
+        assertFalse(game.restoreBoard(boardOf("XX.......")))
+        assertEquals(previous, game.board)
+    }
+
+    @Test
+    fun restoreBoardNeverUsesTheRandomizer() {
+        val randomizer = RecordingRandomizer()
+        val game = TicTacToeGame(randomizer)
+
+        assertTrue(game.restoreBoard(boardOf("XO.X.....")))
+        assertTrue(game.restoreBoard(boardOf("XOXXOOOXX")))
+        assertFalse(game.restoreBoard(boardOf("XXXOOO...")))
+        assertFalse(game.restoreBoard(List(8) { Mark.Empty }))
+
+        assertEquals(0, randomizer.calls)
+    }
+
+    @Test
+    fun restoreBoardCopiesTheInputDefensively() {
+        val game = TicTacToeGame()
+        val input = boardOf("XO.X.....").toMutableList()
+        assertTrue(game.restoreBoard(input))
+
+        input[2] = Mark.O
+        input[0] = Mark.Empty
+
+        assertEquals(boardOf("XO.X....."), game.board)
+    }
+
+    @Test
+    fun restoredActiveBoardContinuesNormally() {
+        val game = TicTacToeGame()
+        assertTrue(game.restoreBoard(boardOf("XO.X.....")))
+
+        assertEquals(GameResult.InProgress, game.checkForWinner())
+        assertEquals(MoveResult.Occupied, game.setMove(Player.O, 0))
+        assertEquals(MoveResult.Applied, game.setMove(Player.O, 4))
+        assertEquals(Mark.O, game.board[4])
+    }
+
+    @Test
+    fun restoredActiveBoardLetsTheComputerChooseFromThatPosition() {
+        val game = TicTacToeGame(RecordingRandomizer())
+        assertTrue(game.restoreBoard(boardOf("XX.OO....")))
+
+        assertEquals(ComputerMoveResult.Selected(5), game.getComputerMove(DifficultyLevel.Expert))
+    }
+
+    @Test
+    fun restoredTerminalBoardsRejectFurtherPlay() {
+        val won = TicTacToeGame()
+        assertTrue(won.restoreBoard(boardOf("XXXOO....")))
+        assertEquals(GameResult.Won(Player.X), won.checkForWinner())
+        assertEquals(MoveResult.GameAlreadyFinished, won.setMove(Player.O, 5))
+        assertEquals(ComputerMoveResult.GameAlreadyFinished, won.getComputerMove())
+
+        val tied = TicTacToeGame()
+        assertTrue(tied.restoreBoard(boardOf("XOXXOOOXX")))
+        assertEquals(GameResult.Tie, tied.checkForWinner())
+        assertEquals(MoveResult.GameAlreadyFinished, tied.setMove(Player.O, 0))
+        assertEquals(ComputerMoveResult.NoMoves, tied.getComputerMove())
+    }
+
+    @Test
+    fun clearBoardAfterRestoreLeavesAnEmptyBoard() {
+        val game = TicTacToeGame()
+        assertTrue(game.restoreBoard(boardOf("XXXOO....")))
+
+        game.clearBoard()
+
+        assertEquals(List(9) { Mark.Empty }, game.board)
+    }
+
+    private fun boardOf(layout: String): List<Mark> = layout.map {
+        when (it) {
+            'X' -> Mark.X
+            'O' -> Mark.O
+            else -> Mark.Empty
         }
     }
 

@@ -1,13 +1,17 @@
 package com.edu.unal.tictactoe
 
+import android.content.Context
 import android.os.SystemClock
-import android.view.InputDevice
-import android.view.MotionEvent
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasClickAction
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -19,6 +23,7 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.edu.unal.tictactoe.data.preferences.GamePreferenceSchema
 import com.edu.unal.tictactoe.game.models.DifficultyLevel
 import com.edu.unal.tictactoe.game.models.GameResult
 import com.edu.unal.tictactoe.game.models.Mark
@@ -26,7 +31,6 @@ import com.edu.unal.tictactoe.game.models.Player
 import com.edu.unal.tictactoe.game.models.Turn
 import com.edu.unal.tictactoe.ui.game.AboutDialogTags
 import com.edu.unal.tictactoe.ui.game.DifficultyDialogTags
-import com.edu.unal.tictactoe.ui.game.ExitConfirmationDialogTags
 import com.edu.unal.tictactoe.ui.game.GameMenuTags
 import com.edu.unal.tictactoe.ui.game.GameViewModel
 import com.edu.unal.tictactoe.ui.game.models.GameUiState
@@ -51,12 +55,14 @@ class MainActivityOptionsTest {
 
     private lateinit var scenario: ActivityScenario<MainActivity>
     private lateinit var activityViewModel: GameViewModel
+    private val preferencesFixture = GamePreferencesTestFixture()
 
     private val context
         get() = InstrumentationRegistry.getInstrumentation().targetContext
 
     @Before
     fun launchActivity() {
+        preferencesFixture.prepare(context)
         scenario = ActivityScenario.launch(MainActivity::class.java)
         activityViewModel = viewModelFromCurrentActivity()
         composeTestRule.waitForIdle()
@@ -64,30 +70,46 @@ class MainActivityOptionsTest {
 
     @After
     fun closeActivity() {
-        if (::scenario.isInitialized) {
-            scenario.close()
+        try {
+            if (::scenario.isInitialized) scenario.close()
+        } finally {
+            preferencesFixture.cleanup()
         }
     }
 
     @Test
-    fun exitDialogBlocksBackAndOutsideThenNoPreservesTheActiveSession() {
+    fun menuOffersNoWayToQuitAndNoQuitConfirmationAppears() {
         clickCell(0)
         val before = snapshot()
-        assertEquals(GameResult.InProgress, before.result)
 
-        openExitDialog()
-        assertDialogVisible(ExitConfirmationDialogTags.DIALOG)
-        composeTestRule.waitForIdle()
+        openMenu()
+        assertEquals(
+            5,
+            composeTestRule.onAllNodes(
+                hasAnyAncestor(hasTestTag(GameMenuTags.MENU)) and hasClickAction(),
+            ).fetchSemanticsNodes().size,
+        )
+        composeTestRule.onNodeWithTag(GameMenuTags.RESET_SCORES).assertIsDisplayed()
+        composeTestRule.onAllNodesWithText("Salir").assertCountEquals(0)
+        composeTestRule.onAllNodesWithText("¿Seguro que quieres salir?").assertCountEquals(0)
+
         pressBack()
-        composeTestRule.waitForIdle()
-        assertDialogVisible(ExitConfirmationDialogTags.DIALOG)
-
-        tapOutsideDialog()
-        assertDialogVisible(ExitConfirmationDialogTags.DIALOG)
+        awaitTag(GameMenuTags.MENU, present = false)
+        composeTestRule.onAllNodesWithText("Salir").assertCountEquals(0)
+        composeTestRule.onAllNodesWithText("¿Seguro que quieres salir?").assertCountEquals(0)
+        assertEquals(Lifecycle.State.RESUMED, scenario.state)
         assertSameSnapshot(before, snapshot())
+    }
 
-        clickTag(ExitConfirmationDialogTags.CANCEL)
-        awaitTag(ExitConfirmationDialogTags.DIALOG, present = false)
+    @Test
+    fun backWithMenuOpenClosesItWithoutChangingTheGame() {
+        clickCell(0)
+        val before = snapshot()
+
+        openMenu()
+        composeTestRule.onNodeWithTag(GameMenuTags.MENU).assertIsDisplayed()
+        pressBack()
+        awaitTag(GameMenuTags.MENU, present = false)
 
         assertEquals(Lifecycle.State.RESUMED, scenario.state)
         assertSame(activityViewModel, viewModelFromCurrentActivity())
@@ -97,12 +119,48 @@ class MainActivityOptionsTest {
     }
 
     @Test
-    fun exitDialogConfirmYesFinishesTheRealActivity() {
-        openExitDialog()
-        assertDialogVisible(ExitConfirmationDialogTags.DIALOG)
+    fun backWithoutOverlayLeavesTheActivityThroughNormalNavigationWithoutDialog() {
+        assertEquals(0, composeTestRule.onAllNodesWithTag(GameMenuTags.MENU).fetchSemanticsNodes().size)
+        assertEquals(0, composeTestRule.onAllNodesWithTag(DifficultyDialogTags.DIALOG).fetchSemanticsNodes().size)
+        assertEquals(0, composeTestRule.onAllNodesWithTag(AboutDialogTags.DIALOG).fetchSemanticsNodes().size)
 
-        clickTag(ExitConfirmationDialogTags.CONFIRM)
+        pressBackAsUser()
+        awaitActivityNoLongerResumed()
+
+        assertTrue(scenario.state != Lifecycle.State.RESUMED)
+    }
+
+    @Test
+    fun resetScoresFromTheRealMenuZeroesCountersKeepsTheFinishedGameAndSurvivesANewSession() {
+        val terminal = playUntilTerminal()
+        assertEquals(1, scoreTotal(terminal))
+
+        openMenu()
+        composeTestRule.onNodeWithTag(GameMenuTags.RESET_SCORES)
+            .assertIsDisplayed().assertIsEnabled().performClick()
+        awaitTag(GameMenuTags.MENU, present = false)
+        composeTestRule.waitForIdle()
+
+        val afterReset = snapshot()
+        assertEquals(0, scoreTotal(afterReset))
+        assertEquals(terminal.board, afterReset.board)
+        assertEquals(terminal.result, afterReset.result)
+        assertEquals(terminal.turn, afterReset.turn)
+        assertEquals(terminal.starter, afterReset.starter)
+        assertEquals(terminal.nextStarter, afterReset.nextStarter)
+        assertEquals(terminal.difficulty, afterReset.difficulty)
+        assertScoreStored(xWins = 0, oWins = 0, ties = 0)
+
+        scenario.onActivity { it.finish() }
         awaitActivityDestroyed()
+        scenario.close()
+        scenario = ActivityScenario.launch(MainActivity::class.java)
+        val fresh = viewModelFromCurrentActivity().uiState.value
+        composeTestRule.waitForIdle()
+
+        assertEquals(0, scoreTotal(fresh))
+        assertTrue(fresh.board.all { it == Mark.Empty })
+        assertScoreStored(xWins = 0, oWins = 0, ties = 0)
     }
 
     @Test
@@ -181,14 +239,13 @@ class MainActivityOptionsTest {
     }
 
     @Test
-    fun newSessionAfterExitStartsInExpertWithoutPersistence() {
+    fun newSessionAfterFinishLoadsPersistedDifficulty() {
         selectDifficulty(DifficultyLevel.Impossible)
         clickCell(4)
         assertEquals(DifficultyLevel.Impossible, snapshot().difficulty)
         val oldViewModel = activityViewModel
 
-        openExitDialog()
-        clickTag(ExitConfirmationDialogTags.CONFIRM)
+        scenario.onActivity { it.finish() }
         awaitActivityDestroyed()
 
         scenario.close()
@@ -198,7 +255,7 @@ class MainActivityOptionsTest {
 
         assertNotSame(oldViewModel, newViewModel)
         val fresh = newViewModel.uiState.value
-        assertEquals(DifficultyLevel.Expert, fresh.difficulty)
+        assertEquals(DifficultyLevel.Impossible, fresh.difficulty)
         assertTrue(fresh.soundEnabled)
         assertTrue(fresh.board.all { it == Mark.Empty })
         assertEquals(0, scoreTotal(fresh))
@@ -239,7 +296,7 @@ class MainActivityOptionsTest {
 
     private fun openMenu() {
         composeTestRule.onNodeWithContentDescription(context.getString(R.string.menu_open))
-            .assertIsDisplayed().performClick()
+            .performScrollTo().assertIsDisplayed().performClick()
         composeTestRule.waitForIdle()
     }
 
@@ -252,13 +309,6 @@ class MainActivityOptionsTest {
         if (tag == GameMenuTags.NEW_GAME || tag == NEW_GAME_SHORTCUT_TAG) {
             awaitHumanOrTerminal()
         }
-    }
-
-    private fun openExitDialog() {
-        openMenu()
-        clickTag(GameMenuTags.EXIT)
-        awaitTag(GameMenuTags.MENU, present = false)
-        awaitTag(ExitConfirmationDialogTags.DIALOG, present = true)
     }
 
     private fun selectDifficulty(level: DifficultyLevel) {
@@ -301,16 +351,28 @@ class MainActivityOptionsTest {
         }
     }
 
-    private fun assertDialogVisible(tag: String) {
-        composeTestRule.onNodeWithTag(tag).assertIsDisplayed()
-    }
-
     private fun awaitTag(tag: String, present: Boolean) {
         composeTestRule.waitUntil(timeoutMillis = 5_000) {
             composeTestRule.onAllNodesWithTag(tag).fetchSemanticsNodes().run {
                 if (present) isNotEmpty() else isEmpty()
             }
         }
+    }
+
+    private fun awaitActivityNoLongerResumed() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val deadline = SystemClock.uptimeMillis() + 5_000
+        while (scenario.state == Lifecycle.State.RESUMED && SystemClock.uptimeMillis() < deadline) {
+            instrumentation.waitForIdleSync()
+            SystemClock.sleep(25)
+        }
+    }
+
+    private fun assertScoreStored(xWins: Int, oWins: Int, ties: Int) {
+        val stored = context.getSharedPreferences(GamePreferenceSchema.FILE_NAME, Context.MODE_PRIVATE)
+        assertEquals(xWins, stored.getInt(GamePreferenceSchema.SCORE_X_WINS, -1))
+        assertEquals(oWins, stored.getInt(GamePreferenceSchema.SCORE_O_WINS, -1))
+        assertEquals(ties, stored.getInt(GamePreferenceSchema.SCORE_TIES, -1))
     }
 
     private fun awaitActivityDestroyed() {
@@ -337,25 +399,4 @@ class MainActivityOptionsTest {
 
     private fun scoreTotal(state: GameUiState): Int =
         state.score.xWins + state.score.oWins + state.score.ties
-
-    private fun tapOutsideDialog() {
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        val downTime = SystemClock.uptimeMillis()
-        val y = context.resources.displayMetrics.heightPixels / 2f
-        val down = touchEvent(MotionEvent.ACTION_DOWN, downTime, downTime, 4f, y)
-        val up = touchEvent(MotionEvent.ACTION_UP, downTime, downTime + 16, 4f, y)
-        try {
-            assertTrue(instrumentation.uiAutomation.injectInputEvent(down, true))
-            SystemClock.sleep(16)
-            assertTrue(instrumentation.uiAutomation.injectInputEvent(up, true))
-        } finally {
-            down.recycle()
-            up.recycle()
-        }
-        composeTestRule.waitForIdle()
-    }
-
-    private fun touchEvent(action: Int, downTime: Long, eventTime: Long, x: Float, y: Float) =
-        MotionEvent.obtain(downTime, eventTime, action, x, y, 0)
-            .apply { source = InputDevice.SOURCE_TOUCHSCREEN }
 }

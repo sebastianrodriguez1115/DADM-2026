@@ -1,5 +1,6 @@
 package com.edu.unal.tictactoe
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.semantics.SemanticsActions
@@ -46,7 +47,11 @@ class GameScreenSoundIntegrationTest {
     @Before
     fun setUp() {
         composeRule.runOnIdle {
-            viewModel = GameViewModel(game = TicTacToeGame(MoveRandomizer { 0 }))
+            viewModel = GameViewModel(
+                preferences = InMemoryGamePreferences(),
+                savedStateHandle = SavedStateHandle(),
+                game = TicTacToeGame(MoveRandomizer { 0 }),
+            )
             assertTrue(viewModel.setDifficulty(DifficultyLevel.Easy))
             viewModelStore.put(GameViewModel::class.java.name, viewModel)
             host = MoveSoundHost(viewModel, MoveSoundPlayerFactory {
@@ -66,7 +71,7 @@ class GameScreenSoundIntegrationTest {
                     onToggleSound = viewModel::toggleSound,
                     onDifficultySelected = viewModel::setDifficulty,
                     onShowToast = {},
-                    onExit = {},
+                    onResetScores = viewModel::resetScores,
                 )
             }
         }
@@ -88,7 +93,11 @@ class GameScreenSoundIntegrationTest {
         composeRule.onNodeWithTag("tic_tac_toe_cell_0").performClick()
         assertEquals(1, player.playedMarks.size)
         assertEquals(Player.X, player.playedMarks.single())
-        awaitHumanTurnAfterComputerMove(expectedBoardXCount = 1, expectedBoardOCount = 1)
+        awaitHumanTurnAfterComputerMove(
+            expectedBoardXCount = 1,
+            expectedBoardOCount = 1,
+            expectedPlayedMarks = listOf(Player.X, Player.O),
+        )
         assertEquals(2, player.playedMarks.size)
         assertEquals(Player.O, player.playedMarks.last())
 
@@ -156,13 +165,21 @@ class GameScreenSoundIntegrationTest {
         composeRule.onNodeWithTag(GameMenuTags.MENU).assertExists()
     }
 
-    private fun awaitHumanTurnAfterComputerMove(expectedBoardXCount: Int, expectedBoardOCount: Int) {
+    private fun awaitHumanTurnAfterComputerMove(
+        expectedBoardXCount: Int,
+        expectedBoardOCount: Int,
+        expectedPlayedMarks: List<Player>? = null,
+    ) {
         composeRule.waitUntil(5_000) {
             val state = viewModel.uiState.value
             state.turn == Turn.Human &&
                 state.board.count { it == Mark.X } == expectedBoardXCount &&
-                state.board.count { it == Mark.O } == expectedBoardOCount
+                state.board.count { it == Mark.O } == expectedBoardOCount &&
+                (expectedPlayedMarks == null || player.playedMarks == expectedPlayedMarks)
         }
+        // Sound is emitted after the state is published, in the same main-thread event: wait for it
+        // to finish before the test thread reads the player.
+        InstrumentationRegistry.getInstrumentation().runOnMainSync {}
     }
 
     private class IndefiniteFakePlayer : MoveSoundPlayer {

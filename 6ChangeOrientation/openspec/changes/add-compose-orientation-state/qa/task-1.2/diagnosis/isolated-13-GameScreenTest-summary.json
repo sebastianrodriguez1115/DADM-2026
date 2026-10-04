@@ -1,0 +1,30 @@
+{
+  "label": "isolated-13-GameScreenTest",
+  "expected": 7,
+  "starts": 7,
+  "ended": 7,
+  "passed": 7,
+  "failed": 0,
+  "complete_inventory": true,
+  "actual_ids": [
+    "com.edu.unal.tictactoe.GameScreenTest#boardStaysSquareAndNewGameIsReachableInsideTopBarViewport",
+    "com.edu.unal.tictactoe.GameScreenTest#staleDifficultyChoiceAfterOpeningIsRejectedWithoutToastOrStateChange",
+    "com.edu.unal.tictactoe.GameScreenTest#difficultyEntryUpdatesVmClosesWindowsAndToastsOnceEvenWhenRepeatingLevel",
+    "com.edu.unal.tictactoe.GameScreenTest#disabledDifficultyDuringActiveGameDoesNotOpenOrNotify",
+    "com.edu.unal.tictactoe.GameScreenTest#hostRecompositionAndRecreationDoNotReplayTheToast",
+    "com.edu.unal.tictactoe.GameScreenTest#menuAndShortcutNewGameRunTheSameActionPreservingScore",
+    "com.edu.unal.tictactoe.GameScreenTest#topBarMenuIsAccessibleAndDoesNotCoverTheBoard"
+  ],
+  "expected_ids": [
+    "com.edu.unal.tictactoe.GameScreenTest#boardStaysSquareAndNewGameIsReachableInsideTopBarViewport",
+    "com.edu.unal.tictactoe.GameScreenTest#difficultyEntryUpdatesVmClosesWindowsAndToastsOnceEvenWhenRepeatingLevel",
+    "com.edu.unal.tictactoe.GameScreenTest#disabledDifficultyDuringActiveGameDoesNotOpenOrNotify",
+    "com.edu.unal.tictactoe.GameScreenTest#hostRecompositionAndRecreationDoNotReplayTheToast",
+    "com.edu.unal.tictactoe.GameScreenTest#menuAndShortcutNewGameRunTheSameActionPreservingScore",
+    "com.edu.unal.tictactoe.GameScreenTest#staleDifficultyChoiceAfterOpeningIsRejectedWithoutToastOrStateChange",
+    "com.edu.unal.tictactoe.GameScreenTest#topBarMenuIsAccessibleAndDoesNotCoverTheBoard"
+  ],
+  "ok_count": 7,
+  "failure_marker": false,
+  "verified": true
+}

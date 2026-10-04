@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="isolated-06-GameBoardInteractionTest" tests="5" failures="0" errors="0" skipped="0">
+  <testcase classname="com.edu.unal.tictactoe.GameBoardInteractionTest" name="keyboardTabSkipsOccupiedCellAndEnterActivatesTheFocusedAvailableCell" />
+  <testcase classname="com.edu.unal.tictactoe.GameBoardInteractionTest" name="availableCellAcceptsKeyboardEnterAndDisabledCellHasNoActivationAction" />
+  <testcase classname="com.edu.unal.tictactoe.GameBoardInteractionTest" name="computerTurnAndTerminalStateExposeDisabledCellsWithoutCallbacks" />
+  <testcase classname="com.edu.unal.tictactoe.GameBoardInteractionTest" name="availableCellClickRequestsExactlyOneMove" />
+  <testcase classname="com.edu.unal.tictactoe.GameBoardInteractionTest" name="exposesNineLabeledButtonHitboxesAndEachTouchRequestsOneMove" />
+</testsuite>

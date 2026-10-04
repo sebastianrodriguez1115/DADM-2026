@@ -1,0 +1,171 @@
+Starting existing AVD DADM_GraphicsSound_API35 once on port 5556 at 2026-10-04T15:05:06Z
+pid=2644
+INFO         | Android emulator version 37.2.12.0 (build_id 16428233) (CL:N/A)
+INFO         | Graphics backend: gfxstream
+INFO         | Found systemPath /Users/jsrc1115/Library/Android/sdk/system-images/android-35/google_apis/arm64-v8a/
+INFO         | Guest GLES Driver: Auto (ext controls)
+INFO         | API level 35 requires GLES 3.1, forcing software rendering for GLES.
+INFO         | emuglConfig_init: vulkan_mode_selected:lavapipe gles_mode_selected:swangle
+INFO         | Checking system compatibility:
+INFO         |   Checking: hasSufficientDiskSpace
+INFO         |      Ok: Disk space requirements to run avd: `DADM_GraphicsSound_API35` are met
+INFO         |   Checking: hasSufficientHwGpu
+INFO         |      Ok: Hardware GPU compatibility checks are not required
+INFO         |   Checking: hasSufficientSystem
+INFO         |      Ok: System requirements to run avd: `DADM_GraphicsSound_API35` are met
+INFO         | Storing crashdata in: /tmp/android-jsrc1115/emu-crash-37.2.12.db, detection is enabled for process: 2644
+INFO         | Showing crashdialog to get consent.
+  module_list[0].crashpad_annotations["ERRLOG"] (type = 1) = DisplaySurfaceGlContextHelper context was preempted by others, current=0x3, needed=0x3, thread=0x75c8491a48
+Failed to restore previous context: 12297
+Failed to find ColorBuffer: 6325
+Failed to bind to texture: invalid color buffer.
+DisplaySurfaceGlContextHelper context was preempted by others, current=0x3, needed=0x3, thread=0x75d1af4968
+Failed to restore previous context: 12297
+detected a hanging thread 'QEMU2 main loop'. No response for 15008 ms
+detected a hanging thread 'QEMU2 CPU0 thread'. No response for 15011 ms
+detected a hanging thread 'QEMU2 CPU1 thread'. No response for 15011 ms
+detected a hanging thread 'QEMU2 main loop'. No response for 15010 ms
+
+  module_list[0].crashpad_annotations["disk.dataPartition.size"] (type = 1) = 10G
+  module_list[0].crashpad_annotations["hw.lcd.height"] (type = 1) = 2400
+  module_list[0].crashpad_annotations["hw.gpu.mode"] (type = 1) = auto
+  module_list[0].crashpad_annotations["hw.cpu.ncore"] (type = 1) = 2
+  module_list[0].crashpad_annotations["hw.sensor.hinge"] (type = 1) = no
+  module_list[0].crashpad_annotations["hw.lcd.width"] (type = 1) = 1080
+  module_list[0].crashpad_annotations["hw.ramSize"] (type = 1) = 3072
+  module_list[0].crashpad_annotations["PlayStore.enabled"] (type = 1) = no
+  module_list[0].crashpad_annotations["cpu_cores"] (type = 1) = 18
+  module_list[0].crashpad_annotations["hw.gpu.enabled"] (type = 1) = no
+  module_list[0].crashpad_annotations["free_ram"] (type = 1) = 15895
+  module_list[0].crashpad_annotations["avd_space"] (type = 1) = 379622162432
+  module_list[0].crashpad_annotations["ro.build.fingerprint"] (type = 1) = google/sdk_gphone64_arm64/emu64a:15/AE3A.240806.043/12960925:userdebug/dev-keys
+  module_list[0].crashpad_annotations["AVD_FLAVOR"] (type = 1) = AVD_PHONE
+  module_list[0].crashpad_annotations["gfxstream_features"] (type = 1) = GlPipeChecksum, Vulkan, HasSharedSlotsHostMemoryAllocator, VulkanShaderFloat16Int8, GlAsyncSwap, GlDma, GlDirectMem, GlesDynamicVersion, RefCountPipe, HostComposition, VulkanNullOptionalStrings, YuvCache, VulkanIgnoredHandles, VulkanQueueSubmitWithCommands, HwcMultiConfigs, VulkanVirtualQueue, VulkanUseDedicatedAhbMemoryType, 
+  module_list[0].crashpad_annotations["internal-msg"] (type = 1) = emuglConfig_init: gpu_mode_requested: auto, no_window: 0
+emuglConfig_init: GPU emulation enabled using Vulkan:'lavapipe' GLES:'swangle' modes
+Deciding if GLDirectMem/Vulkan should be enabled. Selected GLES renderer: Angle Indirect Selected Vulkan renderer: Lavapipe API level: 35 
+Enabling Vulkan
+Enabling GLDirectMem
+Selecting Vulkan device: llvmpipe (LLVM 21.1.4, 128 bits), Version: 1.4.330
+VkEmulation deviceInfo: 
+hasGraphicsQueueFamily = 1
+hasComputeQueueFamily = 1
+externalMemoryMode = OpaqueFd
+supportsExternalMemoryImport = 1
+supportsExternalMemoryExport = 1
+supportsDriverProperties = 1
+supportsExternalMemoryHostProps = 1
+hasSamplerYcbcrConversionExtension = 1
+supportsSamplerYcbcrConversion = 1
+glInteropSupported = 0
+hasNvidiaDeviceDiagnosticCheckpointsExtension = 0
+supportsNvidiaDeviceDiagnosticCheckpoints = 0
+supportsPrivateData = 1
+
+Vulkan emulation initialized
+detected a hanging thread 'QEMU2 main loop'. No response for 15010 ms
+  module_list[0].crashpad_annotations["command_line"] (type = 1) = -avd DADM_GraphicsSound_API35 -port 5556 -no-snapshot-load -no-snapshot-save -no-boot-anim 
+INFO         | No consent for crashreport b874fda4-a213-4c12-94a1-5b59a7fd6ddb, deleting.
+INFO         | Initializing gfxstream backend
+INFO         | startOpenglesRendererImpl: gpu info
+INFO         | 
+INFO         | initIcdPaths: ICD set to 'lavapipe', using Lavapipe ICD
+INFO         | Setting ICD filenames for the loader = /Users/jsrc1115/Library/Android/sdk/emulator/lib64/vulkan/lvp_icd.json
+INFO         | SharedLibrary::open for [/Users/jsrc1115/Library/Android/sdk/emulator/qemu/darwin-aarch64/lib64/vulkan/libvulkan.dylib]
+INFO         | Added library: /Users/jsrc1115/Library/Android/sdk/emulator/qemu/darwin-aarch64/lib64/vulkan/libvulkan.dylib
+INFO         | Enabling Vulkan portability.
+INFO         | Selecting Vulkan device: llvmpipe (LLVM 21.1.4, 128 bits), Version: 1.4.330
+INFO         | Using Vulkan externalMemoryMode: OpaqueFd for VkEmulation
+INFO         | Format VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 does not support YCbCr sampler conversion
+INFO         | Initializing VkEmulation features:
+INFO         |     glInteropSupported: false
+INFO         |     useDeferredCommands: true
+INFO         |     createResourceWithRequirements: true
+INFO         |     useVulkanComposition: false
+INFO         |     useVulkanNativeSwapchain: false
+INFO         |     enable guestRenderDoc: false
+INFO         |     ASTC LDR emulation mode: Gpu
+INFO         |     enable ETC2 emulation: true
+INFO         |     enable Ycbcr emulation: false
+INFO         |     guestVulkanOnly: false
+INFO         |     useDedicatedAllocations: false
+INFO         |     guestVulkanMaxApiVersion: 1.3.0
+INFO         |     enableProtectedMemoryEmulation: false
+INFO         | Graphics Adapter Vendor Google (Google Inc. (Google))
+INFO         | Graphics Adapter Android Emulator OpenGL ES Translator (ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (LLVM 10.0.0) (0x0000C0DE)), SwiftShader driver-5.0.0))
+INFO         | Graphics API Version OpenGL ES 3.0 (OpenGL ES 3.1.0 (ANGLE 2.1.1 git hash: fbf66f49c7cc))
+INFO         | Graphics API Extensions GL_OES_EGL_sync GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_depth24 GL_OES_depth32 GL_OES_element_index_uint GL_OES_texture_float GL_OES_texture_float_linear GL_OES_compressed_paletted_texture GL_OES_compressed_ETC1_RGB8_texture GL_OES_depth_texture GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_OES_packed_depth_stencil GL_OES_vertex_half_float GL_OES_standard_derivatives GL_OES_texture_npot GL_OES_rgb8_rgba8 GL_OVR_multiview2 GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_texture_format_BGRA8888 GL_APPLE_texture_format_BGRA8888 GL_EXT_draw_buffers_indexed GL_EXT_clip_cull_distance 
+INFO         | Graphics Device Extensions N/A
+INFO         | Disabling sparse binding feature support
+INFO         | Sending adb public key [QAAAABN0AhnliZCijvjgjP/Oa6uJPt9NhyuZb2aNow0zTC9kfhF3CbMeIk89InMe9ORTjkXIyt9eI4ubZ2G9JlMZ62l7gBuKlT8/YEMyRTd7p7FP5ecofqHbQP3OkBL0pp5Q69PH7PpTsyiTHKbMsgA8iReqGctro/9Hwi9zdsB1PfNwYr/Laep0OPIiqVugrwlFtUBpGnxiNotVscXE4dWUATrV2MXL6ygtKovMAOad/Ox6iIBuRERIaKvM8M3Pdxz/79A2BLzLAEMgdeBLTzJEjg9guMwSN/jqkhWsuVys2oOJsTHROf4ih70steZEc8GUNZKI1B218FidlRNsu3Eq1CptjYDQibbV8292w7/9k4RYjlDPbgPkt7C0Rj0PrJ0XcwbAJyBUbm/uSnBbkvTX3uED2fXzbnMXut5dLCfn9D4dALUSZ8pDc5gvSLWOWbun8SWmNrCorkVa8lBuD0VPtxME4JhZgThw8rYL6uQ+ysEjMcpKBK/88aCZi65+Ky7T9ytjUwwKPk8WGzOy2KpyDgcn6IjJxq0hJ6/ds6EtajbUtzXfPmIKwB3Yigaq2xRnM/z4G32932UA1gnTE5kKhJ3fjmZmjaXqWjVlZJo729YQmFaCJtXe6wmTsvhP9Qs/sJtp6lAAPGKgP61Zl17gLrEdrhf1B66Q0xTd7TTBCO+PqJ0twgEAAQA= jsrc1115@unknown]
+INFO         | Userspace boot properties:
+INFO         |   androidboot.boot_devices=a003600.virtio_mmio
+INFO         |   androidboot.dalvik.vm.heapsize=576m
+INFO         |   androidboot.debug.hwui.renderer=skiagl
+INFO         |   androidboot.hardware=ranchu
+INFO         |   androidboot.hardware.gltransport=pipe
+INFO         |   androidboot.hardware.vulkan=ranchu
+INFO         |   androidboot.logcat=*:V
+INFO         |   androidboot.opengles.version=196609
+INFO         |   androidboot.qemu=1
+INFO         |   androidboot.qemu.adb.pubkey=QAAAABN0AhnliZCijvjgjP/Oa6uJPt9NhyuZb2aNow0zTC9kfhF3CbMeIk89InMe9ORTjkXIyt9eI4ubZ2G9JlMZ62l7gBuKlT8/YEMyRTd7p7FP5ecofqHbQP3OkBL0pp5Q69PH7PpTsyiTHKbMsgA8iReqGctro/9Hwi9zdsB1PfNwYr/Laep0OPIiqVugrwlFtUBpGnxiNotVscXE4dWUATrV2MXL6ygtKovMAOad/Ox6iIBuRERIaKvM8M3Pdxz/79A2BLzLAEMgdeBLTzJEjg9guMwSN/jqkhWsuVys2oOJsTHROf4ih70steZEc8GUNZKI1B218FidlRNsu3Eq1CptjYDQibbV8292w7/9k4RYjlDPbgPkt7C0Rj0PrJ0XcwbAJyBUbm/uSnBbkvTX3uED2fXzbnMXut5dLCfn9D4dALUSZ8pDc5gvSLWOWbun8SWmNrCorkVa8lBuD0VPtxME4JhZgThw8rYL6uQ+ysEjMcpKBK/88aCZi65+Ky7T9ytjUwwKPk8WGzOy2KpyDgcn6IjJxq0hJ6/ds6EtajbUtzXfPmIKwB3Yigaq2xRnM/z4G32932UA1gnTE5kKhJ3fjmZmjaXqWjVlZJo729YQmFaCJtXe6wmTsvhP9Qs/sJtp6lAAPGKgP61Zl17gLrEdrhf1B66Q0xTd7TTBCO+PqJ0twgEAAQA= jsrc1115@unknown
+INFO         |   androidboot.qemu.avd_name=DADM_GraphicsSound_API35
+INFO         |   androidboot.qemu.camera_hq_edge_processing=0
+INFO         |   androidboot.qemu.camera_protocol_ver=1
+INFO         |   androidboot.qemu.cpuvulkan.version=4206592
+INFO         |   androidboot.qemu.gltransport.drawFlushInterval=800
+INFO         |   androidboot.qemu.gltransport.name=pipe
+INFO         |   androidboot.qemu.hwcodec.avcdec=2
+INFO         |   androidboot.qemu.hwcodec.hevcdec=2
+INFO         |   androidboot.qemu.hwcodec.vpxdec=2
+INFO         |   androidboot.qemu.settings.system.screen_off_timeout=2147483647
+INFO         |   androidboot.qemu.skin=1080x2400
+INFO         |   androidboot.qemu.virtiowifi=1
+INFO         |   androidboot.qemu.vsync=60
+INFO         |   androidboot.serialno=EMULATOR37X2X12X0
+INFO         |   androidboot.vbmeta.digest=d86517453be30669cdb7a7b57307f2ae3122a095509b92c7256b9a3665c7d025
+INFO         |   androidboot.vbmeta.hash_alg=sha256
+INFO         |   androidboot.vbmeta.size=6720
+INFO         |   androidboot.veritymode=enforcing
+INFO         | Monitoring duration of emulator setup.
+INFO         | Activated packet streamer for bluetooth emulation
+INFO         | Successfully initialized netsim WiFi
+INFO         | Setting display: 0 configuration to: 1080x2400, dpi: 420x420 
+INFO         | setDisplayActiveConfig: id:0, 1080x2400
+INFO         | Checking system compatibility:
+INFO         |   Checking: hasSufficientDiskSpace
+INFO         |      Ok: Disk space requirements to run avd: `DADM_GraphicsSound_API35` are met
+INFO         |   Checking: hasSufficientHwGpu
+INFO         |      Ok: Hardware GPU compatibility checks are not required
+INFO         |   Checking: hasSufficientSystem
+INFO         |      Ok: System requirements to run avd: `DADM_GraphicsSound_API35` are met
+INFO         | emulatorSetupEnvironment: Environment scene is not required
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_rgbcSensorValueWidget_valueChanged() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_posture_valueChanged(int) (:0, )
+INFO         | TouchpadHolder: registering via hw_xr_led agent for instance=0x763f575740
+INFO         | Warning: QObject::connect: Cannot queue arguments of type 'std::vector<android::emulation::control::SnapshotInfo>'
+(Make sure 'std::vector<android::emulation::control::SnapshotInfo>' is registered using qRegisterMetaType().) (:0, )
+INFO         | AVD supportsNativeGLES=1, supportsGuestAngle=1
+INFO         | Created extended window in 55.524ms
+INFO         | Loading snapshot 'default_boot'...
+WARNING      | Device 'encrypt' does not have the requested snapshot 'default_boot'
+
+WARNING      | Failed to load snapshot 'default_boot'
+INFO         | Boot completed in 28458 ms
+INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+2026-10-04T15:05:39Z GUARD PASS serial=emulator-5556 avd=DADM_GraphicsSound_API35 api=35 abi=arm64-v8a boot=1
+ERROR        | Failed to find ColorBuffer: 6148
+ERROR        | Failed to bind to texture: invalid color buffer.
+ERROR        | Failed to find ColorBuffer: 18081
+ERROR        | Failed to bind to texture: invalid color buffer.
+ERROR        | Failed to find ColorBuffer: 18546
+ERROR        | Failed to bind to texture: invalid color buffer.
+ERROR        | Failed to find ColorBuffer: 23786
+ERROR        | Failed to bind to texture: invalid color buffer.
+ERROR        | Failed to find ColorBuffer: 26980
+ERROR        | Failed to bind to texture: invalid color buffer.
+ERROR        | detected a hanging thread 'QEMU2 main loop'. No response for 15013 ms
+ERROR        | detected a hanging thread 'QEMU2 CPU0 thread'. No response for 15016 ms
+ERROR        | detected a hanging thread 'QEMU2 CPU1 thread'. No response for 15016 ms
+ERROR        | detected a hanging thread 'QEMU2 main loop'. No response for 15009 ms
+[2662:1066881:20261004,131853.828224:WARNING in_range_cast.h:38] value -143893734 out of range

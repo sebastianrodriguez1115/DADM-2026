@@ -39,9 +39,11 @@ class MainActivityLifecycleTest {
     private lateinit var scenario: ActivityScenario<MainActivity>
     private lateinit var viewModel: GameViewModel
     private val computerMoveObservers = mutableListOf<ComputerMoveTimestamp>()
+    private val preferencesFixture = GamePreferencesTestFixture()
 
     @Before
     fun launch() {
+        preferencesFixture.prepare(InstrumentationRegistry.getInstrumentation().targetContext)
         scenario = ActivityScenario.launch(MainActivity::class.java)
         scenario.onActivity { viewModel = ViewModelProvider(it)[GameViewModel::class.java] }
         composeTestRule.waitForIdle()
@@ -49,9 +51,16 @@ class MainActivityLifecycleTest {
 
     @After
     fun close() {
-        computerMoveObservers.forEach(ComputerMoveTimestamp::close)
-        computerMoveObservers.clear()
-        if (::scenario.isInitialized) scenario.close()
+        try {
+            try {
+                computerMoveObservers.forEach(ComputerMoveTimestamp::close)
+                computerMoveObservers.clear()
+            } finally {
+                if (::scenario.isInitialized) scenario.close()
+            }
+        } finally {
+            preferencesFixture.cleanup()
+        }
     }
 
     @Test
@@ -84,7 +93,8 @@ class MainActivityLifecycleTest {
             assertTrue("observer must see the real ON_RESUME callback", deadlineResume > intervalEnd)
             val remainingNanos = COMPUTER_DELAY_NANOS - foregroundNanos
             composeTestRule.waitUntil(timeoutMillis = 1_000) {
-                viewModel.uiState.value.board.count { it == Mark.O } == 1
+                viewModel.uiState.value.board.count { it == Mark.O } == 1 &&
+                    computerMoveTime.completedAt.get() > 0L
             }
             val observedAt = computerMoveTime.completedAt.get()
             assertTrue("computer move timestamp must be captured", observedAt > 0L)

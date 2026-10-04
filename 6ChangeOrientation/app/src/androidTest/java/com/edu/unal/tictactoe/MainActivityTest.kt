@@ -38,11 +38,13 @@ class MainActivityTest {
 
     private lateinit var scenario: ActivityScenario<MainActivity>
     private lateinit var activityViewModel: GameViewModel
+    private val preferencesFixture = GamePreferencesTestFixture()
     private val context
         get() = InstrumentationRegistry.getInstrumentation().targetContext
 
     @Before
     fun launchActivity() {
+        preferencesFixture.prepare(context)
         scenario = ActivityScenario.launch(MainActivity::class.java)
         scenario.onActivity { activity ->
             activityViewModel = ViewModelProvider(activity)[GameViewModel::class.java]
@@ -52,8 +54,10 @@ class MainActivityTest {
 
     @After
     fun closeActivity() {
-        if (::scenario.isInitialized) {
-            scenario.close()
+        try {
+            if (::scenario.isInitialized) scenario.close()
+        } finally {
+            preferencesFixture.cleanup()
         }
     }
 
@@ -206,7 +210,7 @@ class MainActivityTest {
     }
 
     @Test
-    fun closingActivityAndLaunchingNewInstanceStartsANewSession() {
+    fun closingActivityAndLaunchingNewInstanceStartsNewGameWithPersistedScore() {
         val oldViewModel = activityViewModel
 
         val terminal = playUntilTerminal(oldViewModel)
@@ -236,21 +240,19 @@ class MainActivityTest {
         assertTrue(newSession.board.all { it == Mark.Empty })
         assertEquals(Turn.Human, newSession.turn)
         assertEquals(GameResult.InProgress, newSession.result)
-        assertEquals(0, newSession.score.xWins)
-        assertEquals(0, newSession.score.oWins)
-        assertEquals(0, newSession.score.ties)
+        assertEquals(oldSession.score, newSession.score)
         assertEquals(Player.X, newSession.starter)
         assertEquals(Player.O, newSession.nextStarter)
         composeTestRule.onNodeWithText(context.getString(R.string.first_human))
             .performScrollTo()
             .assertIsDisplayed()
-        composeTestRule.onNodeWithText(context.getString(R.string.score_human_wins, 0))
+        composeTestRule.onNodeWithText(context.getString(R.string.score_human_wins, oldSession.score.xWins))
             .performScrollTo()
             .assertIsDisplayed()
-        composeTestRule.onNodeWithText(context.getString(R.string.score_computer_wins, 0))
+        composeTestRule.onNodeWithText(context.getString(R.string.score_computer_wins, oldSession.score.oWins))
             .performScrollTo()
             .assertIsDisplayed()
-        composeTestRule.onNodeWithText(context.getString(R.string.score_ties, 0))
+        composeTestRule.onNodeWithText(context.getString(R.string.score_ties, oldSession.score.ties))
             .performScrollTo()
             .assertIsDisplayed()
     }

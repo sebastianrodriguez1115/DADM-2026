@@ -1,0 +1,1831 @@
+{
+  "target": {
+    "serial": "emulator-5556",
+    "avd": "DADM_GraphicsSound_API35"
+  },
+  "guard_checks": 236,
+  "summary": {
+    "pasa": 22,
+    "manual, no ejecutada": 1
+  },
+  "cases": [
+    {
+      "id": "TC-01",
+      "title": "Arranque limpio (datos borrados), vertical",
+      "covers": "game-session: Primera partida / sin snapshot; tic-tac-toe-game: Sin barra superior, Disposición portrait; game-options: Persistencia de dificultad (default Expert)",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "tablero vacío",
+          "ok": true,
+          "detail": "........."
+        },
+        {
+          "check": "inicia X (texto 'La persona hace la primera jugada')",
+          "ok": true,
+          "detail": "La persona hace la primera jugada"
+        },
+        {
+          "check": "marcador en cero",
+          "ok": true,
+          "detail": "(0, 0, 0)"
+        },
+        {
+          "check": "vertical limpio: tablero, estado, marcador y controles presentes",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vertical limpio: sin título de aplicación 'TicTacToe'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vertical limpio: ningún texto (barra/título) por encima del tablero",
+          "ok": true,
+          "detail": "[]"
+        },
+        {
+          "check": "vertical limpio: tablero cuadrado",
+          "ok": true,
+          "detail": "996x996px"
+        },
+        {
+          "check": "vertical limpio: botón de menú junto a 'Nueva partida' (misma fila, a la derecha)",
+          "ok": true,
+          "detail": "newgame=[42,891] menu=[913,1039] cy 1662/1663"
+        },
+        {
+          "check": "vertical limpio: vertical - orden tablero > estado > marcador > controles",
+          "ok": true,
+          "detail": "1166/1198/1293/1599"
+        },
+        {
+          "check": "vertical limpio: objetivos del menú y 'Nueva partida' >= 48 dp",
+          "ok": true,
+          "detail": "menu 126x126, newgame h=126"
+        },
+        {
+          "check": "vertical limpio: casillas >= 48 dp",
+          "ok": true,
+          "detail": "min=322px"
+        },
+        {
+          "check": "vertical limpio: contenido dentro de pantalla",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "tras 3 s el tablero sigue vacío (X inicia, sin jugada automática)",
+          "ok": true,
+          "detail": "........."
+        },
+        {
+          "check": "dificultad por defecto Experto",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "no existen claves de partida en preferencias (solo dificultad/marcador)",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "evidence": [
+        "evidence/TC-01/01-arranque.xml",
+        "evidence/TC-01/01-arranque.png",
+        "evidence/TC-01/02-dificultad-experto-cerrada.xml",
+        "evidence/TC-01/02-dificultad-experto-cerrada.png",
+        "evidence/TC-01/prefs.xml"
+      ],
+      "error": null,
+      "seconds": 19.1
+    },
+    {
+      "id": "TC-02",
+      "title": "Menú: cinco entradas en orden, sin Salir; cierre con Atrás",
+      "covers": "game-options: Menú con las cinco entradas, Sin acción Salir, Back con overlay, El menú se cierra antes de la acción",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "exactamente cinco entradas",
+          "ok": true,
+          "detail": "['Nueva partida', 'Dificultad', 'Sonido', 'Reiniciar puntajes', 'Acerca de']"
+        },
+        {
+          "check": "orden: Nueva partida, Dificultad, Sonido, Reiniciar puntajes, Acerca de",
+          "ok": true,
+          "detail": "['Nueva partida', 'Dificultad', 'Sonido', 'Reiniciar puntajes', 'Acerca de']"
+        },
+        {
+          "check": "no existe 'Salir'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "Sonido expone su estado ('Habilitado')",
+          "ok": true,
+          "detail": "['Sonido', 'Habilitado']"
+        },
+        {
+          "check": "todas las entradas habilitadas con tablero vacío",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "menú no deja ver título/barra",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "Atrás cierra el menú",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "la app sigue en primer plano y la partida no cambia",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "Acerca de abre su diálogo y el menú se cerró (sin ventanas apiladas)",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "Atrás cierra el diálogo Acerca de y la partida no cambia",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "Atrás cierra el diálogo de dificultad sin Toast",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "dificultad sigue Experto tras cancelar",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "evidence": [
+        "evidence/TC-02/01-menu-abierto.xml",
+        "evidence/TC-02/01-menu-abierto.png",
+        "evidence/TC-02/02-tras-atras.xml",
+        "evidence/TC-02/02-tras-atras.png",
+        "evidence/TC-02/03-acerca-de.xml",
+        "evidence/TC-02/03-acerca-de.png",
+        "evidence/TC-02/04-dificultad-abierto.xml",
+        "evidence/TC-02/04-dificultad-abierto.png"
+      ],
+      "error": null,
+      "seconds": 37.7
+    },
+    {
+      "id": "TC-03",
+      "title": "Atrás sin overlay: navegación normal del sistema (sin intercepción)",
+      "covers": "game-options: Back sin overlay; game-session: Background y Back",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "Atrás sin overlay no provoca cierre abrupto (sin FATAL EXCEPTION)",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "Atrás sin overlay hace que la app salga de primer plano (navegación normal)",
+          "ok": true,
+          "detail": "topResumedActivity=ActivityRecord{19c7373 u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t2976}"
+        }
+      ],
+      "notes": [
+        "Tras Atrás sin overlay, topResumedActivity = 'topResumedActivity=ActivityRecord{19c7373 u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t2976}'. Aplicación salió de primer plano.",
+        "Proceso vivo tras Atrás (la especificación no garantiza finalizar la tarea).",
+        "Relanzamiento tras Atrás: tablero=......... estado=La persona hace la primera jugada (informativo; ambos comportamientos son navegación normal)."
+      ],
+      "evidence": [
+        "evidence/TC-03/top-after-back.txt",
+        "evidence/TC-03/01-relanzamiento-tras-atras.xml",
+        "evidence/TC-03/01-relanzamiento-tras-atras.png"
+      ],
+      "error": null,
+      "seconds": 13.1
+    },
+    {
+      "id": "TC-04",
+      "title": "Partida completa hasta un desenlace: punto único y taps posteriores sin efecto",
+      "covers": "game-session: Puntuación única (victoria humana/computadora/empate, Resultado no duplicado)",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "G1-Fácil-X-gana: 'Victoria humana' suma exactamente un punto en el contador correcto",
+          "ok": true,
+          "detail": "delta=(1, 0, 0) esperado=(1, 0, 0)"
+        },
+        {
+          "check": "G1-Fácil-X-gana: taps posteriores no cambian tablero, estado ni marcador",
+          "ok": true,
+          "detail": "('XXXOX.O.O', 'Victoria humana', (1, 0, 0)) -> ('XXXOX.O.O', 'Victoria humana', (1, 0, 0))"
+        },
+        {
+          "check": "G1-Fácil-X-gana: casillas deshabilitadas tras el desenlace",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "G2-Experto-O-gana: 'Victoria de la computadora' suma exactamente un punto en el contador correcto",
+          "ok": true,
+          "detail": "delta=(0, 1, 0) esperado=(0, 1, 0)"
+        },
+        {
+          "check": "G2-Experto-O-gana: taps posteriores no cambian tablero, estado ni marcador",
+          "ok": true,
+          "detail": "('.X.X..OOO', 'Victoria de la computadora', (1, 1, 0)) -> ('.X.X..OOO', 'Victoria de la computadora', (1, 1, 0))"
+        },
+        {
+          "check": "G2-Experto-O-gana: casillas deshabilitadas tras el desenlace",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "G3-Experto-empate: 'Empate' suma exactamente un punto en el contador correcto",
+          "ok": true,
+          "detail": "delta=(0, 0, 1) esperado=(0, 0, 1)"
+        },
+        {
+          "check": "G3-Experto-empate: taps posteriores no cambian tablero, estado ni marcador",
+          "ok": true,
+          "detail": "('XOXOXXOXO', 'Empate', (1, 1, 1)) -> ('XOXOXXOXO', 'Empate', (1, 1, 1))"
+        },
+        {
+          "check": "G3-Experto-empate: casillas deshabilitadas tras el desenlace",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "marcador final = suma de desenlaces",
+          "ok": true,
+          "detail": "(1, 1, 1)"
+        }
+      ],
+      "notes": [
+        "Desenlaces observados: {'Victoria humana': 1, 'Victoria de la computadora': 1, 'Empate': 1}"
+      ],
+      "evidence": [
+        "evidence/TC-04/01-G1-F_cil-X-gana-terminal.xml",
+        "evidence/TC-04/01-G1-F_cil-X-gana-terminal.png",
+        "evidence/TC-04/02-G1-F_cil-X-gana-tras-taps.xml",
+        "evidence/TC-04/02-G1-F_cil-X-gana-tras-taps.png",
+        "evidence/TC-04/03-G2-Experto-O-gana-terminal.xml",
+        "evidence/TC-04/03-G2-Experto-O-gana-terminal.png",
+        "evidence/TC-04/04-G2-Experto-O-gana-tras-taps.xml",
+        "evidence/TC-04/04-G2-Experto-O-gana-tras-taps.png",
+        "evidence/TC-04/05-G3-Experto-empate-terminal.xml",
+        "evidence/TC-04/05-G3-Experto-empate-terminal.png",
+        "evidence/TC-04/06-G3-Experto-empate-tras-taps.xml",
+        "evidence/TC-04/06-G3-Experto-empate-tras-taps.png"
+      ],
+      "error": null,
+      "seconds": 91.3
+    },
+    {
+      "id": "TC-05",
+      "title": "Rotación con tablero vacío",
+      "covers": "tic-tac-toe-game: Disposición landscape/portrait; game-session: Rotación con estado guardado",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "vertical inicial: tablero, estado, marcador y controles presentes",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vertical inicial: sin título de aplicación 'TicTacToe'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vertical inicial: ningún texto (barra/título) por encima del tablero",
+          "ok": true,
+          "detail": "[]"
+        },
+        {
+          "check": "vertical inicial: tablero cuadrado",
+          "ok": true,
+          "detail": "996x996px"
+        },
+        {
+          "check": "vertical inicial: botón de menú junto a 'Nueva partida' (misma fila, a la derecha)",
+          "ok": true,
+          "detail": "newgame=[42,891] menu=[913,1039] cy 1662/1663"
+        },
+        {
+          "check": "vertical inicial: vertical - orden tablero > estado > marcador > controles",
+          "ok": true,
+          "detail": "1166/1198/1293/1599"
+        },
+        {
+          "check": "vertical inicial: objetivos del menú y 'Nueva partida' >= 48 dp",
+          "ok": true,
+          "detail": "menu 126x126, newgame h=126"
+        },
+        {
+          "check": "vertical inicial: casillas >= 48 dp",
+          "ok": true,
+          "detail": "min=322px"
+        },
+        {
+          "check": "vertical inicial: contenido dentro de pantalla",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vacío horizontal: tablero, estado, marcador y controles presentes",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vacío horizontal: sin título de aplicación 'TicTacToe'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vacío horizontal: ningún texto (barra/título) por encima del tablero",
+          "ok": true,
+          "detail": "[]"
+        },
+        {
+          "check": "vacío horizontal: tablero cuadrado",
+          "ok": true,
+          "detail": "709x709px"
+        },
+        {
+          "check": "vacío horizontal: botón de menú junto a 'Nueva partida' (misma fila, a la derecha)",
+          "ok": true,
+          "detail": "newgame=[921,2211] menu=[2233,2359] cy 741/742"
+        },
+        {
+          "check": "vacío horizontal: horizontal - tablero a la izquierda del panel",
+          "ok": true,
+          "detail": "board.r=879 status.l=921 newgame.l=921"
+        },
+        {
+          "check": "vacío horizontal: horizontal - estado, marcador y controles a la derecha del tablero",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vacío horizontal: horizontal - tablero <= 270 dp (referencia)",
+          "ok": true,
+          "detail": "709px = 270 dp"
+        },
+        {
+          "check": "vacío horizontal: horizontal - tablero ocupa el lado izquierdo (centro en la mitad izquierda)",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vacío horizontal: objetivos del menú y 'Nueva partida' >= 48 dp",
+          "ok": true,
+          "detail": "menu 126x126, newgame h=126"
+        },
+        {
+          "check": "vacío horizontal: casillas >= 48 dp",
+          "ok": true,
+          "detail": "min=226px"
+        },
+        {
+          "check": "vacío horizontal: contenido dentro de pantalla",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vacío horizontal: tablero, estado y marcador conservados",
+          "ok": true,
+          "detail": "('.........', 'La persona hace la primera jugada', (0, 0, 0)) -> ('.........', 'La persona hace la primera jugada', (0, 0, 0))"
+        },
+        {
+          "check": "vacío vertical: tablero, estado, marcador y controles presentes",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vacío vertical: sin título de aplicación 'TicTacToe'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vacío vertical: ningún texto (barra/título) por encima del tablero",
+          "ok": true,
+          "detail": "[]"
+        },
+        {
+          "check": "vacío vertical: tablero cuadrado",
+          "ok": true,
+          "detail": "996x996px"
+        },
+        {
+          "check": "vacío vertical: botón de menú junto a 'Nueva partida' (misma fila, a la derecha)",
+          "ok": true,
+          "detail": "newgame=[42,891] menu=[913,1039] cy 1662/1663"
+        },
+        {
+          "check": "vacío vertical: vertical - orden tablero > estado > marcador > controles",
+          "ok": true,
+          "detail": "1166/1198/1293/1599"
+        },
+        {
+          "check": "vacío vertical: objetivos del menú y 'Nueva partida' >= 48 dp",
+          "ok": true,
+          "detail": "menu 126x126, newgame h=126"
+        },
+        {
+          "check": "vacío vertical: casillas >= 48 dp",
+          "ok": true,
+          "detail": "min=322px"
+        },
+        {
+          "check": "vacío vertical: contenido dentro de pantalla",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vacío vertical: tablero, estado y marcador conservados",
+          "ok": true,
+          "detail": "('.........', 'La persona hace la primera jugada', (0, 0, 0)) -> ('.........', 'La persona hace la primera jugada', (0, 0, 0))"
+        },
+        {
+          "check": "sin jugada automática tras rotar (X inicia)",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "evidence": [
+        "evidence/TC-05/01-vac_o-horizontal.xml",
+        "evidence/TC-05/01-vac_o-horizontal.png",
+        "evidence/TC-05/02-vac_o-vertical.xml",
+        "evidence/TC-05/02-vac_o-vertical.png"
+      ],
+      "error": null,
+      "seconds": 23.1
+    },
+    {
+      "id": "TC-06",
+      "title": "Rotación en partida activa con turno humano",
+      "covers": "game-session: Rotación durante una partida activa; Rotación con estado guardado",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "activa horizontal: tablero, estado, marcador y controles presentes",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "activa horizontal: sin título de aplicación 'TicTacToe'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "activa horizontal: ningún texto (barra/título) por encima del tablero",
+          "ok": true,
+          "detail": "[]"
+        },
+        {
+          "check": "activa horizontal: tablero cuadrado",
+          "ok": true,
+          "detail": "709x709px"
+        },
+        {
+          "check": "activa horizontal: botón de menú junto a 'Nueva partida' (misma fila, a la derecha)",
+          "ok": true,
+          "detail": "newgame=[921,2211] menu=[2233,2359] cy 741/742"
+        },
+        {
+          "check": "activa horizontal: horizontal - tablero a la izquierda del panel",
+          "ok": true,
+          "detail": "board.r=879 status.l=921 newgame.l=921"
+        },
+        {
+          "check": "activa horizontal: horizontal - estado, marcador y controles a la derecha del tablero",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "activa horizontal: horizontal - tablero <= 270 dp (referencia)",
+          "ok": true,
+          "detail": "709px = 270 dp"
+        },
+        {
+          "check": "activa horizontal: horizontal - tablero ocupa el lado izquierdo (centro en la mitad izquierda)",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "activa horizontal: objetivos del menú y 'Nueva partida' >= 48 dp",
+          "ok": true,
+          "detail": "menu 126x126, newgame h=126"
+        },
+        {
+          "check": "activa horizontal: casillas >= 48 dp",
+          "ok": true,
+          "detail": "min=226px"
+        },
+        {
+          "check": "activa horizontal: contenido dentro de pantalla",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "activa horizontal: tablero, estado y marcador conservados",
+          "ok": true,
+          "detail": "('....X..O.', 'Tu turno', (0, 0, 0)) -> ('....X..O.', 'Tu turno', (0, 0, 0))"
+        },
+        {
+          "check": "activa vertical: tablero, estado, marcador y controles presentes",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "activa vertical: sin título de aplicación 'TicTacToe'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "activa vertical: ningún texto (barra/título) por encima del tablero",
+          "ok": true,
+          "detail": "[]"
+        },
+        {
+          "check": "activa vertical: tablero cuadrado",
+          "ok": true,
+          "detail": "996x996px"
+        },
+        {
+          "check": "activa vertical: botón de menú junto a 'Nueva partida' (misma fila, a la derecha)",
+          "ok": true,
+          "detail": "newgame=[42,891] menu=[913,1039] cy 1662/1663"
+        },
+        {
+          "check": "activa vertical: vertical - orden tablero > estado > marcador > controles",
+          "ok": true,
+          "detail": "1166/1198/1293/1599"
+        },
+        {
+          "check": "activa vertical: objetivos del menú y 'Nueva partida' >= 48 dp",
+          "ok": true,
+          "detail": "menu 126x126, newgame h=126"
+        },
+        {
+          "check": "activa vertical: casillas >= 48 dp",
+          "ok": true,
+          "detail": "min=322px"
+        },
+        {
+          "check": "activa vertical: contenido dentro de pantalla",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "activa vertical: tablero, estado y marcador conservados",
+          "ok": true,
+          "detail": "('....X..O.', 'Tu turno', (0, 0, 0)) -> ('....X..O.', 'Tu turno', (0, 0, 0))"
+        },
+        {
+          "check": "exactamente 1 X y 1 O (ninguna jugada duplicada)",
+          "ok": true,
+          "detail": "....X..O."
+        },
+        {
+          "check": "la partida continúa tras rotar (X y O juegan normalmente)",
+          "ok": true,
+          "detail": "X...X..OO"
+        }
+      ],
+      "notes": [],
+      "evidence": [
+        "evidence/TC-06/01-antes.xml",
+        "evidence/TC-06/01-antes.png",
+        "evidence/TC-06/02-activa-horizontal.xml",
+        "evidence/TC-06/02-activa-horizontal.png",
+        "evidence/TC-06/03-activa-vertical.xml",
+        "evidence/TC-06/03-activa-vertical.png"
+      ],
+      "error": null,
+      "seconds": 27.3
+    },
+    {
+      "id": "TC-07",
+      "title": "Rotación con turno de O pendiente (tap + rotación inmediata)",
+      "covers": "game-session: Rotación conserva espera pendiente, Tiempo restante tras rotación; reto extra 2",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "R1-vert-a-horiz: exactamente una X y una O (una sola jugada de O)",
+          "ok": true,
+          "detail": "....X..O."
+        },
+        {
+          "check": "R1-vert-a-horiz: turno de la persona (no se perdió el turno de O)",
+          "ok": true,
+          "detail": "Tu turno"
+        },
+        {
+          "check": "R1-vert-a-horiz: marcador sin cambios",
+          "ok": true,
+          "detail": "(0, 0, 0)"
+        },
+        {
+          "check": "R2-vert-a-horiz: exactamente una X y una O (una sola jugada de O)",
+          "ok": true,
+          "detail": ".O..X...."
+        },
+        {
+          "check": "R2-vert-a-horiz: turno de la persona (no se perdió el turno de O)",
+          "ok": true,
+          "detail": "Tu turno"
+        },
+        {
+          "check": "R2-vert-a-horiz: marcador sin cambios",
+          "ok": true,
+          "detail": "(0, 0, 0)"
+        },
+        {
+          "check": "R3-vert-a-horiz: exactamente una X y una O (una sola jugada de O)",
+          "ok": true,
+          "detail": "....X..O."
+        },
+        {
+          "check": "R3-vert-a-horiz: turno de la persona (no se perdió el turno de O)",
+          "ok": true,
+          "detail": "Tu turno"
+        },
+        {
+          "check": "R3-vert-a-horiz: marcador sin cambios",
+          "ok": true,
+          "detail": "(0, 0, 0)"
+        },
+        {
+          "check": "D1-doble-rotacion: exactamente una X y una O (una sola jugada de O)",
+          "ok": true,
+          "detail": ".O..X...."
+        },
+        {
+          "check": "D1-doble-rotacion: turno de la persona (no se perdió el turno de O)",
+          "ok": true,
+          "detail": "Tu turno"
+        },
+        {
+          "check": "D1-doble-rotacion: marcador sin cambios",
+          "ok": true,
+          "detail": "(0, 0, 0)"
+        },
+        {
+          "check": "D2-doble-rotacion: exactamente una X y una O (una sola jugada de O)",
+          "ok": true,
+          "detail": "O...X...."
+        },
+        {
+          "check": "D2-doble-rotacion: turno de la persona (no se perdió el turno de O)",
+          "ok": true,
+          "detail": "Tu turno"
+        },
+        {
+          "check": "D2-doble-rotacion: marcador sin cambios",
+          "ok": true,
+          "detail": "(0, 0, 0)"
+        }
+      ],
+      "notes": [
+        "La ventana de 1000 ms de O no es observable con precisión desde adb: la rotación se dispara ~0.3 s después del tap; los milisegundos exactos (400/600 ms, 999 ms) quedan cubiertos por las pruebas JVM/instrumentadas con reloj virtual."
+      ],
+      "evidence": [
+        "evidence/TC-07/01-R1-vert-a-horiz.xml",
+        "evidence/TC-07/01-R1-vert-a-horiz.png",
+        "evidence/TC-07/02-R2-vert-a-horiz.xml",
+        "evidence/TC-07/02-R2-vert-a-horiz.png",
+        "evidence/TC-07/03-R3-vert-a-horiz.xml",
+        "evidence/TC-07/03-R3-vert-a-horiz.png",
+        "evidence/TC-07/04-D1-doble-rotacion.xml",
+        "evidence/TC-07/04-D1-doble-rotacion.png",
+        "evidence/TC-07/05-D2-doble-rotacion.xml",
+        "evidence/TC-07/05-D2-doble-rotacion.png"
+      ],
+      "error": null,
+      "seconds": 73.5
+    },
+    {
+      "id": "TC-08",
+      "title": "Rotación con partida terminada: sin punto ni jugada duplicados",
+      "covers": "game-session: Rotación después de un resultado; Resultado no duplicado",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "terminal horizontal: tablero, estado, marcador y controles presentes",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "terminal horizontal: sin título de aplicación 'TicTacToe'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "terminal horizontal: ningún texto (barra/título) por encima del tablero",
+          "ok": true,
+          "detail": "[]"
+        },
+        {
+          "check": "terminal horizontal: tablero cuadrado",
+          "ok": true,
+          "detail": "709x709px"
+        },
+        {
+          "check": "terminal horizontal: botón de menú junto a 'Nueva partida' (misma fila, a la derecha)",
+          "ok": true,
+          "detail": "newgame=[921,2211] menu=[2233,2359] cy 741/742"
+        },
+        {
+          "check": "terminal horizontal: horizontal - tablero a la izquierda del panel",
+          "ok": true,
+          "detail": "board.r=879 status.l=921 newgame.l=921"
+        },
+        {
+          "check": "terminal horizontal: horizontal - estado, marcador y controles a la derecha del tablero",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "terminal horizontal: horizontal - tablero <= 270 dp (referencia)",
+          "ok": true,
+          "detail": "709px = 270 dp"
+        },
+        {
+          "check": "terminal horizontal: horizontal - tablero ocupa el lado izquierdo (centro en la mitad izquierda)",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "terminal horizontal: objetivos del menú y 'Nueva partida' >= 48 dp",
+          "ok": true,
+          "detail": "menu 126x126, newgame h=126"
+        },
+        {
+          "check": "terminal horizontal: casillas >= 48 dp",
+          "ok": true,
+          "detail": "min=226px"
+        },
+        {
+          "check": "terminal horizontal: contenido dentro de pantalla",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "terminal horizontal: tablero, estado y marcador conservados",
+          "ok": true,
+          "detail": "('XOX.XOX.O', 'Victoria humana', (1, 0, 0)) -> ('XOX.XOX.O', 'Victoria humana', (1, 0, 0))"
+        },
+        {
+          "check": "terminal vertical: tablero, estado, marcador y controles presentes",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "terminal vertical: sin título de aplicación 'TicTacToe'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "terminal vertical: ningún texto (barra/título) por encima del tablero",
+          "ok": true,
+          "detail": "[]"
+        },
+        {
+          "check": "terminal vertical: tablero cuadrado",
+          "ok": true,
+          "detail": "996x996px"
+        },
+        {
+          "check": "terminal vertical: botón de menú junto a 'Nueva partida' (misma fila, a la derecha)",
+          "ok": true,
+          "detail": "newgame=[42,891] menu=[913,1039] cy 1662/1663"
+        },
+        {
+          "check": "terminal vertical: vertical - orden tablero > estado > marcador > controles",
+          "ok": true,
+          "detail": "1166/1198/1293/1599"
+        },
+        {
+          "check": "terminal vertical: objetivos del menú y 'Nueva partida' >= 48 dp",
+          "ok": true,
+          "detail": "menu 126x126, newgame h=126"
+        },
+        {
+          "check": "terminal vertical: casillas >= 48 dp",
+          "ok": true,
+          "detail": "min=322px"
+        },
+        {
+          "check": "terminal vertical: contenido dentro de pantalla",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "terminal vertical: tablero, estado y marcador conservados",
+          "ok": true,
+          "detail": "('XOX.XOX.O', 'Victoria humana', (1, 0, 0)) -> ('XOX.XOX.O', 'Victoria humana', (1, 0, 0))"
+        },
+        {
+          "check": "tras varias rotaciones el marcador sigue igual (sin punto extra)",
+          "ok": true,
+          "detail": "(1, 0, 0) -> (1, 0, 0)"
+        }
+      ],
+      "notes": [],
+      "evidence": [
+        "evidence/TC-08/01-terminal.xml",
+        "evidence/TC-08/01-terminal.png",
+        "evidence/TC-08/02-terminal-horizontal.xml",
+        "evidence/TC-08/02-terminal-horizontal.png",
+        "evidence/TC-08/03-terminal-vertical.xml",
+        "evidence/TC-08/03-terminal-vertical.png"
+      ],
+      "error": null,
+      "seconds": 48.4
+    },
+    {
+      "id": "TC-09",
+      "title": "Rotación con sonido silenciado",
+      "covers": "game-session: conservación de estado de sonido; game-options: Sonido disponible durante la partida",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "Sonido muestra 'Deshabilitado' tras silenciar",
+          "ok": true,
+          "detail": "['Sonido', 'Deshabilitado']"
+        },
+        {
+          "check": "rotación 1: Sonido sigue 'Deshabilitado'",
+          "ok": true,
+          "detail": "['Sonido', 'Deshabilitado']"
+        },
+        {
+          "check": "rotación 0: Sonido sigue 'Deshabilitado'",
+          "ok": true,
+          "detail": "['Sonido', 'Deshabilitado']"
+        },
+        {
+          "check": "rotación 1: Sonido sigue 'Deshabilitado'",
+          "ok": true,
+          "detail": "['Sonido', 'Deshabilitado']"
+        },
+        {
+          "check": "rotación 0: Sonido sigue 'Deshabilitado'",
+          "ok": true,
+          "detail": "['Sonido', 'Deshabilitado']"
+        },
+        {
+          "check": "tablero y marcador conservados",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "notes": [
+        "Que NO suene audio al rotar y que el sonido se oiga al jugar es verificación manual (TC-30); el emulador corre sin audio."
+      ],
+      "evidence": [
+        "evidence/TC-09/01-silenciado.xml",
+        "evidence/TC-09/01-silenciado.png"
+      ],
+      "error": null,
+      "seconds": 59.5
+    },
+    {
+      "id": "TC-10",
+      "title": "Rotación con menú o diálogo abierto",
+      "covers": "game-options: Back con overlay; Menú y opciones no alteran la espera de O; (la persistencia de ventanas no se exige)",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "menu: sin crash y partida intacta tras rotar",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "dificultad: sin crash y partida intacta tras rotar",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "acerca: sin crash y partida intacta tras rotar",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "sin FATAL EXCEPTION en el buffer de crash",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "notes": [
+        "menu: tras rotar a horizontal el overlay se cierra (la especificación no exige conservarlo).",
+        "dificultad: tras rotar a horizontal el overlay se cierra (la especificación no exige conservarlo).",
+        "acerca: tras rotar a horizontal el overlay se cierra (la especificación no exige conservarlo)."
+      ],
+      "evidence": [
+        "evidence/TC-10/01-menu-horizontal.xml",
+        "evidence/TC-10/01-menu-horizontal.png",
+        "evidence/TC-10/02-dificultad-horizontal.xml",
+        "evidence/TC-10/02-dificultad-horizontal.png",
+        "evidence/TC-10/03-acerca-horizontal.xml",
+        "evidence/TC-10/03-acerca-horizontal.png"
+      ],
+      "error": null,
+      "seconds": 75.4
+    },
+    {
+      "id": "TC-11",
+      "title": "Nueva partida: alternancia del iniciador y apertura única de O",
+      "covers": "game-session: Alternancia, Apertura O tras 1000 ms, X inicia sin movimiento automático, abandono no puntúa; game-options: Nueva partida desde el menú, botón atajo",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "partida 1 inicia X",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "partida 2 (tras abandonar): inicia O, apertura única",
+          "ok": true,
+          "detail": "....O...."
+        },
+        {
+          "check": "la apertura ocurre una sola vez (sigue 1 O tras 3.5 s)",
+          "ok": true,
+          "detail": "....O...."
+        },
+        {
+          "check": "la partida abandonada no sumó puntos",
+          "ok": true,
+          "detail": "(0, 0, 0) -> (0, 0, 0)"
+        },
+        {
+          "check": "tras la apertura de O la entrada Dificultad queda deshabilitada",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "partida 3 (desde el menú) inicia X con tablero vacío",
+          "ok": true,
+          "detail": "......... La persona hace la primera jugada"
+        },
+        {
+          "check": "X inicia: sin jugada automática tras 3 s",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "partida 4 inicia O de nuevo (alternancia)",
+          "ok": true,
+          "detail": ".O......."
+        },
+        {
+          "check": "partida 5 inicia X",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "rotación durante la apertura pendiente de O: una sola O y turno humano",
+          "ok": true,
+          "detail": "....O.... Tu turno"
+        }
+      ],
+      "notes": [],
+      "evidence": [
+        "evidence/TC-11/01-juego2-O-inicia.xml",
+        "evidence/TC-11/01-juego2-O-inicia.png",
+        "evidence/TC-11/02-juego2-tras-3s.xml",
+        "evidence/TC-11/02-juego2-tras-3s.png",
+        "evidence/TC-11/03-dificultad-deshabilitada.xml",
+        "evidence/TC-11/03-dificultad-deshabilitada.png",
+        "evidence/TC-11/04-juego3-X-inicia-via-menu.xml",
+        "evidence/TC-11/04-juego3-X-inicia-via-menu.png",
+        "evidence/TC-11/05-juego6-O-inicia-con-rotacion.xml",
+        "evidence/TC-11/05-juego6-O-inicia-con-rotacion.png"
+      ],
+      "error": null,
+      "seconds": 59.3
+    },
+    {
+      "id": "TC-12",
+      "title": "Dificultad: cuatro niveles, Toast, bloqueo en partida activa, edición al terminar",
+      "covers": "game-options: Selección de dificultad (todos los escenarios de UI), Accesibilidad de opciones",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "exactamente cuatro radios en orden Fácil, Difícil, Experto, Imposible",
+          "ok": true,
+          "detail": "[('Fácil', False), ('Difícil', False), ('Experto', True), ('Imposible', False)]"
+        },
+        {
+          "check": "un solo radio marcado (Experto)",
+          "ok": true,
+          "detail": "[('Fácil', False), ('Difícil', False), ('Experto', True), ('Imposible', False)]"
+        },
+        {
+          "check": "filas de radio >= 48 dp",
+          "ok": true,
+          "detail": "[126, 126, 126, 126]"
+        },
+        {
+          "check": "seleccionar Fácil: se cierra el diálogo y aparece un Toast (ventana Toast)",
+          "ok": true,
+          "detail": "toast=True"
+        },
+        {
+          "check": "seleccionar Fácil: el Toast no persiste/repite tras expirar",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "reabrir tras elegir Fácil: radio marcado = Fácil",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "seleccionar Imposible: se cierra el diálogo y aparece un Toast (ventana Toast)",
+          "ok": true,
+          "detail": "toast=True"
+        },
+        {
+          "check": "seleccionar Imposible: el Toast no persiste/repite tras expirar",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "reabrir tras elegir Imposible: radio marcado = Imposible",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "seleccionar Difícil: se cierra el diálogo y aparece un Toast (ventana Toast)",
+          "ok": true,
+          "detail": "toast=True"
+        },
+        {
+          "check": "seleccionar Difícil: el Toast no persiste/repite tras expirar",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "reabrir tras elegir Difícil: radio marcado = Difícil",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "seleccionar Experto: se cierra el diálogo y aparece un Toast (ventana Toast)",
+          "ok": true,
+          "detail": "toast=True"
+        },
+        {
+          "check": "seleccionar Experto: el Toast no persiste/repite tras expirar",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "reabrir tras elegir Experto: radio marcado = Experto",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "seleccionar Experto: se cierra el diálogo y aparece un Toast (ventana Toast)",
+          "ok": true,
+          "detail": "toast=True"
+        },
+        {
+          "check": "seleccionar Experto: el Toast no persiste/repite tras expirar",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "reabrir tras elegir Experto: radio marcado = Experto",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "preferencia persistida con código 2 (Experto)",
+          "ok": true,
+          "detail": "<?xml version='1.0' encoding='utf-8' standalone='yes' ?> <map>     <int name=\"difficulty_code\" value=\"2\" /> </map> "
+        },
+        {
+          "check": "rotar tras elegir no vuelve a emitir el Toast",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "preferencia persistida con código 3 (Imposible)",
+          "ok": true,
+          "detail": "<?xml version='1.0' encoding='utf-8' standalone='yes' ?> <map>     <int name=\"difficulty_code\" value=\"3\" /> </map> "
+        },
+        {
+          "check": "persistencia tras detención forzada y relanzamiento: Imposible",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "partida activa con marcas: Dificultad deshabilitada",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "tocar la entrada deshabilitada no abre el diálogo de dificultad",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "tras tocar la entrada deshabilitada la partida no cambia",
+          "ok": true,
+          "detail": "O...X.... -> O...X...."
+        },
+        {
+          "check": "partida terminada: Dificultad habilitada",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "partida terminada: se acepta el cambio de dificultad (Toast)",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "el cambio tras desenlace no altera tablero ni marcador",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "evidence": [
+        "evidence/TC-12/01-dialogo.xml",
+        "evidence/TC-12/01-dialogo.png",
+        "evidence/TC-12/toast-02-F_cil.png",
+        "evidence/TC-12/03-seleccion-F_cil.xml",
+        "evidence/TC-12/03-seleccion-F_cil.png",
+        "evidence/TC-12/toast-04-Imposible.png",
+        "evidence/TC-12/05-seleccion-Imposible.xml",
+        "evidence/TC-12/05-seleccion-Imposible.png",
+        "evidence/TC-12/toast-06-Dif_cil.png",
+        "evidence/TC-12/07-seleccion-Dif_cil.xml",
+        "evidence/TC-12/07-seleccion-Dif_cil.png",
+        "evidence/TC-12/toast-08-Experto.png",
+        "evidence/TC-12/09-seleccion-Experto.xml",
+        "evidence/TC-12/09-seleccion-Experto.png",
+        "evidence/TC-12/toast-10-Experto.png",
+        "evidence/TC-12/11-seleccion-Experto.xml",
+        "evidence/TC-12/11-seleccion-Experto.png",
+        "evidence/TC-12/12-final-experto.xml",
+        "evidence/TC-12/12-final-experto.png",
+        "evidence/TC-12/prefs-experto.xml",
+        "evidence/TC-12/toast-13-Imposible.png",
+        "evidence/TC-12/14-activa-menu.xml",
+        "evidence/TC-12/14-activa-menu.png",
+        "evidence/TC-12/15-activa-tras-tocar-deshabilitada.xml",
+        "evidence/TC-12/15-activa-tras-tocar-deshabilitada.png",
+        "evidence/TC-12/16-terminada-menu.xml",
+        "evidence/TC-12/16-terminada-menu.png",
+        "evidence/TC-12/toast-17-F_cil.png"
+      ],
+      "error": null,
+      "seconds": 192.4
+    },
+    {
+      "id": "TC-13",
+      "title": "Persistencia del marcador tras detención forzada",
+      "covers": "game-session: Inicio de sesión (scores persistentes), Sin persistencia permanente; Nueva sesión tras perder el proceso",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "se registraron 2 desenlaces",
+          "ok": true,
+          "detail": "(2, 0, 0)"
+        },
+        {
+          "check": "marcador conservado tras force-stop + relanzamiento",
+          "ok": true,
+          "detail": "(2, 0, 0) -> (2, 0, 0)"
+        },
+        {
+          "check": "partida nueva (tablero vacío, inicia X)",
+          "ok": true,
+          "detail": "......... La persona hace la primera jugada"
+        },
+        {
+          "check": "dificultad conservada (Fácil)",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "evidence": [
+        "evidence/TC-13/prefs-antes.xml",
+        "evidence/TC-13/01-relanzado.xml",
+        "evidence/TC-13/01-relanzado.png",
+        "evidence/TC-13/prefs-despues.xml"
+      ],
+      "error": null,
+      "seconds": 49.6
+    },
+    {
+      "id": "TC-14",
+      "title": "Reiniciar puntajes: en partida activa y terminada; el cero persiste",
+      "covers": "tic-tac-toe-game: Acción accesible de reset; game-session: Restablecimiento persistente (Restablecer durante partida / terminal)",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "precondición: marcador distinto de cero y partida activa",
+          "ok": true,
+          "detail": "(1, 0, 0) Tu turno"
+        },
+        {
+          "check": "A: marcador pasa a 0/0/0 de inmediato",
+          "ok": true,
+          "detail": "(0, 0, 0)"
+        },
+        {
+          "check": "A: tablero, turno y resultado sin cambios",
+          "ok": true,
+          "detail": "....X..OO/Tu turno -> ....X..OO/Tu turno"
+        },
+        {
+          "check": "A: sin jugada extra ni cambios tras 2.5 s",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "A: preferencias con ceros",
+          "ok": true,
+          "detail": "<?xml version='1.0' encoding='utf-8' standalone='yes' ?> <map>     <int name=\"score_x_wins\" value=\"0\" />     <int name=\"score_o_wins\" value=\"0\" />     <int name=\"score_ties\" value=\"0\" />     <int name=\"difficulty_code\" value=\"0\" /> </map> "
+        },
+        {
+          "check": "A: al terminar la partida el marcador suma exactamente 1",
+          "ok": true,
+          "detail": "(1, 0, 0)"
+        },
+        {
+          "check": "B: marcador 0/0/0 en partida terminada",
+          "ok": true,
+          "detail": "(0, 0, 0)"
+        },
+        {
+          "check": "B: resultado y tablero permanecen",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "B: el resultado terminal no se recuenta",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "B: rotar tras reset mantiene ceros",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "B: el cero persiste tras detención forzada y relanzamiento",
+          "ok": true,
+          "detail": "(0, 0, 0)"
+        },
+        {
+          "check": "Reiniciar puntajes siempre habilitada y etiquetada",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "evidence": [
+        "evidence/TC-14/01-A-antes.xml",
+        "evidence/TC-14/01-A-antes.png",
+        "evidence/TC-14/02-A-despues.xml",
+        "evidence/TC-14/02-A-despues.png",
+        "evidence/TC-14/A-prefs.xml",
+        "evidence/TC-14/03-B-terminal.xml",
+        "evidence/TC-14/03-B-terminal.png",
+        "evidence/TC-14/04-B-despues.xml",
+        "evidence/TC-14/04-B-despues.png",
+        "evidence/TC-14/B-prefs.xml"
+      ],
+      "error": null,
+      "seconds": 77.7
+    },
+    {
+      "id": "TC-15",
+      "title": "Muerte de proceso en segundo plano: partida activa (y sonido silenciado)",
+      "covers": "game-session: Restauración soportada por muerte de proceso; Conservación del estado",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "proceso terminado por `am kill`",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "nuevo proceso",
+          "ok": true,
+          "detail": "10704 -> 10919"
+        },
+        {
+          "check": "tablero, turno y marcador restaurados",
+          "ok": true,
+          "detail": "('X...X..OO', 'Tu turno', (0, 0, 0)) -> ('X...X..OO', 'Tu turno', (0, 0, 0))"
+        },
+        {
+          "check": "no hay jugada extra de O",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "el silencio de sesión se restaura (Deshabilitado)",
+          "ok": true,
+          "detail": "['Sonido', 'Deshabilitado']"
+        },
+        {
+          "check": "el juego continúa normalmente tras restaurar",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "evidence": [
+        "evidence/TC-15/01-antes.xml",
+        "evidence/TC-15/01-antes.png",
+        "evidence/TC-15/02-restaurado.xml",
+        "evidence/TC-15/02-restaurado.png"
+      ],
+      "error": null,
+      "seconds": 38.0
+    },
+    {
+      "id": "TC-16",
+      "title": "Muerte de proceso con partida terminada: sin punto duplicado",
+      "covers": "game-session: Resultado no duplicado, Restauración soportada; Rotación después de un resultado",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "resultado, tablero y marcador restaurados sin punto extra",
+          "ok": true,
+          "detail": "('XO.OX...X', 'Victoria humana', (1, 0, 0)) -> ('XO.OX...X', 'Victoria humana', (1, 0, 0))"
+        },
+        {
+          "check": "segunda muerte de proceso: marcador intacto",
+          "ok": true,
+          "detail": "(1, 0, 0) -> (1, 0, 0)"
+        }
+      ],
+      "notes": [],
+      "evidence": [
+        "evidence/TC-16/01-antes.xml",
+        "evidence/TC-16/01-antes.png",
+        "evidence/TC-16/02-restaurado.xml",
+        "evidence/TC-16/02-restaurado.png"
+      ],
+      "error": null,
+      "seconds": 41.2
+    },
+    {
+      "id": "TC-17",
+      "title": "Muerte de proceso con turno de O pendiente (tap + HOME + kill)",
+      "covers": "game-session: Restauración soportada de O, Pausa y continuación del tiempo restante; reto extra 2",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "rep1: tras restaurar hay exactamente una X y una O y turno humano (O jugó una vez)",
+          "ok": true,
+          "detail": "..O.X.... Tu turno"
+        },
+        {
+          "check": "rep1: marcador intacto",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "rep2: tras restaurar hay exactamente una X y una O y turno humano (O jugó una vez)",
+          "ok": true,
+          "detail": "....X..O. Tu turno"
+        },
+        {
+          "check": "rep2: marcador intacto",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "rep3: tras restaurar hay exactamente una X y una O y turno humano (O jugó una vez)",
+          "ok": true,
+          "detail": "....X...O Tu turno"
+        },
+        {
+          "check": "rep3: marcador intacto",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "apertura de O pendiente + muerte de proceso: una sola O y turno humano",
+          "ok": true,
+          "detail": "........O Tu turno"
+        }
+      ],
+      "notes": [
+        "Si O ya había jugado antes del HOME (ventana de ~0.3 s), la repetición equivale a TC-15; el estado pendiente exacto no es observable desde adb."
+      ],
+      "evidence": [
+        "evidence/TC-17/01-rep1-restaurado.xml",
+        "evidence/TC-17/01-rep1-restaurado.png",
+        "evidence/TC-17/02-rep2-restaurado.xml",
+        "evidence/TC-17/02-rep2-restaurado.png",
+        "evidence/TC-17/03-rep3-restaurado.xml",
+        "evidence/TC-17/03-rep3-restaurado.png",
+        "evidence/TC-17/04-apertura-restaurada.xml",
+        "evidence/TC-17/04-apertura-restaurada.png"
+      ],
+      "error": null,
+      "seconds": 62.2
+    },
+    {
+      "id": "TC-18",
+      "title": "Detención forzada y lanzamiento nuevo: partida nueva, marcador y dificultad conservados, sonido activo",
+      "covers": "game-session: Límites de la sesión (Sin persistencia permanente, Nueva sesión, Sin snapshot temporal)",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "precondición: partida activa, sonido silenciado, marcador > 0",
+          "ok": true,
+          "detail": "O........ (1, 0, 0)"
+        },
+        {
+          "check": "partida nueva: tablero vacío e inicia X",
+          "ok": true,
+          "detail": "......... La persona hace la primera jugada"
+        },
+        {
+          "check": "marcador conservado",
+          "ok": true,
+          "detail": "(1, 0, 0) -> (1, 0, 0)"
+        },
+        {
+          "check": "dificultad conservada (Imposible)",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "sonido vuelve a activo (Habilitado) en sesión nueva",
+          "ok": true,
+          "detail": "['Sonido', 'Habilitado']"
+        },
+        {
+          "check": "sin jugada automática (X inicia)",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "evidence": [
+        "evidence/TC-18/01-antes.xml",
+        "evidence/TC-18/01-antes.png",
+        "evidence/TC-18/02-tras-force-stop.xml",
+        "evidence/TC-18/02-tras-force-stop.png"
+      ],
+      "error": null,
+      "seconds": 60.1
+    },
+    {
+      "id": "TC-19",
+      "title": "Cierre de la tarea desde Recientes: partida nueva, marcador y dificultad conservados",
+      "covers": "game-session: Nueva sesión tras finalizar la tarea",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "partida nueva tras cerrar la tarea (tablero vacío, X)",
+          "ok": true,
+          "detail": "......... La persona hace la primera jugada"
+        },
+        {
+          "check": "marcador conservado",
+          "ok": true,
+          "detail": "(1, 0, 0) -> (1, 0, 0)"
+        },
+        {
+          "check": "dificultad conservada (Difícil)",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "evidence": [
+        "evidence/TC-19/01-recientes.png",
+        "evidence/TC-19/02-tras-deslizar.png",
+        "evidence/TC-19/01-relanzado.xml",
+        "evidence/TC-19/01-relanzado.png"
+      ],
+      "error": null,
+      "seconds": 47.8
+    },
+    {
+      "id": "TC-20",
+      "title": "Accesibilidad por jerarquía: etiquetas y objetivos táctiles >= 48 dp (vertical y horizontal)",
+      "covers": "game-options: Accesibilidad de opciones y diálogos; tic-tac-toe-game: Restricciones extremas y accesibilidad, Acción en menú compacto",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "vertical: 9 casillas con etiqueta 'Casilla, fila r, columna c, estado'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vertical: casillas ocupadas expuestas como deshabilitadas, vacías habilitadas",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vertical: tablero etiquetado 'Tablero de tres en raya'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vertical: botón de menú con etiqueta 'Abrir menú'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vertical: 'Nueva partida' con texto",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vertical: objetivos >= 48 dp (menú, Nueva partida, casillas)",
+          "ok": true,
+          "detail": "menu=126x126 newgame_h=126"
+        },
+        {
+          "check": "vertical: cinco entradas con etiqueta de texto y alto >= 48 dp",
+          "ok": true,
+          "detail": "[126, 126, 126, 126, 126]"
+        },
+        {
+          "check": "vertical: Dificultad deshabilitada expone enabled=false en partida activa",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vertical: diálogo Acerca de con botón 'Aceptar' >= 48 dp",
+          "ok": true,
+          "detail": "126"
+        },
+        {
+          "check": "horizontal: 9 casillas con etiqueta 'Casilla, fila r, columna c, estado'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "horizontal: casillas ocupadas expuestas como deshabilitadas, vacías habilitadas",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "horizontal: tablero etiquetado 'Tablero de tres en raya'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "horizontal: botón de menú con etiqueta 'Abrir menú'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "horizontal: 'Nueva partida' con texto",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "horizontal: objetivos >= 48 dp (menú, Nueva partida, casillas)",
+          "ok": true,
+          "detail": "menu=126x126 newgame_h=126"
+        },
+        {
+          "check": "horizontal: cinco entradas con etiqueta de texto y alto >= 48 dp",
+          "ok": true,
+          "detail": "[126, 126, 126, 126, 126]"
+        },
+        {
+          "check": "horizontal: Dificultad deshabilitada expone enabled=false en partida activa",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "horizontal: diálogo Acerca de con botón 'Aceptar' >= 48 dp",
+          "ok": true,
+          "detail": "126"
+        }
+      ],
+      "notes": [
+        "El icono de cada entrada del menú es decorativo (contentDescription=null) y la etiqueta es el texto; el recorrido real con TalkBack es manual (TC-30)."
+      ],
+      "evidence": [
+        "evidence/TC-20/01-orient0-juego.xml",
+        "evidence/TC-20/01-orient0-juego.png",
+        "evidence/TC-20/02-orient0-menu.xml",
+        "evidence/TC-20/02-orient0-menu.png",
+        "evidence/TC-20/03-orient1-juego.xml",
+        "evidence/TC-20/03-orient1-juego.png",
+        "evidence/TC-20/04-orient1-menu.xml",
+        "evidence/TC-20/04-orient1-menu.png"
+      ],
+      "error": null,
+      "seconds": 42.5
+    },
+    {
+      "id": "TC-21",
+      "title": "Arranque limpio en horizontal y juego en horizontal",
+      "covers": "tic-tac-toe-game: Disposición landscape, Sin barra superior; game-options: menú en horizontal",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "arranque en horizontal: tablero vacío e inicia X",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "horizontal limpio: tablero, estado, marcador y controles presentes",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "horizontal limpio: sin título de aplicación 'TicTacToe'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "horizontal limpio: ningún texto (barra/título) por encima del tablero",
+          "ok": true,
+          "detail": "[]"
+        },
+        {
+          "check": "horizontal limpio: tablero cuadrado",
+          "ok": true,
+          "detail": "709x709px"
+        },
+        {
+          "check": "horizontal limpio: botón de menú junto a 'Nueva partida' (misma fila, a la derecha)",
+          "ok": true,
+          "detail": "newgame=[921,2211] menu=[2233,2359] cy 741/742"
+        },
+        {
+          "check": "horizontal limpio: horizontal - tablero a la izquierda del panel",
+          "ok": true,
+          "detail": "board.r=879 status.l=921 newgame.l=921"
+        },
+        {
+          "check": "horizontal limpio: horizontal - estado, marcador y controles a la derecha del tablero",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "horizontal limpio: horizontal - tablero <= 270 dp (referencia)",
+          "ok": true,
+          "detail": "709px = 270 dp"
+        },
+        {
+          "check": "horizontal limpio: horizontal - tablero ocupa el lado izquierdo (centro en la mitad izquierda)",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "horizontal limpio: objetivos del menú y 'Nueva partida' >= 48 dp",
+          "ok": true,
+          "detail": "menu 126x126, newgame h=126"
+        },
+        {
+          "check": "horizontal limpio: casillas >= 48 dp",
+          "ok": true,
+          "detail": "min=226px"
+        },
+        {
+          "check": "horizontal limpio: contenido dentro de pantalla",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "menú horizontal: cinco entradas en orden",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "Atrás cierra el menú en horizontal",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vertical tras horizontal: tablero, estado, marcador y controles presentes",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vertical tras horizontal: sin título de aplicación 'TicTacToe'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "vertical tras horizontal: ningún texto (barra/título) por encima del tablero",
+          "ok": true,
+          "detail": "[]"
+        },
+        {
+          "check": "vertical tras horizontal: tablero cuadrado",
+          "ok": true,
+          "detail": "996x996px"
+        },
+        {
+          "check": "vertical tras horizontal: botón de menú junto a 'Nueva partida' (misma fila, a la derecha)",
+          "ok": true,
+          "detail": "newgame=[42,891] menu=[913,1039] cy 1662/1663"
+        },
+        {
+          "check": "vertical tras horizontal: vertical - orden tablero > estado > marcador > controles",
+          "ok": true,
+          "detail": "1166/1198/1293/1599"
+        },
+        {
+          "check": "vertical tras horizontal: objetivos del menú y 'Nueva partida' >= 48 dp",
+          "ok": true,
+          "detail": "menu 126x126, newgame h=126"
+        },
+        {
+          "check": "vertical tras horizontal: casillas >= 48 dp",
+          "ok": true,
+          "detail": "min=322px"
+        },
+        {
+          "check": "vertical tras horizontal: contenido dentro de pantalla",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "tablero conservado al volver a vertical",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "evidence": [
+        "evidence/TC-21/01-arranque-horizontal.xml",
+        "evidence/TC-21/01-arranque-horizontal.png",
+        "evidence/TC-21/02-jugada-horizontal.xml",
+        "evidence/TC-21/02-jugada-horizontal.png",
+        "evidence/TC-21/03-menu-horizontal.xml",
+        "evidence/TC-21/03-menu-horizontal.png"
+      ],
+      "error": null,
+      "seconds": 24.0
+    },
+    {
+      "id": "TC-22",
+      "title": "Estabilidad: sin crash ni ANR durante toda la ejecución",
+      "covers": "design: Resolver recreación durante la espera de O sin crash",
+      "verdict": "pasa",
+      "checks": [
+        {
+          "check": "buffer de crash sin 'FATAL EXCEPTION'",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "check": "sin am_anr del paquete",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "notes": [
+        "El logcat se limpió en TC-03 y se revisa al final; contiene solo la parte posterior a TC-03."
+      ],
+      "evidence": [
+        "evidence/TC-22/logcat-crash.txt",
+        "evidence/TC-22/logcat-errors-app.txt"
+      ],
+      "error": null,
+      "seconds": 0.1
+    },
+    {
+      "id": "TC-30",
+      "title": "MANUAL: sonido audible y recorrido TalkBack",
+      "covers": "game-session: sonido sin duplicar; game-options: Accesibilidad (tecnología de asistencia)",
+      "verdict": "manual, no ejecutada",
+      "checks": [],
+      "notes": [
+        "No ejecutado: el emulador corre sin audio y TalkBack no se automatiza. Debe hacerlo una persona: (1) oír X/O al jugar, silencio con Sonido deshabilitado, un solo sonido por jugada tras rotar y tras restaurar; (2) recorrido con TalkBack de casillas, menú, diálogos y 'Reiniciar puntajes'."
+      ],
+      "evidence": [],
+      "error": null,
+      "seconds": 0.0
+    }
+  ]
+}

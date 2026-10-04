@@ -19,7 +19,6 @@ import androidx.test.espresso.Espresso.pressBack
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.edu.unal.tictactoe.game.models.Turn
-import com.edu.unal.tictactoe.ui.game.ExitConfirmationDialogTags
 import com.edu.unal.tictactoe.ui.game.GameMenuTags
 import com.edu.unal.tictactoe.ui.game.GameViewModel
 import com.edu.unal.tictactoe.ui.game.models.GameUiState
@@ -42,10 +41,12 @@ class MainActivitySoundOptionsTest {
 
     private lateinit var scenario: ActivityScenario<MainActivity>
     private lateinit var viewModel: GameViewModel
+    private val preferencesFixture = GamePreferencesTestFixture()
     private val context get() = InstrumentationRegistry.getInstrumentation().targetContext
 
     @Before
     fun launch() {
+        preferencesFixture.prepare(context)
         scenario = ActivityScenario.launch(MainActivity::class.java)
         viewModel = currentViewModel()
         composeRule.waitForIdle()
@@ -53,7 +54,11 @@ class MainActivitySoundOptionsTest {
 
     @After
     fun close() {
-        if (::scenario.isInitialized) scenario.close()
+        try {
+            if (::scenario.isInitialized) scenario.close()
+        } finally {
+            preferencesFixture.cleanup()
+        }
     }
 
     @Test
@@ -95,9 +100,7 @@ class MainActivitySoundOptionsTest {
         assertSameExceptSound(mutedIdleSnapshot, snapshot())
 
         val oldViewModel = viewModel
-        openMenu()
-        composeRule.onNodeWithTag(GameMenuTags.EXIT).assertIsDisplayed().performClick()
-        composeRule.onNodeWithTag(ExitConfirmationDialogTags.CONFIRM).performClick()
+        scenario.onActivity { it.finish() }
         composeRule.waitUntil(timeoutMillis = 5_000) { scenario.state == Lifecycle.State.DESTROYED }
 
         scenario.close()

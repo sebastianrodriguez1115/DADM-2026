@@ -1,6 +1,9 @@
 package com.edu.unal.tictactoe.ui.game
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelStore
+import com.edu.unal.tictactoe.data.preferences.FakeGamePreferences
+import com.edu.unal.tictactoe.data.preferences.GamePreferences
 import com.edu.unal.tictactoe.game.TicTacToeGame
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -23,14 +26,25 @@ class GameViewModelCoroutineTestHarness : TestWatcher() {
     fun createViewModel(
         game: TicTacToeGame = TicTacToeGame(),
         mainDispatcher: CoroutineDispatcher = dispatcher,
+        preferences: GamePreferences = FakeGamePreferences(),
+        savedStateHandle: SavedStateHandle = SavedStateHandle(),
     ): GameViewModel {
-        val viewModel = GameViewModel(game = game, monotonicClock = clock, mainDispatcher = mainDispatcher)
+        val viewModel = GameViewModel(
+            preferences = preferences,
+            savedStateHandle = savedStateHandle,
+            game = game,
+            monotonicClock = clock,
+            mainDispatcher = mainDispatcher,
+        )
         viewModelStores += ViewModelStore().apply { put("game", viewModel) }
         return viewModel
     }
 
-    fun createViewModelResumed(game: TicTacToeGame = TicTacToeGame()) =
-        createViewModel(game).also { it.onHostResumed() }
+    fun createViewModelResumed(
+        game: TicTacToeGame = TicTacToeGame(),
+        preferences: GamePreferences = FakeGamePreferences(),
+        savedStateHandle: SavedStateHandle = SavedStateHandle(),
+    ) = createViewModel(game, preferences = preferences, savedStateHandle = savedStateHandle).also { it.onHostResumed() }
 
     override fun starting(description: Description) {
         Dispatchers.setMain(dispatcher)

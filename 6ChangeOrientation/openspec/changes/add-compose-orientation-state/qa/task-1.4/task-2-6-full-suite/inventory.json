@@ -1,0 +1,143 @@
+{
+  "classes": {
+    "com.edu.unal.tictactoe.AboutDialogTest": [
+      "showsTitleImageAndExactAuthor",
+      "acceptClosesAndInvokesDismissOnce",
+      "backDismissesOnceWithoutOtherSideEffects"
+    ],
+    "com.edu.unal.tictactoe.AndroidMoveSoundPlayerLoadingTest": [
+      "twoLoadsFromOnePoolCompleteIndependentlyWithoutBlockingMain"
+    ],
+    "com.edu.unal.tictactoe.DifficultyDialogTest": [
+      "opensWithFourOrderedLabelsAndOnlyCurrentSelected",
+      "selectingEachOptionIncludingCurrentUpdatesClosesAndNotifiesOnce",
+      "rejectedSelectionClosesWithoutChangingValueOrNotifying",
+      "backDismissesWithoutSelectionOrToast",
+      "outsideTouchDismissesWithoutSelectionOrToast",
+      "hostRecreationAndRecompositionKeepCurrentWithoutNotifying"
+    ],
+    "com.edu.unal.tictactoe.ExampleInstrumentedTest": [
+      "useAppContext"
+    ],
+    "com.edu.unal.tictactoe.ExitConfirmationDialogTest": [
+      "noInvokesOnlyCancelClosesDialogAndKeepsHostStateIntact",
+      "yesInvokesOnlyConfirmWithoutClosingOrChangingHostState",
+      "backPressKeepsDialogOpenAndInvokesNoCallback",
+      "outsideTouchKeepsDialogOpenThenNoCloses"
+    ],
+    "com.edu.unal.tictactoe.GameBoardInteractionTest": [
+      "exposesNineLabeledButtonHitboxesAndEachTouchRequestsOneMove",
+      "availableCellAcceptsKeyboardEnterAndDisabledCellHasNoActivationAction",
+      "availableCellClickRequestsExactlyOneMove",
+      "keyboardTabSkipsOccupiedCellAndEnterActivatesTheFocusedAvailableCell",
+      "computerTurnAndTerminalStateExposeDisabledCellsWithoutCallbacks"
+    ],
+    "com.edu.unal.tictactoe.GameBoardLayoutTest": [
+      "hitTargetsStayAtLeast48DpInCompactAndResponsiveViewports",
+      "fractionalDensitiesDoNotRoundHitTargetsBelow48Dp"
+    ],
+    "com.edu.unal.tictactoe.GameBoardRenderingTest": [
+      "rendersVectorMarksWithThemeColorsAndNoTextAcrossThemes",
+      "rendersFourThirdsGridLinesWithoutBlockingNineCellActions",
+      "cellsRemainSemanticallyClickable"
+    ],
+    "com.edu.unal.tictactoe.GameMenuTest": [
+      "menuHasExactlyFiveEntriesInSpecifiedOrder",
+      "eachEnabledEntryShowsItsLabelClosesMenuAndInvokesCallbackOnce",
+      "soundShowsEnabledAndDisabledTextAndSemanticStateAndRemainsActionable",
+      "disabledDifficultyStaysVisibleAndClickingItDoesNotInvokeOrClose",
+      "recompositionReflectsCanChangeWithoutInvokingCallbacks",
+      "backDismissesMenuWithoutLeavingTheContent"
+    ],
+    "com.edu.unal.tictactoe.GamePreferencesIsolationTest": [
+      "preparationRemovesResidueSeedsZerosAndExpertAndLeavesOtherFilesAlone",
+      "preparationAppliesCustomSeedDeterministicallyAndCanLeaveKeysAbsent"
+    ],
+    "com.edu.unal.tictactoe.GamePreferencesResidueWriterTest": [
+      "writeContaminatedGamePreferences"
+    ],
+    "com.edu.unal.tictactoe.GameScreenSoundIntegrationTest": [
+      "menuMuteStopsInSameMainEventPreservesTurnAndSuppressesUntilUnmuted"
+    ],
+    "com.edu.unal.tictactoe.GameScreenTest": [
+      "topBarMenuIsAccessibleAndDoesNotCoverTheBoard",
+      "menuAndShortcutNewGameRunTheSameActionPreservingScore",
+      "difficultyEntryUpdatesVmClosesWindowsAndToastsOnceEvenWhenRepeatingLevel",
+      "disabledDifficultyDuringActiveGameDoesNotOpenOrNotify",
+      "staleDifficultyChoiceAfterOpeningIsRejectedWithoutToastOrStateChange",
+      "hostRecompositionAndRecreationDoNotReplayTheToast",
+      "boardStaysSquareAndNewGameIsReachableInsideTopBarViewport"
+    ],
+    "com.edu.unal.tictactoe.ImpossibleOpeningTimingTest": [
+      "impossibleOpeningFromEmptyBoardRunsOneMoveAndRecordsSamples"
+    ],
+    "com.edu.unal.tictactoe.LauncherIconTest": [
+      "adaptiveMipmapsResolveAndRenderOwnMotif",
+      "monochromeLayerRendersWhiteForegroundOverBackground"
+    ],
+    "com.edu.unal.tictactoe.MainActivityAccessibilityTest": [
+      "realPortraitAndLandscapeKeepTopBarBoardAndControlsReachable",
+      "menuEntriesExposeLabelsAndClickActionsMatchingTheDifficultyGate",
+      "difficultyDialogOptionsExposeRadioSemanticsAndCancelKeepsTheValue",
+      "aboutAndExitDialogButtonsExposeLabelsRolesAndTouchTargets"
+    ],
+    "com.edu.unal.tictactoe.MainActivityLifecycleTest": [
+      "pauseSuspendsPendingResponseAndResumeCompletesItOnce",
+      "recreationDuringPendingResponseRetainsSessionWithoutDuplicatingTurn",
+      "recreationDuringPendingOpeningRetainsSessionAndExecutesOneOpening",
+      "finishingWithPendingTurnCancelsItAndNextActivityStartsFreshSession"
+    ],
+    "com.edu.unal.tictactoe.MainActivityOptionsTest": [
+      "exitDialogBlocksBackAndOutsideThenNoPreservesTheActiveSession",
+      "exitDialogConfirmYesFinishesTheRealActivity",
+      "impossibleSelectionAndGateSurviveRecreationBackgroundAndMenuBack",
+      "terminalGameEnablesDifficultyAndKeepsNewGameRulesAndScore",
+      "newSessionAfterExitLoadsPersistedDifficulty",
+      "aboutDialogDuringAnActiveGameShowsTheAuthorAndKeepsTheSnapshot"
+    ],
+    "com.edu.unal.tictactoe.MainActivityPendingTurnOptionsTest": [
+      "openMenuDoesNotPauseResponseAndRemainsUsableAfterOneComputerMove",
+      "acceptedDifficultyDuringEmptyOpeningAppliesToThatOpening",
+      "difficultyDialogOpenedDuringOpeningCannotApplyAfterOHasMoved"
+    ],
+    "com.edu.unal.tictactoe.MainActivitySoundOptionsTest": [
+      "muteIsAccessibleAndSurvivesNewGameRecreationAndBackgroundButNotNewSession"
+    ],
+    "com.edu.unal.tictactoe.MainActivityTest": [
+      "humanMoveUsesActivityViewModelAndRecompositionDoesNotRepeatIt",
+      "newGameActionStartsOOnceAndPreservesScoreAcrossRedraws",
+      "activityRecreationKeepsTheSameViewModelAndCurrentGame",
+      "terminalGameKeepsResultBoardAndSingleScoreAfterRecreation",
+      "openingOAndFollowingXOpeningSurviveRecreationWithoutExtraOpening",
+      "activeAndTerminalGamesSurviveRealBackgroundAndForegroundTransitions",
+      "closingActivityAndLaunchingNewInstanceStartsNewGameWithPersistedScore"
+    ],
+    "com.edu.unal.tictactoe.SharedPreferencesGamePreferencesTest": [
+      "absentKeysDefaultToZeroAndExpert",
+      "eachInvalidScoreIsNormalizedIndependentlyAndValidScoresSurvive",
+      "wrongTypedScoresAndDifficultyFallbackPerKey",
+      "stableDifficultyCodesRoundTripAndWritesRestoreFromFreshAdapter",
+      "writesAreImmediatelyVisibleAndPreserveUnrelatedPreference",
+      "obtainsPreferencesFromApplicationContextRatherThanSuppliedWrapper"
+    ],
+    "com.edu.unal.tictactoe.TicTacToeScreenTest": [
+      "rendersBoardStatusScoreAndNewGameInOrder",
+      "rendersNineCellsAndLocalizedCellDescription",
+      "rendersActiveTurnStatesFromResources",
+      "rendersComputerTurnFromResources",
+      "rendersTieFromResources",
+      "rendersComputerResultFromResources",
+      "cellAndNewGameCallbacksAreOnlyInvokedByActions",
+      "recompositionDoesNotInvokeCallbacksOrChangeSnapshot",
+      "cellsArePositiveSquareAndStayInsideTheBoard",
+      "boardAndControlsAdaptToPortraitAndLandscapeConstraints",
+      "occupiedCellsKeepTheirMarksAndAreDisabled",
+      "largeFontKeepsTerminalMarksVisibleAndControlsReachableInBothThemes",
+      "realViewModelUiFlowCoversHumanComputerAndTieResults",
+      "realViewModelUiFlowAlternatesAfterAbandonmentWithoutScoringOrDuplicateOpening",
+      "terminalResultsAndComputerTurnRejectCellTouchesButAllowNewGame"
+    ]
+  },
+  "class_count": 23,
+  "test_count": 91
+}

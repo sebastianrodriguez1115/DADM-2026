@@ -1,6 +1,7 @@
 package com.edu.unal.tictactoe.game
 
 import java.util.Collections
+import kotlin.math.abs
 import com.edu.unal.tictactoe.game.models.ComputerMoveResult
 import com.edu.unal.tictactoe.game.models.DifficultyLevel
 import com.edu.unal.tictactoe.game.models.GameResult
@@ -151,6 +152,46 @@ class TicTacToeGame(
 
     fun clearBoard() {
         cells.fill(Mark.Empty)
+    }
+
+    /**
+     * Replaces the whole board with [marks] when it is an intrinsically legal position,
+     * without going through the move path (no computer move, no randomizer use).
+     * Returns false and leaves the board untouched otherwise. Turn and starter
+     * consistency are the caller's responsibility.
+     */
+    fun restoreBoard(marks: List<Mark>): Boolean {
+        if (marks.size != BOARD_SIZE) {
+            return false
+        }
+        val candidate = ArrayList(marks)
+        if (!isLegalPosition(candidate)) {
+            return false
+        }
+        for (index in candidate.indices) {
+            cells[index] = candidate[index]
+        }
+        return true
+    }
+
+    private fun isLegalPosition(board: List<Mark>): Boolean {
+        val xCount = board.count { it == Mark.X }
+        val oCount = board.count { it == Mark.O }
+        if (abs(xCount - oCount) > 1) {
+            return false
+        }
+        val xWins = hasWinningLine(board, Mark.X)
+        val oWins = hasWinningLine(board, Mark.O)
+        return when {
+            xWins && oWins -> false
+            xWins -> xCount >= oCount
+            oWins -> oCount >= xCount
+            else -> true
+        }
+    }
+
+    private fun hasWinningLine(board: List<Mark>, mark: Mark): Boolean {
+        return WINNING_LINES.any { line -> line.all { board[it] == mark } }
     }
 
     private fun resultFor(board: List<Mark>): GameResult {

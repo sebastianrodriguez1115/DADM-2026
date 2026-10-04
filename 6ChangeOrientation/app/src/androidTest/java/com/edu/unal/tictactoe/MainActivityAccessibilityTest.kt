@@ -36,7 +36,6 @@ import com.edu.unal.tictactoe.game.models.DifficultyLevel
 import com.edu.unal.tictactoe.ui.game.AboutDialogTags
 import com.edu.unal.tictactoe.ui.game.DifficultyDialogTags
 import com.edu.unal.tictactoe.ui.game.DifficultyLabels
-import com.edu.unal.tictactoe.ui.game.ExitConfirmationDialogTags
 import com.edu.unal.tictactoe.ui.game.GameMenuTags
 import com.edu.unal.tictactoe.ui.game.GameViewModel
 import org.junit.After
@@ -60,12 +59,14 @@ class MainActivityAccessibilityTest {
     val composeTestRule = createEmptyComposeRule()
     private lateinit var scenario: ActivityScenario<MainActivity>
     private lateinit var activityViewModel: GameViewModel
+    private val preferencesFixture = GamePreferencesTestFixture()
     private var originalRequestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     private val context
         get() = InstrumentationRegistry.getInstrumentation().targetContext
 
     @Before
     fun launchActivity() {
+        preferencesFixture.prepare(context)
         scenario = ActivityScenario.launch(MainActivity::class.java)
         scenario.onActivity { activity ->
             originalRequestedOrientation = activity.requestedOrientation
@@ -76,18 +77,23 @@ class MainActivityAccessibilityTest {
 
     @After
     fun restoreOrientationAndCloseActivity() {
-        if (!::scenario.isInitialized) return
         try {
-            if (scenario.state != Lifecycle.State.DESTROYED) {
-                scenario.onActivity { it.requestedOrientation = originalRequestedOrientation }
+            if (::scenario.isInitialized) {
+                try {
+                    if (scenario.state != Lifecycle.State.DESTROYED) {
+                        scenario.onActivity { it.requestedOrientation = originalRequestedOrientation }
+                    }
+                } finally {
+                    scenario.close()
+                }
             }
         } finally {
-            scenario.close()
+            preferencesFixture.cleanup()
         }
     }
 
     @Test
-    fun realPortraitAndLandscapeKeepTopBarBoardAndControlsReachable() {
+    fun realPortraitAndLandscapeShowNoTitleAndKeepMenuBoardAndControlsReachable() {
         val orientations = listOf(
             ActivityInfo.SCREEN_ORIENTATION_PORTRAIT to Configuration.ORIENTATION_PORTRAIT,
             ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE to Configuration.ORIENTATION_LANDSCAPE,
@@ -152,7 +158,7 @@ class MainActivityAccessibilityTest {
     }
 
     @Test
-    fun aboutAndExitDialogButtonsExposeLabelsRolesAndTouchTargets() {
+    fun aboutDialogButtonsExposeLabelsRolesAndTouchTargets() {
         openMenu()
         clickMenuEntry(GameMenuTags.ABOUT)
         awaitTag(AboutDialogTags.DIALOG, present = true)
@@ -163,13 +169,6 @@ class MainActivityAccessibilityTest {
         assertLabeled(AboutDialogTags.ACCEPT, R.string.about_accept, Role.Button, enabled = true)
         composeTestRule.onNodeWithTag(AboutDialogTags.ACCEPT).performClick()
         awaitTag(AboutDialogTags.DIALOG, present = false)
-        openMenu()
-        clickMenuEntry(GameMenuTags.EXIT)
-        awaitTag(ExitConfirmationDialogTags.DIALOG, present = true)
-        assertLabeled(ExitConfirmationDialogTags.CONFIRM, R.string.exit_yes, Role.Button, enabled = true)
-        assertLabeled(ExitConfirmationDialogTags.CANCEL, R.string.exit_no, Role.Button, enabled = true)
-        composeTestRule.onNodeWithTag(ExitConfirmationDialogTags.CANCEL).performClick()
-        awaitTag(ExitConfirmationDialogTags.DIALOG, present = false)
         assertEquals(Lifecycle.State.RESUMED, scenario.state)
     }
 
@@ -184,25 +183,51 @@ class MainActivityAccessibilityTest {
     }
 
     private fun assertAccessibleLayout() {
-        val board = composeTestRule.onNodeWithTag(BOARD_TAG)
+        composeTestRule.onNodeWithTag(BOARD_TAG)
             .performScrollTo()
             .assertIsDisplayed()
+        // The controls may be below the fold on a short window: reach the menu by scrolling, then
+        // read both bounds at that same scroll position so they can be compared.
+        val menu = composeTestRule.onNodeWithContentDescription(context.getString(R.string.menu_open))
+            .performScrollTo()
+            .assertIsDisplayed()
+            .assertHasClickAction()
             .getUnclippedBoundsInRoot()
+        val board = composeTestRule.onNodeWithTag(BOARD_TAG).getUnclippedBoundsInRoot()
         val width = board.right - board.left
         val height = board.bottom - board.top
         assertTrue("board must have positive size", width > 0.dp && height > 0.dp)
         assertTrue("board must stay square", kotlin.math.abs((width - height).value) <= BOUNDS_TOLERANCE.value)
-        val menu = composeTestRule.onNodeWithContentDescription(context.getString(R.string.menu_open))
-            .assertIsDisplayed()
-            .assertHasClickAction()
-            .getUnclippedBoundsInRoot()
-        assertTrue("top bar must not cover the board", menu.bottom <= board.top)
+        composeTestRule.onNodeWithText(context.getString(R.string.app_name)).assertDoesNotExist()
+        assertTrue(
+            "menu must not overlap the board",
+            menu.left >= board.right || board.left >= menu.right ||
+                menu.top >= board.bottom || board.top >= menu.bottom,
+        )
+        assertTouchTarget(GameMenuTags.BUTTON)
         (0 until 9).forEach { location ->
             val tag = CELL_TAG_PREFIX + location
             composeTestRule.onNodeWithTag(tag).performScrollTo().assertIsDisplayed()
             assertTouchTarget(tag)
         }
-        composeTestRule.onNodeWithTag(NEW_GAME_TAG).performScrollTo().assertIsDisplayed().assertIsEnabled()
+        val newGame = composeTestRule.onNodeWithTag(NEW_GAME_TAG)
+            .performScrollTo()
+            .assertIsDisplayed()
+            .assertIsEnabled()
+            .assert(hasText(context.getString(R.string.new_game)))
+            .getUnclippedBoundsInRoot()
+        assertTouchTarget(NEW_GAME_TAG)
+        val menuBeside = composeTestRule.onNodeWithContentDescription(context.getString(R.string.menu_open))
+            .getUnclippedBoundsInRoot()
+        assertTrue(
+            "menu must share the controls row with New game",
+            menuBeside.top < newGame.bottom && newGame.top < menuBeside.bottom,
+        )
+        openMenu()
+        assertMenuEntries(difficultyEnabled = true)
+        pressBack()
+        composeTestRule.waitForIdle()
+        awaitTag(GameMenuTags.MENU, present = false)
     }
 
     private fun assertMenuEntries(difficultyEnabled: Boolean) {
@@ -215,7 +240,7 @@ class MainActivityAccessibilityTest {
         )
         assertLabeled(GameMenuTags.NEW_GAME, R.string.new_game, enabled = true)
         assertLabeled(GameMenuTags.ABOUT, R.string.menu_about, enabled = true)
-        assertLabeled(GameMenuTags.EXIT, R.string.menu_exit, enabled = true)
+        assertLabeled(GameMenuTags.RESET_SCORES, R.string.menu_reset_scores, enabled = true)
         assertLabeled(GameMenuTags.DIFFICULTY, R.string.menu_difficulty, enabled = difficultyEnabled)
         assertLabeled(GameMenuTags.SOUND, R.string.menu_sound, enabled = true)
         composeTestRule.onNodeWithTag(GameMenuTags.SOUND)
@@ -246,6 +271,7 @@ class MainActivityAccessibilityTest {
 
     private fun openMenu() {
         composeTestRule.onNodeWithContentDescription(context.getString(R.string.menu_open))
+            .performScrollTo()
             .assertIsDisplayed()
             .performClick()
         composeTestRule.waitForIdle()

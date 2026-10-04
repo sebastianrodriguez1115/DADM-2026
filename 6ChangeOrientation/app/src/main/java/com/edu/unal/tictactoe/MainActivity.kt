@@ -14,6 +14,7 @@ import com.edu.unal.tictactoe.ui.game.GameScreen
 import com.edu.unal.tictactoe.ui.game.GameViewModel
 import com.edu.unal.tictactoe.ui.game.audio.AndroidMoveSoundPlayerFactory
 import com.edu.unal.tictactoe.ui.game.audio.MoveSoundHost
+import com.edu.unal.tictactoe.ui.game.gameViewModelFactory
 import com.edu.unal.tictactoe.ui.theme.TicTacToeTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         // Resolve from the Activity's store once so lifecycle callbacks and Compose share it.
-        gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
+        gameViewModel = ViewModelProvider(this, gameViewModelFactory())[GameViewModel::class.java]
         moveSoundHost = MoveSoundHost(
             gameViewModel,
             AndroidMoveSoundPlayerFactory(applicationContext),
@@ -47,7 +48,7 @@ class MainActivity : ComponentActivity() {
                             Toast.LENGTH_SHORT,
                         ).show()
                     },
-                    onExit = { finish() },
+                    onResetScores = gameViewModel::resetScores,
                 )
             }
         }

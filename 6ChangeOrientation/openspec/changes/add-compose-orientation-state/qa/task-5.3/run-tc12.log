@@ -1,0 +1,35 @@
+16:55:51 original settings accelerometer_rotation=1 user_rotation=0
+16:55:51 install: Performing Streamed Install
+Success
+16:55:51 === TC-12: Dificultad: cuatro niveles, Toast, bloqueo en partida activa, edición al terminar
+16:56:02   [ok] exactamente cuatro radios en orden Fácil, Difícil, Experto, Imposible [('Fácil', False), ('Difícil', False), ('Experto', True), ('Imposible', False)]
+16:56:02   [ok] un solo radio marcado (Experto) [('Fácil', False), ('Difícil', False), ('Experto', True), ('Imposible', False)]
+16:56:02   [ok] filas de radio >= 48 dp [126, 126, 126, 126]
+16:56:12   [ok] seleccionar Fácil: se cierra el diálogo y aparece un Toast (ventana Toast) toast=True
+16:56:17   [ok] seleccionar Fácil: el Toast no persiste/repite tras expirar 
+16:56:24   [ok] reabrir tras elegir Fácil: radio marcado = Fácil 
+16:56:34   [ok] seleccionar Imposible: se cierra el diálogo y aparece un Toast (ventana Toast) toast=True
+16:56:38   [ok] seleccionar Imposible: el Toast no persiste/repite tras expirar 
+16:56:46   [ok] reabrir tras elegir Imposible: radio marcado = Imposible 
+16:56:56   [ok] seleccionar Difícil: se cierra el diálogo y aparece un Toast (ventana Toast) toast=True
+16:57:00   [ok] seleccionar Difícil: el Toast no persiste/repite tras expirar 
+16:57:07   [ok] reabrir tras elegir Difícil: radio marcado = Difícil 
+16:57:17   [ok] seleccionar Experto: se cierra el diálogo y aparece un Toast (ventana Toast) toast=True
+16:57:22   [ok] seleccionar Experto: el Toast no persiste/repite tras expirar 
+16:57:29   [ok] reabrir tras elegir Experto: radio marcado = Experto 
+16:57:39   [ok] seleccionar Experto: se cierra el diálogo y aparece un Toast (ventana Toast) toast=True
+16:57:43   [ok] seleccionar Experto: el Toast no persiste/repite tras expirar 
+16:57:50   [ok] reabrir tras elegir Experto: radio marcado = Experto 
+16:57:53   [ok] preferencia persistida con código 2 (Experto) <?xml version='1.0' encoding='utf-8' standalone='yes' ?> <map>     <int name="difficulty_code" value="2" /> </map> 
+16:58:09   [ok] rotar tras elegir no vuelve a emitir el Toast 
+16:58:12   [ok] preferencia persistida con código 3 (Imposible) <?xml version='1.0' encoding='utf-8' standalone='yes' ?> <map>     <int name="difficulty_code" value="3" /> </map> 
+16:58:23   [ok] persistencia tras detención forzada y relanzamiento: Imposible 
+16:58:31   [ok] partida activa con marcas: Dificultad deshabilitada 
+16:58:34   [ok] tocar la entrada deshabilitada no abre el diálogo de dificultad 
+16:58:37   [ok] tras tocar la entrada deshabilitada la partida no cambia O...X.... -> O...X....
+16:58:53   [ok] partida terminada: Dificultad habilitada 
+16:59:01   [ok] partida terminada: se acepta el cambio de dificultad (Toast) 
+16:59:03   [ok] el cambio tras desenlace no altera tablero ni marcador 
+16:59:03 === TC-12 -> pasa
+16:59:03 restored: user_rotation=0, accelerometer_rotation restored
+16:59:03 summary: {'pasa': 22, 'manual, no ejecutada': 1}  guard checks: 236

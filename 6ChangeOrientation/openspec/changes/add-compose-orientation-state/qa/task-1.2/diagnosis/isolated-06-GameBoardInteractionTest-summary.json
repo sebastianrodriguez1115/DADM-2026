@@ -1,0 +1,26 @@
+{
+  "label": "isolated-06-GameBoardInteractionTest",
+  "expected": 5,
+  "starts": 5,
+  "ended": 5,
+  "passed": 5,
+  "failed": 0,
+  "complete_inventory": true,
+  "actual_ids": [
+    "com.edu.unal.tictactoe.GameBoardInteractionTest#keyboardTabSkipsOccupiedCellAndEnterActivatesTheFocusedAvailableCell",
+    "com.edu.unal.tictactoe.GameBoardInteractionTest#availableCellAcceptsKeyboardEnterAndDisabledCellHasNoActivationAction",
+    "com.edu.unal.tictactoe.GameBoardInteractionTest#computerTurnAndTerminalStateExposeDisabledCellsWithoutCallbacks",
+    "com.edu.unal.tictactoe.GameBoardInteractionTest#availableCellClickRequestsExactlyOneMove",
+    "com.edu.unal.tictactoe.GameBoardInteractionTest#exposesNineLabeledButtonHitboxesAndEachTouchRequestsOneMove"
+  ],
+  "expected_ids": [
+    "com.edu.unal.tictactoe.GameBoardInteractionTest#availableCellAcceptsKeyboardEnterAndDisabledCellHasNoActivationAction",
+    "com.edu.unal.tictactoe.GameBoardInteractionTest#availableCellClickRequestsExactlyOneMove",
+    "com.edu.unal.tictactoe.GameBoardInteractionTest#computerTurnAndTerminalStateExposeDisabledCellsWithoutCallbacks",
+    "com.edu.unal.tictactoe.GameBoardInteractionTest#exposesNineLabeledButtonHitboxesAndEachTouchRequestsOneMove",
+    "com.edu.unal.tictactoe.GameBoardInteractionTest#keyboardTabSkipsOccupiedCellAndEnterActivatesTheFocusedAvailableCell"
+  ],
+  "ok_count": 5,
+  "failure_marker": false,
+  "verified": true
+}

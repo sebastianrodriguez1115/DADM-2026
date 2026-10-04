@@ -1,0 +1,24 @@
+{
+  "label": "reverse-MainActivityAccessibilityTest",
+  "expected": 4,
+  "starts": 4,
+  "ended": 4,
+  "passed": 4,
+  "failed": 0,
+  "complete_inventory": true,
+  "actual_ids": [
+    "com.edu.unal.tictactoe.MainActivityAccessibilityTest#menuEntriesExposeLabelsAndClickActionsMatchingTheDifficultyGate",
+    "com.edu.unal.tictactoe.MainActivityAccessibilityTest#aboutDialogButtonsExposeLabelsRolesAndTouchTargets",
+    "com.edu.unal.tictactoe.MainActivityAccessibilityTest#realPortraitAndLandscapeKeepTopBarBoardAndControlsReachable",
+    "com.edu.unal.tictactoe.MainActivityAccessibilityTest#difficultyDialogOptionsExposeRadioSemanticsAndCancelKeepsTheValue"
+  ],
+  "expected_ids": [
+    "com.edu.unal.tictactoe.MainActivityAccessibilityTest#aboutDialogButtonsExposeLabelsRolesAndTouchTargets",
+    "com.edu.unal.tictactoe.MainActivityAccessibilityTest#difficultyDialogOptionsExposeRadioSemanticsAndCancelKeepsTheValue",
+    "com.edu.unal.tictactoe.MainActivityAccessibilityTest#menuEntriesExposeLabelsAndClickActionsMatchingTheDifficultyGate",
+    "com.edu.unal.tictactoe.MainActivityAccessibilityTest#realPortraitAndLandscapeKeepTopBarBoardAndControlsReachable"
+  ],
+  "ok_count": 4,
+  "failure_marker": false,
+  "verified": true
+}

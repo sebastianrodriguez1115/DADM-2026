@@ -1,7 +1,9 @@
 package com.edu.unal.tictactoe.ui.game
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.edu.unal.tictactoe.data.preferences.GamePreferences
 import com.edu.unal.tictactoe.game.TicTacToeGame
 import com.edu.unal.tictactoe.game.models.ComputerMoveResult
 import com.edu.unal.tictactoe.game.models.DifficultyLevel
@@ -12,6 +14,8 @@ import com.edu.unal.tictactoe.game.models.Score
 import com.edu.unal.tictactoe.game.models.Turn
 import com.edu.unal.tictactoe.ui.game.audio.MoveSoundSink
 import com.edu.unal.tictactoe.ui.game.models.GameUiState
+import com.edu.unal.tictactoe.ui.game.session.GameSessionSnapshot
+import com.edu.unal.tictactoe.ui.game.session.GameSessionSnapshotCodec
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,7 +27,27 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 
+/**
+ * Holds the live game session and mirrors it, as a [GameSessionSnapshot], into the framework's
+ * [SavedStateHandle]. Score and difficulty come only from [preferences]; the snapshot format,
+ * excluded fields and restoration limits are documented on [GameSessionSnapshot] and
+ * [com.edu.unal.tictactoe.ui.game.session.GameSessionSnapshotCodec].
+ *
+ * Capture: the snapshot is rewritten at the end of construction and after every transition that
+ * changes it (human move, computer move, new game, sound toggle). The host pause
+ * ([onHostPaused]) is the only route that freezes the remaining time of a pending turn of O and
+ * rewrites the snapshot with it, because the framework serializes the saved state after that
+ * callback; no other save callback exists. Only a remaining duration is stored, never an instant.
+ *
+ * Restore (at construction): the whole snapshot is validated before anything is applied; an
+ * invalid or absent one is discarded entirely and a fresh session starts (empty board, X, sound
+ * on) with the current preferences. A restored pending turn is purely logical, with no clock or
+ * job, and only runs once the host reaches RESUMED ([onHostResumed]). Restoring never scores,
+ * writes preferences, plays sound or moves.
+ */
 class GameViewModel(
+    private val preferences: GamePreferences,
+    private val savedStateHandle: SavedStateHandle,
     private val game: TicTacToeGame = TicTacToeGame(),
     private val monotonicClock: MonotonicClock = MonotonicClock { System.nanoTime() },
     private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main.immediate,
@@ -39,18 +63,47 @@ class GameViewModel(
     val uiState: StateFlow<GameUiState>
 
     init {
-        game.clearBoard()
+        // A snapshot is applied only if it is fully coherent and the engine accepts its board;
+        // otherwise nothing is applied and the session starts fresh. Restoring never goes through
+        // the move path: no scoring, no store writes, no randomizer, no audio, no computer move.
+        val snapshot = GameSessionSnapshotCodec
+            .decode(savedStateHandle.get<Any>(GameSessionSnapshot.SAVED_STATE_KEY))
+            ?.takeIf { game.restoreBoard(it.board) }
+        if (snapshot == null) game.clearBoard()
         _uiState = MutableStateFlow(
             GameUiState(
                 board = game.board,
-                turn = Turn.Human,
-                result = GameResult.InProgress,
-                starter = Player.X,
-                nextStarter = Player.O,
-                score = Score(),
+                turn = snapshot?.turn ?: Turn.Human,
+                result = snapshot?.result ?: GameResult.InProgress,
+                starter = snapshot?.starter ?: Player.X,
+                nextStarter = snapshot?.nextStarter ?: Player.O,
+                score = preferences.readScore(),
+                difficulty = preferences.readDifficulty(),
+                soundEnabled = snapshot?.soundEnabled ?: true,
             ),
         )
         uiState = _uiState.asStateFlow()
+        snapshot?.pendingComputerRemainingNanos?.let { remaining ->
+            // Logical turn only: the host starts out of the foreground, so no clock or job yet.
+            pendingComputerTurn = PendingComputerTurn(generation = generation, remainingNanos = remaining)
+        }
+        saveSnapshot()
+    }
+
+    /** Mirrors the session (never score or difficulty) into the framework-saved state. */
+    private fun saveSnapshot() {
+        val state = _uiState.value
+        savedStateHandle[GameSessionSnapshot.SAVED_STATE_KEY] = GameSessionSnapshotCodec.encode(
+            GameSessionSnapshot(
+                board = state.board,
+                turn = state.turn,
+                result = state.result,
+                starter = state.starter,
+                nextStarter = state.nextStarter,
+                soundEnabled = state.soundEnabled,
+                pendingComputerRemainingNanos = pendingComputerTurn?.remainingNanos,
+            ),
+        )
     }
 
     fun onHumanMove(location: Int) {
@@ -66,12 +119,14 @@ class GameViewModel(
         val resultAfterHuman = game.checkForWinner()
         if (resultAfterHuman != GameResult.InProgress) {
             publishState(turn = Turn.Human, result = resultAfterHuman)
+            saveSnapshot()
             emitMoveSound(Player.X)
             return
         }
 
         publishState(turn = Turn.Computer, result = GameResult.InProgress)
         startPendingComputerTurn()
+        saveSnapshot()
         emitMoveSound(Player.X)
     }
 
@@ -121,6 +176,9 @@ class GameViewModel(
             pending.job?.cancel()
             pending.job = null
         }
+        // The only capture route: the framework serializes saved state after this callback, so
+        // the handle must already hold the remaining time with the elapsed time discounted.
+        saveSnapshot()
         clearMoveSoundSink()
     }
 
@@ -154,6 +212,7 @@ class GameViewModel(
                 nextStarter = nextStarter,
             )
         }
+        saveSnapshot()
     }
 
     fun setDifficulty(level: DifficultyLevel): Boolean {
@@ -172,6 +231,7 @@ class GameViewModel(
             difficulty = level,
             soundEnabled = currentState.soundEnabled,
         )
+        preferences.writeDifficulty(level)
         return true
     }
 
@@ -187,7 +247,29 @@ class GameViewModel(
             difficulty = currentState.difficulty,
             soundEnabled = !currentState.soundEnabled,
         )
+        saveSnapshot()
         if (currentState.soundEnabled) stopSoundSink()
+    }
+
+    /**
+     * Zeroes only the three counters, in memory and in the store, in the same synchronous event.
+     * It does not republish or re-score an outcome and leaves the board, turn, result, starters,
+     * difficulty, sound and any pending computer turn exactly as they were.
+     */
+    fun resetScores() {
+        val currentState = _uiState.value
+        val zeroScore = Score()
+        _uiState.value = GameUiState(
+            board = currentState.board,
+            turn = currentState.turn,
+            result = currentState.result,
+            starter = currentState.starter,
+            nextStarter = currentState.nextStarter,
+            score = zeroScore,
+            difficulty = currentState.difficulty,
+            soundEnabled = currentState.soundEnabled,
+        )
+        preferences.writeScore(zeroScore)
     }
 
     private fun playComputerTurn(pending: PendingComputerTurn) {
@@ -217,6 +299,7 @@ class GameViewModel(
             val resultAfterComputer = game.checkForWinner()
             val nextTurn = if (resultAfterComputer == GameResult.InProgress) Turn.Human else Turn.Computer
             publishState(turn = nextTurn, result = resultAfterComputer)
+            saveSnapshot()
             if (computerMove is ComputerMoveResult.Selected) emitMoveSound(Player.O)
             return
         }
@@ -321,16 +404,19 @@ class GameViewModel(
         nextStarter: Player,
     ) {
         val currentState = _uiState.value
+        val score = scoreAfterTransition(currentState, result)
         _uiState.value = GameUiState(
             board = game.board,
             turn = turn,
             result = result,
             starter = starter,
             nextStarter = nextStarter,
-            score = scoreAfterTransition(currentState, result),
+            score = score,
             difficulty = currentState.difficulty,
             soundEnabled = currentState.soundEnabled,
         )
+        // The score only changes on the single InProgress -> terminal transition.
+        if (score != currentState.score) preferences.writeScore(score)
     }
 
     private fun scoreAfterTransition(currentState: GameUiState, result: GameResult): Score {

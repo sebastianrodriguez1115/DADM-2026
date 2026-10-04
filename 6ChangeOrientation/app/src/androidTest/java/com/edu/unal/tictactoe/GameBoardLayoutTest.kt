@@ -3,23 +3,22 @@ package com.edu.unal.tictactoe
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.getUnclippedBoundsInRoot
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performScrollTo
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.edu.unal.tictactoe.ui.game.TicTacToeScreen
 import com.edu.unal.tictactoe.ui.game.models.GameUiState
 import com.edu.unal.tictactoe.ui.theme.TicTacToeTheme
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -27,41 +26,42 @@ import org.junit.runner.RunWith
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
+private const val BOARD_TAG = "tic_tac_toe_board"
+private const val STATUS_TAG = "tic_tac_toe_status"
+private const val SCORE_TAG = "tic_tac_toe_score"
+private const val NEW_GAME_TAG = "tic_tac_toe_new_game"
+private const val MENU_STUB_TAG = "game_board_layout_test_menu"
+private const val TOLERANCE = 1f
+
 @RunWith(AndroidJUnit4::class)
 class GameBoardLayoutTest {
     @get:Rule
     val composeRule = createComposeRule()
 
+    private val viewport = FixedViewport(composeRule)
+
     @Test
     fun hitTargetsStayAtLeast48DpInCompactAndResponsiveViewports() {
-        var viewport by mutableStateOf(320 to 192)
         var darkTheme by mutableStateOf(false)
         val density = 1.25f
         val fontScale = 2f
-        composeRule.setContent {
-            CompositionLocalProvider(LocalDensity provides Density(density, fontScale)) {
-                TicTacToeTheme(darkTheme = darkTheme, dynamicColor = false) {
-                    Surface {
-                        Box(Modifier.size(viewport.first.dp, viewport.second.dp)) {
-                            TicTacToeScreen(
-                                uiState = GameUiState(),
-                                onCellClick = {},
-                                onNewGame = {},
-                            )
-                        }
-                    }
+        viewport.setContent(320, 192, fontScale, density) {
+            TicTacToeTheme(darkTheme = darkTheme, dynamicColor = false) {
+                Surface {
+                    TicTacToeScreen(
+                        uiState = GameUiState(),
+                        onCellClick = {},
+                        onNewGame = {},
+                    )
                 }
             }
         }
 
         // Compact portrait, ordinary portrait, compact landscape, and landscape.
         listOf(320 to 192, 320 to 480, 480 to 192, 480 to 320).forEach { size ->
-            composeRule.runOnIdle {
-                viewport = size
-                darkTheme = !darkTheme
-            }
-            composeRule.waitForIdle()
-            assertBoardAndCells(density, size.first)
+            composeRule.runOnIdle { darkTheme = !darkTheme }
+            viewport.show(size.first, size.second, fontScale, density)
+            assertBoardAndCells(viewport.density, size.first)
             if (size.second == 192) {
                 listOf("tic_tac_toe_status", "tic_tac_toe_score", "tic_tac_toe_new_game")
                     .forEach { tag ->
@@ -73,25 +73,82 @@ class GameBoardLayoutTest {
 
     @Test
     fun fractionalDensitiesDoNotRoundHitTargetsBelow48Dp() {
-        var density by mutableStateOf(1.1f)
-        composeRule.setContent {
-            CompositionLocalProvider(LocalDensity provides Density(density, 2f)) {
-                TicTacToeTheme(dynamicColor = false) {
-                    Surface {
-                        Box(Modifier.size(320.dp, 192.dp)) {
-                            TicTacToeScreen(GameUiState(), {}, {})
-                        }
-                    }
+        viewport.setContent(320, 192, fontScale = 2f, density = 1.1f) {
+            TicTacToeTheme(dynamicColor = false) {
+                Surface {
+                    TicTacToeScreen(GameUiState(), {}, {})
                 }
             }
         }
 
         listOf(1.1f, 1.25f, 1.5f).forEach { nextDensity ->
-            composeRule.runOnIdle { density = nextDensity }
-            composeRule.waitForIdle()
+            viewport.show(320, 192, fontScale = 2f, density = nextDensity)
             assertBoardAndCells(nextDensity, viewportWidth = 320)
         }
     }
+
+    @Test
+    fun wideLandscapePlacesTheSquareBoardLeftOfStatusScoreAndControlsWithoutScrolling() {
+        setScreen(640 to 360)
+
+        listOf(640 to 360, 915 to 412).forEach { (width, height) ->
+            viewport.show(width, height)
+
+            val board = bounds(BOARD_TAG)
+            val side = board.right.value - board.left.value
+            assertEquals("board must be square", side, board.bottom.value - board.top.value, TOLERANCE)
+            assertEquals("room allows the 270 dp reference", 270f, side, TOLERANCE)
+            assertTrue("board must fit the height", side <= height - 32f + TOLERANCE)
+            assertBoardAndCells(viewport.density, width)
+
+            val rightPanel = listOf(STATUS_TAG, SCORE_TAG, NEW_GAME_TAG, MENU_STUB_TAG)
+            rightPanel.forEach { tag ->
+                composeRule.onNodeWithTag(tag).assertIsDisplayed()
+                val box = bounds(tag)
+                assertTrue("board must be left of $tag", board.right.value <= box.left.value + TOLERANCE)
+                assertTrue("$tag must fit the viewport", box.right.value <= width + TOLERANCE)
+                assertTrue("$tag must fit the viewport", box.bottom.value <= height + TOLERANCE)
+                assertTrue("$tag must fit the viewport", box.top.value >= -TOLERANCE)
+            }
+            assertTrue("board must fit the viewport", board.bottom.value <= height + TOLERANCE)
+        }
+    }
+
+    @Test
+    fun heightLimitedLandscapeShrinksTheBoardBelowTheReferenceKeepingCellsUsable() {
+        setScreen(480 to 192)
+
+        listOf(480 to 192, 640 to 220).forEach { (width, height) ->
+            viewport.show(width, height)
+
+            val board = bounds(BOARD_TAG)
+            val side = board.right.value - board.left.value
+            assertEquals("board must be square", side, board.bottom.value - board.top.value, TOLERANCE)
+            assertTrue("height must limit the board below 270 dp, was $side", side < 270f - TOLERANCE)
+            assertBoardAndCells(viewport.density, width)
+            listOf(STATUS_TAG, SCORE_TAG, NEW_GAME_TAG, MENU_STUB_TAG).forEach { tag ->
+                composeRule.onNodeWithTag(tag).performScrollTo().assertIsDisplayed()
+                assertTrue("board must be left of $tag", board.right.value <= bounds(tag).left.value + TOLERANCE)
+            }
+        }
+    }
+
+    private fun setScreen(initial: Pair<Int, Int>) {
+        viewport.setContent(initial.first, initial.second) {
+            TicTacToeTheme(dynamicColor = false) {
+                Surface {
+                    TicTacToeScreen(
+                        uiState = GameUiState(),
+                        onCellClick = {},
+                        onNewGame = {},
+                        menu = { Box(Modifier.size(48.dp).testTag(MENU_STUB_TAG)) },
+                    )
+                }
+            }
+        }
+    }
+
+    private fun bounds(tag: String) = composeRule.onNodeWithTag(tag).getUnclippedBoundsInRoot()
 
     private fun assertBoardAndCells(density: Float, viewportWidth: Int) {
         val board = composeRule.onNodeWithTag("tic_tac_toe_board")

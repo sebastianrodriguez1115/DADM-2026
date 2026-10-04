@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="isolated-05-ExitConfirmationDialogTest" tests="4" failures="0" errors="0" skipped="0">
+  <testcase classname="com.edu.unal.tictactoe.ExitConfirmationDialogTest" name="backPressKeepsDialogOpenAndInvokesNoCallback" />
+  <testcase classname="com.edu.unal.tictactoe.ExitConfirmationDialogTest" name="noInvokesOnlyCancelClosesDialogAndKeepsHostStateIntact" />
+  <testcase classname="com.edu.unal.tictactoe.ExitConfirmationDialogTest" name="yesInvokesOnlyConfirmWithoutClosingOrChangingHostState" />
+  <testcase classname="com.edu.unal.tictactoe.ExitConfirmationDialogTest" name="outsideTouchKeepsDialogOpenThenNoCloses" />
+</testsuite>

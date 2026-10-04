@@ -52,8 +52,8 @@ class GameMenuTest {
             GameMenuTags.NEW_GAME to R.string.new_game,
             GameMenuTags.DIFFICULTY to R.string.menu_difficulty,
             GameMenuTags.SOUND to R.string.menu_sound,
+            GameMenuTags.RESET_SCORES to R.string.menu_reset_scores,
             GameMenuTags.ABOUT to R.string.menu_about,
-            GameMenuTags.EXIT to R.string.menu_exit,
         )
         assertEquals(
             5,
@@ -74,7 +74,7 @@ class GameMenuTest {
         var newGameCount = 0
         var difficultyCount = 0
         var aboutCount = 0
-        var exitCount = 0
+        var resetScoresCount = 0
         var soundCount = 0
         setMenu(
             canChangeDifficulty = true,
@@ -83,7 +83,7 @@ class GameMenuTest {
             onDifficulty = { difficultyCount++ },
             onToggleSound = { soundCount++ },
             onAbout = { aboutCount++ },
-            onExit = { exitCount++ },
+            onResetScores = { resetScoresCount++ },
         )
 
         clickEntry(GameMenuTags.NEW_GAME, R.string.new_game)
@@ -98,12 +98,12 @@ class GameMenuTest {
         assertEquals(1, difficultyCount)
         assertMenuClosed()
 
-        clickEntry(GameMenuTags.ABOUT, R.string.menu_about)
-        assertEquals(1, aboutCount)
+        clickEntry(GameMenuTags.RESET_SCORES, R.string.menu_reset_scores)
+        assertEquals(1, resetScoresCount)
         assertMenuClosed()
 
-        clickEntry(GameMenuTags.EXIT, R.string.menu_exit)
-        assertEquals(1, exitCount)
+        clickEntry(GameMenuTags.ABOUT, R.string.menu_about)
+        assertEquals(1, aboutCount)
         assertMenuClosed()
     }
 
@@ -123,8 +123,8 @@ class GameMenuTest {
                             callbackCount++
                             enabled = !enabled
                         },
+                        onResetScores = {},
                         onAbout = {},
-                        onExit = {},
                     )
                 }
             }
@@ -190,8 +190,8 @@ class GameMenuTest {
                         onNewGame = {},
                         onDifficulty = { difficultyCount++ },
                         onToggleSound = {},
+                        onResetScores = {},
                         onAbout = {},
-                        onExit = {},
                     )
                 }
             }
@@ -232,8 +232,8 @@ class GameMenuTest {
         onNewGame: () -> Unit = {},
         onDifficulty: () -> Unit = {},
         onToggleSound: () -> Unit = {},
+        onResetScores: () -> Unit = {},
         onAbout: () -> Unit = {},
-        onExit: () -> Unit = {},
     ) {
         composeTestRule.setContent {
             TicTacToeTheme(dynamicColor = false) {
@@ -244,8 +244,8 @@ class GameMenuTest {
                         onNewGame = onNewGame,
                         onDifficulty = onDifficulty,
                         onToggleSound = onToggleSound,
+                        onResetScores = onResetScores,
                         onAbout = onAbout,
-                        onExit = onExit,
                     )
                 }
             }

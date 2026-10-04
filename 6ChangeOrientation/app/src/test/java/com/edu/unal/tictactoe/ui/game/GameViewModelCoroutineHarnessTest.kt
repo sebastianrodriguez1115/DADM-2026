@@ -1,6 +1,8 @@
 package com.edu.unal.tictactoe.ui.game
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.edu.unal.tictactoe.data.preferences.FakeGamePreferences
 import com.edu.unal.tictactoe.game.MoveRandomizer
 import com.edu.unal.tictactoe.game.TicTacToeGame
 import com.edu.unal.tictactoe.game.models.DifficultyLevel
@@ -195,6 +197,8 @@ class GameViewModelCoroutineHarnessTest {
         val randomizer = CountingRandomizer()
         var clockNanos = 0L
         val viewModel = GameViewModel(
+            preferences = FakeGamePreferences(),
+            savedStateHandle = SavedStateHandle(),
             game = TicTacToeGame(randomizer),
             monotonicClock = MonotonicClock { clockNanos },
             mainDispatcher = harness.dispatcher,
@@ -220,6 +224,8 @@ class GameViewModelCoroutineHarnessTest {
         val randomizer = CountingRandomizer()
         var clockNanos = 0L
         val viewModel = GameViewModel(
+            preferences = FakeGamePreferences(),
+            savedStateHandle = SavedStateHandle(),
             game = TicTacToeGame(randomizer),
             monotonicClock = MonotonicClock { clockNanos },
             mainDispatcher = harness.dispatcher,
@@ -258,8 +264,8 @@ class GameViewModelCoroutineHarnessTest {
     }
 
     @Test
-    fun noArgumentViewModelConstructorRemainsUsableUnderMainRule() {
-        val viewModel = GameViewModel()
+    fun defaultSeamsViewModelConstructorRemainsUsableUnderMainRule() {
+        val viewModel = GameViewModel(preferences = FakeGamePreferences(), savedStateHandle = SavedStateHandle())
 
         assertEquals(0, viewModel.uiState.value.board.count { it != Mark.Empty })
         assertEquals(ViewModel::class.java, viewModel.javaClass.superclass)

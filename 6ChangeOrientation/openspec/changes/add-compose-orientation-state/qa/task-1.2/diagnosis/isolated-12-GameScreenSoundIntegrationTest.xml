@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="isolated-12-GameScreenSoundIntegrationTest" tests="1" failures="1" errors="0" skipped="0">
+  <testcase classname="com.edu.unal.tictactoe.GameScreenSoundIntegrationTest" name="menuMuteStopsInSameMainEventPreservesTurnAndSuppressesUntilUnmuted">
+    <failure message="java.lang.AssertionError: expected:&lt;2&gt; but was:&lt;1&gt;">java.lang.AssertionError: expected:&lt;2&gt; but was:&lt;1&gt;</failure>
+  </testcase>
+</testsuite>

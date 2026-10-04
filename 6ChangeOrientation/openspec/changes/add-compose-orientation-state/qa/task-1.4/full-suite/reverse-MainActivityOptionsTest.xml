@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="reverse-MainActivityOptionsTest" tests="6" failures="1" errors="0" skipped="0">
+  <testcase classname="com.edu.unal.tictactoe.MainActivityOptionsTest" name="exitDialogBlocksBackAndOutsideThenNoPreservesTheActiveSession" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityOptionsTest" name="impossibleSelectionAndGateSurviveRecreationBackgroundAndMenuBack" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityOptionsTest" name="newSessionAfterExitStartsInExpertWithoutPersistence">
+    <failure message="java.lang.AssertionError: expected:&lt;Expert&gt; but was:&lt;Impossible&gt;">java.lang.AssertionError: expected:&lt;Expert&gt; but was:&lt;Impossible&gt;</failure>
+  </testcase>
+  <testcase classname="com.edu.unal.tictactoe.MainActivityOptionsTest" name="terminalGameEnablesDifficultyAndKeepsNewGameRulesAndScore" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityOptionsTest" name="exitDialogConfirmYesFinishesTheRealActivity" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityOptionsTest" name="aboutDialogDuringAnActiveGameShowsTheAuthorAndKeepsTheSnapshot" />
+</testsuite>

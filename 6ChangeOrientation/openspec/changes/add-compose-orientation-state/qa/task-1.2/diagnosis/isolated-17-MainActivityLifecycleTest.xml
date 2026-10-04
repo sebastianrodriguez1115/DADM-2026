@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="isolated-17-MainActivityLifecycleTest" tests="4" failures="0" errors="0" skipped="0">
+  <testcase classname="com.edu.unal.tictactoe.MainActivityLifecycleTest" name="recreationDuringPendingOpeningRetainsSessionAndExecutesOneOpening" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityLifecycleTest" name="finishingWithPendingTurnCancelsItAndNextActivityStartsFreshSession" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityLifecycleTest" name="pauseSuspendsPendingResponseAndResumeCompletesItOnce" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityLifecycleTest" name="recreationDuringPendingResponseRetainsSessionWithoutDuplicatingTurn" />
+</testsuite>

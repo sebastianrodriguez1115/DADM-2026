@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="reverse-MainActivityOptionsTest" tests="8" failures="0" errors="0" skipped="0">
+  <testcase classname="com.edu.unal.tictactoe.MainActivityOptionsTest" name="menuOffersNoWayToQuitAndNoQuitConfirmationAppears" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityOptionsTest" name="impossibleSelectionAndGateSurviveRecreationBackgroundAndMenuBack" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityOptionsTest" name="resetScoresFromTheRealMenuZeroesCountersKeepsTheFinishedGameAndSurvivesANewSession" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityOptionsTest" name="newSessionAfterFinishLoadsPersistedDifficulty" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityOptionsTest" name="backWithoutOverlayLeavesTheActivityThroughNormalNavigationWithoutDialog" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityOptionsTest" name="terminalGameEnablesDifficultyAndKeepsNewGameRulesAndScore" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityOptionsTest" name="backWithMenuOpenClosesItWithoutChangingTheGame" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityOptionsTest" name="aboutDialogDuringAnActiveGameShowsTheAuthorAndKeepsTheSnapshot" />
+</testsuite>

@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="isolated-01-DifficultyDialogTest" tests="6" failures="0" errors="0" skipped="0">
+  <testcase classname="com.edu.unal.tictactoe.DifficultyDialogTest" name="hostRecreationAndRecompositionKeepCurrentWithoutNotifying" />
+  <testcase classname="com.edu.unal.tictactoe.DifficultyDialogTest" name="outsideTouchDismissesWithoutSelectionOrToast" />
+  <testcase classname="com.edu.unal.tictactoe.DifficultyDialogTest" name="opensWithFourOrderedLabelsAndOnlyCurrentSelected" />
+  <testcase classname="com.edu.unal.tictactoe.DifficultyDialogTest" name="selectingEachOptionIncludingCurrentUpdatesClosesAndNotifiesOnce" />
+  <testcase classname="com.edu.unal.tictactoe.DifficultyDialogTest" name="rejectedSelectionClosesWithoutChangingValueOrNotifying" />
+  <testcase classname="com.edu.unal.tictactoe.DifficultyDialogTest" name="backDismissesWithoutSelectionOrToast" />
+</testsuite>

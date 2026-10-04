@@ -1,0 +1,22 @@
+{
+  "label": "reverse-MainActivityPendingTurnOptionsTest",
+  "expected": 3,
+  "starts": 3,
+  "ended": 3,
+  "passed": 3,
+  "failed": 0,
+  "complete_inventory": true,
+  "actual_ids": [
+    "com.edu.unal.tictactoe.MainActivityPendingTurnOptionsTest#acceptedDifficultyDuringEmptyOpeningAppliesToThatOpening",
+    "com.edu.unal.tictactoe.MainActivityPendingTurnOptionsTest#openMenuDoesNotPauseResponseAndRemainsUsableAfterOneComputerMove",
+    "com.edu.unal.tictactoe.MainActivityPendingTurnOptionsTest#difficultyDialogOpenedDuringOpeningCannotApplyAfterOHasMoved"
+  ],
+  "expected_ids": [
+    "com.edu.unal.tictactoe.MainActivityPendingTurnOptionsTest#acceptedDifficultyDuringEmptyOpeningAppliesToThatOpening",
+    "com.edu.unal.tictactoe.MainActivityPendingTurnOptionsTest#difficultyDialogOpenedDuringOpeningCannotApplyAfterOHasMoved",
+    "com.edu.unal.tictactoe.MainActivityPendingTurnOptionsTest#openMenuDoesNotPauseResponseAndRemainsUsableAfterOneComputerMove"
+  ],
+  "ok_count": 3,
+  "failure_marker": false,
+  "verified": true
+}

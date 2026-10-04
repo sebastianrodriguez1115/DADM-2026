@@ -1,0 +1,47 @@
+INSTRUMENTATION_STATUS: class=com.edu.unal.tictactoe.GameScreenSoundIntegrationTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=
+com.edu.unal.tictactoe.GameScreenSoundIntegrationTest:
+INSTRUMENTATION_STATUS: test=menuMuteStopsInSameMainEventPreservesTurnAndSuppressesUntilUnmuted
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.edu.unal.tictactoe.GameScreenSoundIntegrationTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: expected:<2> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at com.edu.unal.tictactoe.GameScreenSoundIntegrationTest.menuMuteStopsInSameMainEventPreservesTurnAndSuppressesUntilUnmuted(GameScreenSoundIntegrationTest.kt:92)
+
+INSTRUMENTATION_STATUS: stream=
+Error in menuMuteStopsInSameMainEventPreservesTurnAndSuppressesUntilUnmuted(com.edu.unal.tictactoe.GameScreenSoundIntegrationTest):
+java.lang.AssertionError: expected:<2> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at com.edu.unal.tictactoe.GameScreenSoundIntegrationTest.menuMuteStopsInSameMainEventPreservesTurnAndSuppressesUntilUnmuted(GameScreenSoundIntegrationTest.kt:92)
+
+INSTRUMENTATION_STATUS: test=menuMuteStopsInSameMainEventPreservesTurnAndSuppressesUntilUnmuted
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_RESULT: stream=
+
+Time: 3.915
+There was 1 failure:
+1) menuMuteStopsInSameMainEventPreservesTurnAndSuppressesUntilUnmuted(com.edu.unal.tictactoe.GameScreenSoundIntegrationTest)
+java.lang.AssertionError: expected:<2> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at com.edu.unal.tictactoe.GameScreenSoundIntegrationTest.menuMuteStopsInSameMainEventPreservesTurnAndSuppressesUntilUnmuted(GameScreenSoundIntegrationTest.kt:92)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+
+INSTRUMENTATION_CODE: -1

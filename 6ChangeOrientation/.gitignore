@@ -15,3 +15,6 @@
 local.properties
 .kotlin/
 .idea/
+
+# Large emulator logcat dumps from the task 1.2 diagnosis: kept locally, not versioned
+/openspec/changes/**/qa/task-1.2/diagnosis/isolated-01-DifficultyDialogTest-logcat*

@@ -14,7 +14,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
-import androidx.test.espresso.Espresso.pressBack
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.edu.unal.tictactoe.ui.game.AboutDialog
@@ -66,12 +65,11 @@ class AboutDialogTest {
         val host = setAbout()
         composeTestRule.onNodeWithTag(AboutDialogTags.DIALOG).assertIsDisplayed()
         composeTestRule.waitForIdle()
-        pressBack()
-        composeTestRule.waitForIdle()
+        pressBackAsUser()
 
+        assertDialogClosed()
         assertEquals(1, host.dismissCount)
         assertEquals(0, host.sessionVersion)
-        assertDialogClosed()
     }
 
     private fun assertDialogClosed() {

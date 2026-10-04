@@ -25,7 +25,7 @@
     <string name="sound_enabled">Habilitado</string>
     <string name="sound_disabled">Deshabilitado</string>
     <string name="menu_about">Acerca de</string>
-    <string name="menu_exit">Salir</string>
+    <string name="menu_reset_scores">Reiniciar puntajes</string>
 
     <string name="difficulty_dialog_title">Dificultad</string>
     <string name="difficulty_easy">Fácil</string>
@@ -37,9 +37,4 @@
     <string name="about_image_description">Imagen del tres en raya</string>
     <string name="about_author">Juan Sebastian Rodriguez</string>
     <string name="about_accept">Aceptar</string>
-
-    <string name="exit_dialog_title">Salir</string>
-    <string name="exit_dialog_message">¿Seguro que quieres salir?</string>
-    <string name="exit_yes">Sí</string>
-    <string name="exit_no">No</string>
 </resources>

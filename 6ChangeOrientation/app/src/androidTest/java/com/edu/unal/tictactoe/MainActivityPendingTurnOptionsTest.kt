@@ -25,6 +25,7 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -39,10 +40,20 @@ class MainActivityPendingTurnOptionsTest {
 
     private lateinit var scenario: ActivityScenario<MainActivity>
     private lateinit var viewModel: GameViewModel
+    private val preferencesFixture = GamePreferencesTestFixture()
+
+    @Before
+    fun preparePreferences() {
+        preferencesFixture.prepare(context)
+    }
 
     @After
     fun closeActivity() {
-        if (::scenario.isInitialized) scenario.close()
+        try {
+            if (::scenario.isInitialized) scenario.close()
+        } finally {
+            preferencesFixture.cleanup()
+        }
     }
 
     @Test

@@ -20,7 +20,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
-import androidx.test.espresso.Espresso.pressBack
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.edu.unal.tictactoe.game.models.DifficultyLevel
@@ -110,7 +109,7 @@ class DifficultyDialogTest {
 
         composeTestRule.onNodeWithTag(DifficultyDialogTags.DIALOG).assertIsDisplayed()
         composeTestRule.waitForIdle()
-        pressBack()
+        pressBackAsUser()
         composeTestRule.waitForIdle()
 
         assertEquals(DifficultyLevel.Impossible, host.current)
