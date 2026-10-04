@@ -506,6 +506,27 @@ Tomado de la sección «No cubierto o solo parcialmente» de `report.md`:
 - Privacidad: 0 coincidencias de serial o modelo del teléfono del usuario en `qa/task-5.3/`.
 - La entrega de QA se aceptó con las observaciones y los límites anotados arriba.
 
+## Cierre de las verificaciones manuales (2026-10-04)
+
+Esta sección sustituye las notas que dejaban como pendientes el sonido audible y el recorrido con TalkBack (en la sección de la corrida final de aceptación y en la de la tarea 5.3, incluidas «Verificaciones manuales pendientes (TC-30)» y las líneas de «Lo que QA no cubrió» y de «Límites»). Esas notas se conservan como historial sin cambios.
+
+### Sonido audible
+
+- El usuario informó de que lo comprobó él mismo en su dispositivo.
+- No hay evidencia adjunta en el repositorio ni detalle de qué casos probó.
+- Se registra como comprobación informada por el usuario. No la verificaron las pruebas automáticas ni QA.
+
+### Recorrido con TalkBack
+
+- No se ejecutó y no se va a ejecutar, por decisión del usuario. No queda pendiente.
+- Motivo: no es un requisito de los enunciados de los talleres. Los cuatro PDF del repositorio (`3TicTacToe/TicTacToe.pdf`, `4MenusNDialogs/reto4.pdf`, `5GraphicsSound/Reto5 - graphics and sound.pdf` y `6ChangeOrientation/Reto6 - change orientation.pdf`) no mencionan TalkBack, accesibilidad ni lector de pantalla. Es un requisito propio de las especificaciones del proyecto (`openspec/specs/custom-game-board/spec.md`), introducido por el cambio de gráficos y sonido.
+
+### Qué está verificado en accesibilidad
+
+- Las pruebas instrumentadas y QA comprobaron etiquetas, estados y tamaños táctiles leyendo la jerarquía de accesibilidad (`MainActivityAccessibilityTest` y el caso TC-20 de `qa/task-5.3/`).
+- Que TalkBack anuncie correctamente esos elementos al recorrerlos no está verificado.
+- La especificación `custom-game-board` sigue exigiendo la exposición a TalkBack. No se modificó.
+
 ## Redacción de la identidad del dispositivo (2026-10-04)
 
 A petición del usuario, se sustituyeron el número de serie y el modelo de su teléfono por los marcadores `physical-device` y `redacted-model` en la evidencia y los registros de este cambio y de los tres cambios archivados.
