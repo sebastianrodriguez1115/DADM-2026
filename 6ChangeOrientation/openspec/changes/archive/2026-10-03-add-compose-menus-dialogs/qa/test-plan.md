@@ -5,7 +5,7 @@ Inicio real: 2026-10-02 00:21 UTC (2026-10-01 local). Commit `677af1af639376c6a5
 ## Fuentes y entorno
 
 Leídos completos: `reto4.pdf` (7 páginas), `openspec/config.yaml`, proposal/design/tasks, ambos deltas y specs base game-session/tic-tac-toe-game. Prevalece delta IA. Android nativo, sin URL/API/credenciales; Playwright, axe y Postman no aplican.
-Host macOS 27.0.1 (26A434), JBR OpenJDK 25.0.3 de Android Studio; Gradle wrapper 9.6.0, AGP 9.4.1, bytecode Java 11, minSdk35/compile37/target37. Un dispositivo físico Samsung Galaxy S21 Ultra (Android15/API35), sin publicar identificadores. SDK existente: plataforma android-37.0 y build-tools36.0.0.
+Host macOS 27.0.1 (26A434), JBR OpenJDK 25.0.3 de Android Studio; Gradle wrapper 9.6.0, AGP 9.4.1, bytecode Java 11, minSdk35/compile37/target37. Un dispositivo físico redacted-manufacturer redacted-model (Android15/API35), sin publicar identificadores. SDK existente: plataforma android-37.0 y build-tools36.0.0.
 
 ## Plan por riesgo
 

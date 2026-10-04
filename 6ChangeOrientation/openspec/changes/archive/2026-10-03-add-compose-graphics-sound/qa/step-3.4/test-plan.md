@@ -34,8 +34,8 @@ Exploración guiada: comprobar evidencias de cancelación cercana a deadlines y 
 | Suite | Ejecutados / pasan | Fallan / omitidos | Exit | Evidencia |
 |---|---|---|---|---|
 | JVM completa | 96 / 96 | 0 / 0 | 0 | `evidence/jvm.log`, `evidence/jvm-summary.json`, `evidence/jvm/*.xml` |
-| `TicTacToeScreenTest` | 15 / 15 | 0 / 0 | 0 | `evidence/screen.log`, `evidence/screen-summary.json`, `evidence/screen/0-TEST-SM-G998B - 15.xml` |
-| `GameBoardInteractionTest` | 5 / 5 | 0 / 0 | 0 | `evidence/board.log`, `evidence/board-summary.json`, `evidence/board/0-TEST-SM-G998B - 15.xml` |
+| `TicTacToeScreenTest` | 15 / 15 | 0 / 0 | 0 | `evidence/screen.log`, `evidence/screen-summary.json`, `evidence/screen/0-TEST-redacted-model - 15.xml` |
+| `GameBoardInteractionTest` | 5 / 5 | 0 / 0 | 0 | `evidence/board.log`, `evidence/board-summary.json`, `evidence/board/0-TEST-redacted-model - 15.xml` |
 
 | Caso | Resultado | Evidencia (test names en JSON y XML) |
 |---|---|---|

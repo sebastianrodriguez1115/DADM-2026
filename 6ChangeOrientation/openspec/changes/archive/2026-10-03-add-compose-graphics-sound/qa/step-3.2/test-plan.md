@@ -44,9 +44,9 @@ Script reutilizable: `python3 openspec/changes/add-compose-graphics-sound/qa/ste
 | Ejecución fresca | Pasan / total | Failures / errors / skipped | Exit Gradle | Evidencia |
 |---|---|---|---|---|
 | testDebugUnitTest | 91/91 | 0/0/0 | 0 | `evidence/unit/summary.json`, `gradle.log` y XML por clase |
-| TicTacToeScreenTest | 13/15 | 2/0/0 | 1 | `evidence/TicTacToeScreenTest/summary.json`, `gradle.log`, `TEST-SM-G998B_-_15.xml` |
-| GameBoardInteractionTest | 5/5 | 0/0/0 | 0 | `evidence/GameBoardInteractionTest/summary.json`, `gradle.log`, `TEST-SM-G998B_-_15.xml` |
-| TicTacToeScreenTest repetición | 13/15 | 2/0/0 | 1 | `evidence/TicTacToeScreenTest-repeat/summary.json`, `gradle.log`, `TEST-SM-G998B_-_15.xml` |
+| TicTacToeScreenTest | 13/15 | 2/0/0 | 1 | `evidence/TicTacToeScreenTest/summary.json`, `gradle.log`, `TEST-redacted-model_-_15.xml` |
+| GameBoardInteractionTest | 5/5 | 0/0/0 | 0 | `evidence/GameBoardInteractionTest/summary.json`, `gradle.log`, `TEST-redacted-model_-_15.xml` |
+| TicTacToeScreenTest repetición | 13/15 | 2/0/0 | 1 | `evidence/TicTacToeScreenTest-repeat/summary.json`, `gradle.log`, `TEST-redacted-model_-_15.xml` |
 
 ### OBS-01 — bloqueo de sincronización en tests instrumentados (impacto medio)
 No es defecto del producto: el estado Disabled obtenido es precisamente el requerido por 3.2 durante la espera. Se reprodujo idénticamente en dos ejecuciones frescas.
@@ -84,8 +84,8 @@ Comando de esta ejecución: `python3 openspec/changes/add-compose-graphics-sound
 ### Resultado vigente: APROBADO QA 3.2
 | Ejecución independiente fresca | Pasan / total | Failures / errors / skipped | Exit Gradle | Evidencia |
 |---|---|---|---|---|
-| TicTacToeScreenTest, retry-obs01 | 15/15 | 0/0/0 | 0 | `evidence/TicTacToeScreenTest-retry-obs01/summary.json`, `gradle.log`, `TEST-SM-G998B_-_15.xml` |
-| GameBoardInteractionTest, retry-obs01 | 5/5 | 0/0/0 | 0 | `evidence/GameBoardInteractionTest-retry-obs01/summary.json`, `gradle.log`, `TEST-SM-G998B_-_15.xml` |
+| TicTacToeScreenTest, retry-obs01 | 15/15 | 0/0/0 | 0 | `evidence/TicTacToeScreenTest-retry-obs01/summary.json`, `gradle.log`, `TEST-redacted-model_-_15.xml` |
+| GameBoardInteractionTest, retry-obs01 | 5/5 | 0/0/0 | 0 | `evidence/GameBoardInteractionTest-retry-obs01/summary.json`, `gradle.log`, `TEST-redacted-model_-_15.xml` |
 
 El script de reintento terminó con exit 0. Ambas invocaciones usaron `--no-configuration-cache --rerun-tasks` y filtros de clase separados. JVM **91/91, exit 0** retenida de ejecución previa (`evidence/unit/`), no reejecutada por este encargo; no se atribuye a este reintento.
 

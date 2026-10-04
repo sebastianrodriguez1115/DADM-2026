@@ -84,7 +84,7 @@ WARNING: Please consider reporting this to the maintainers of class com.google.p
 WARNING: sun.misc.Unsafe::arrayBaseOffset will be removed in a future release
 
 > Task :app:connectedDebugAndroidTest
-Running tests on devices: SM-G998B - 15
+Running tests on devices: redacted-model - 15
 
 BUILD SUCCESSFUL in 1m 39s
 68 actionable tasks: 68 executed

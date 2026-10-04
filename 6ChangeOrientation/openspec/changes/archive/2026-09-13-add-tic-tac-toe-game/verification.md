@@ -32,7 +32,7 @@
 
 - Comando: `./gradlew :app:connectedDebugAndroidTest`.
 - Reproducción opcional: `ANDROID_SERIAL=<dispositivo> ./gradlew :app:connectedDebugAndroidTest`.
-- Target real seleccionado: Samsung SM-G998B, Android 15/API 35.
+- Target real seleccionado: redacted-manufacturer redacted-model, Android 15/API 35.
 - Resultado: 23 pruebas, 0 fallos, 0 errores y 0 omitidas.
 - Desglose: `TicTacToeScreenTest` 15, `MainActivityTest` 7,
   `ExampleInstrumentedTest` 1.

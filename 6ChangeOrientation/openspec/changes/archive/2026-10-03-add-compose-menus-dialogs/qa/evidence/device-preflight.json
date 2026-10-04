@@ -1,8 +1,8 @@
 {
   "ro.build.version.sdk": "35",
   "ro.build.version.release": "15",
-  "ro.product.manufacturer": "samsung",
-  "ro.product.model": "SM-G998B",
+  "ro.product.manufacturer": "redacted-manufacturer",
+  "ro.product.model": "redacted-model",
   "compatible_min_sdk": true,
   "lock_indicators": [
     "mInputRestricted=false",

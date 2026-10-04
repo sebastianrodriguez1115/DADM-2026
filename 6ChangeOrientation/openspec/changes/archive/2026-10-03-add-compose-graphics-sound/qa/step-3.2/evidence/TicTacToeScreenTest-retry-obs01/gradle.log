@@ -76,7 +76,7 @@
 > Task :app:createDebugAndroidTestApkListingFileRedirect
 
 > Task :app:connectedDebugAndroidTest
-Running tests on devices: SM-G998B - 15
+Running tests on devices: redacted-model - 15
 
 BUILD SUCCESSFUL in 40s
 68 actionable tasks: 68 executed

@@ -5,7 +5,7 @@
 - Fecha real: **2026-10-01 19:21–19:37 UTC−05 / 2026-10-02 00:21–00:37 UTC**.
 - Commit: `677af1af639376c6a54917744710cb61a784dd73`; code review previo aprobado por orquestador. Árbol inicialmente limpio; al terminar solo se añadió `qa/` (sin producto/tests/config modificados).
 - Host: macOS27.0.1 (26A434); runtime JBR OpenJDK25.0.3 de Android Studio. Gradle9.6.0/AGP9.4.1, Java11 bytecode; min35/compile37/target37.
-- Dispositivo: **Samsung Galaxy S21 Ultra, Android15/API35**, físico, único autorizado, desbloqueado; identificadores no retenidos. Compatible con min35; no se necesitó cambiar ajustes.
+- Dispositivo: **redacted-manufacturer redacted-model, Android15/API35**, físico, único autorizado, desbloqueado; identificadores no retenidos. Compatible con min35; no se necesitó cambiar ajustes.
 - Requisitos completos y plan/casos con técnicas, precondiciones, pasos, esperado y trazabilidad: `test-plan.md`. Se leyeron las 7 páginas del PDF, config, proposal/design/tasks, deltas y specs base; delta IA prevalece.
 
 ## Comandos y resultados reales

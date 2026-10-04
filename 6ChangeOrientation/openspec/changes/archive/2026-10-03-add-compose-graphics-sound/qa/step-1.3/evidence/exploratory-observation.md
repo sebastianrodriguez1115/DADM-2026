@@ -11,6 +11,6 @@ Se instaló únicamente el APK debug del proyecto (la instrumentación había re
 
 No se ejecutó el segundo toque exploratorio en ocupada; **no se declara PASA**. El rechazo ocupado y los nueve toques siguen cubiertos por las pruebas instrumentadas pasadas.
 
-Durante preparación se corrigieron dos supuestos del script de QA: Samsung requiere `dumpsys window` completo para el campo de foco; UIAutomator separa etiqueta y envoltura clickable (el enabled correcto está en la envoltura, no la etiqueta). No son defectos del producto. Hubo también cambios intermitentes de foco tras lanzamiento/durante exploración; no se guardan nombres/datos de otras aplicaciones ni se infiere una causa.
+Durante preparación se corrigieron dos supuestos del script de QA: redacted-manufacturer requiere `dumpsys window` completo para el campo de foco; UIAutomator separa etiqueta y envoltura clickable (el enabled correcto está en la envoltura, no la etiqueta). No son defectos del producto. Hubo también cambios intermitentes de foco tras lanzamiento/durante exploración; no se guardan nombres/datos de otras aplicaciones ni se infiere una causa.
 
 No se cambiaron ajustes globales, no se desbloqueó el teléfono ni se manipularon otras apps. No se guardaron seriales. La captura cruda temporal se eliminó; se retiene solo el recorte del tablero propio.
