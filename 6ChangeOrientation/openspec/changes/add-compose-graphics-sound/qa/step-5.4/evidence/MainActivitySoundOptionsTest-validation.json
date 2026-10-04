@@ -1,0 +1,18 @@
+{
+  "suite": "MainActivitySoundOptionsTest",
+  "expected": 1,
+  "adb_exit": 0,
+  "starts": 1,
+  "passed": 1,
+  "status_codes": [
+    1,
+    0
+  ],
+  "passed_methods": [
+    "muteIsAccessibleAndSurvivesNewGameRecreationAndBackgroundButNotNewSession"
+  ],
+  "ok_summary": true,
+  "runner_finished": true,
+  "failure_marker": false,
+  "verified_pass": true
+}

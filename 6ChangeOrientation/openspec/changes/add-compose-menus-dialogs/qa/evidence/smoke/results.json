@@ -1,0 +1,35 @@
+{
+  "end_utc": "2026-10-02T00:35:20.733539+00:00",
+  "results": [
+    {
+      "case": "exit-no/about",
+      "result": "PASS",
+      "detail": "Native adb/UI: board and score unchanged after About accept, exit Back/outside and No"
+    },
+    {
+      "case": "terminal-score",
+      "result": "PASS",
+      "detail": "Reached terminal via first free legal human cells; exactly one result scored"
+    },
+    {
+      "case": "newgame-alternation-retention",
+      "result": "PASS",
+      "detail": "Menu new game produced exactly one O and disabled row; shortcut alternated X-empty; terminal score and Impossible retained"
+    },
+    {
+      "case": "exit-yes",
+      "result": "PASS",
+      "detail": "After native Sí app is not top resumed; real ActivityScenario suite separately asserts DESTROYED"
+    },
+    {
+      "case": "new-session",
+      "result": "PASS",
+      "detail": "Relaunch after explicit exit: Expert selected, empty board, zero counters"
+    }
+  ],
+  "app_left_finished": true,
+  "packages_left_installed": [
+    "com.edu.unal.tictactoe",
+    "com.edu.unal.tictactoe.test"
+  ]
+}

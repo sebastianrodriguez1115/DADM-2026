@@ -1,0 +1,3 @@
+PASS: XML fresh saved results match summary: 3 + 7 + 6 = 16 tests; zero failures/errors/skips
+PASS: individual cases, counts and redaction; JVM NOT RERUN
+validator_exit_code=0

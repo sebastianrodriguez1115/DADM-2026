@@ -1,0 +1,543 @@
+{
+  "totals": {
+    "tests": 59,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fresh_xml": true,
+  "xml_count": 1,
+  "cases": [
+    {
+      "classname": "com.edu.unal.tictactoe.AboutDialogTest",
+      "name": "showsTitleImageAndExactAuthor",
+      "status": "PASS",
+      "seconds": "1.892",
+      "id": "IT-001",
+      "plan": "QA08",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.AboutDialogTest",
+      "name": "acceptClosesAndInvokesDismissOnce",
+      "status": "PASS",
+      "seconds": "1.340",
+      "id": "IT-002",
+      "plan": "QA08",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.AboutDialogTest",
+      "name": "backDismissesOnceWithoutOtherSideEffects",
+      "status": "PASS",
+      "seconds": "1.441",
+      "id": "IT-003",
+      "plan": "QA08",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.DifficultyDialogTest",
+      "name": "hostRecreationAndRecompositionKeepCurrentWithoutNotifying",
+      "status": "PASS",
+      "seconds": "1.850",
+      "id": "IT-004",
+      "plan": "QA04/QA07",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.DifficultyDialogTest",
+      "name": "outsideTouchDismissesWithoutSelectionOrToast",
+      "status": "PASS",
+      "seconds": "1.307",
+      "id": "IT-005",
+      "plan": "QA04/QA07",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.DifficultyDialogTest",
+      "name": "opensWithFourOrderedLabelsAndOnlyCurrentSelected",
+      "status": "PASS",
+      "seconds": "1.816",
+      "id": "IT-006",
+      "plan": "QA04/QA07",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.DifficultyDialogTest",
+      "name": "selectingEachOptionIncludingCurrentUpdatesClosesAndNotifiesOnce",
+      "status": "PASS",
+      "seconds": "2.705",
+      "id": "IT-007",
+      "plan": "QA04/QA07",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.DifficultyDialogTest",
+      "name": "rejectedSelectionClosesWithoutChangingValueOrNotifying",
+      "status": "PASS",
+      "seconds": "1.464",
+      "id": "IT-008",
+      "plan": "QA04/QA07",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.DifficultyDialogTest",
+      "name": "backDismissesWithoutSelectionOrToast",
+      "status": "PASS",
+      "seconds": "1.514",
+      "id": "IT-009",
+      "plan": "QA04/QA07",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.ExampleInstrumentedTest",
+      "name": "useAppContext",
+      "status": "PASS",
+      "seconds": "0.003",
+      "id": "IT-010",
+      "plan": "QA02",
+      "capability": "harness/build"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.ExitConfirmationDialogTest",
+      "name": "backPressKeepsDialogOpenAndInvokesNoCallback",
+      "status": "PASS",
+      "seconds": "1.294",
+      "id": "IT-011",
+      "plan": "QA06",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.ExitConfirmationDialogTest",
+      "name": "noInvokesOnlyCancelClosesDialogAndKeepsHostStateIntact",
+      "status": "PASS",
+      "seconds": "1.431",
+      "id": "IT-012",
+      "plan": "QA06",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.ExitConfirmationDialogTest",
+      "name": "yesInvokesOnlyConfirmWithoutClosingOrChangingHostState",
+      "status": "PASS",
+      "seconds": "1.329",
+      "id": "IT-013",
+      "plan": "QA06",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.ExitConfirmationDialogTest",
+      "name": "outsideTouchKeepsDialogOpenThenNoCloses",
+      "status": "PASS",
+      "seconds": "1.376",
+      "id": "IT-014",
+      "plan": "QA06",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.GameMenuTest",
+      "name": "disabledDifficultyStaysVisibleAndClickingItDoesNotInvokeOrClose",
+      "status": "PASS",
+      "seconds": "1.265",
+      "id": "IT-015",
+      "plan": "QA04/QA07",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.GameMenuTest",
+      "name": "eachEnabledEntryShowsItsLabelClosesMenuAndInvokesCallbackOnce",
+      "status": "PASS",
+      "seconds": "2.176",
+      "id": "IT-016",
+      "plan": "QA04/QA07",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.GameMenuTest",
+      "name": "recompositionReflectsCanChangeWithoutInvokingCallbacks",
+      "status": "PASS",
+      "seconds": "1.179",
+      "id": "IT-017",
+      "plan": "QA04/QA07",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.GameMenuTest",
+      "name": "backDismissesMenuWithoutLeavingTheContent",
+      "status": "PASS",
+      "seconds": "1.306",
+      "id": "IT-018",
+      "plan": "QA04/QA07",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.GameScreenTest",
+      "name": "boardStaysSquareAndNewGameIsReachableInsideTopBarViewport",
+      "status": "PASS",
+      "seconds": "1.079",
+      "id": "IT-019",
+      "plan": "QA04/QA07",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.GameScreenTest",
+      "name": "difficultyEntryUpdatesVmClosesWindowsAndToastsOnceEvenWhenRepeatingLevel",
+      "status": "PASS",
+      "seconds": "1.931",
+      "id": "IT-020",
+      "plan": "QA04/QA07",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.GameScreenTest",
+      "name": "disabledDifficultyDuringActiveGameDoesNotOpenOrNotify",
+      "status": "PASS",
+      "seconds": "1.332",
+      "id": "IT-021",
+      "plan": "QA04/QA07",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.GameScreenTest",
+      "name": "hostRecompositionAndRecreationDoNotReplayTheToast",
+      "status": "PASS",
+      "seconds": "1.581",
+      "id": "IT-022",
+      "plan": "QA04/QA07",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.GameScreenTest",
+      "name": "menuAndShortcutNewGameRunTheSameActionPreservingScore",
+      "status": "PASS",
+      "seconds": "1.368",
+      "id": "IT-023",
+      "plan": "QA04/QA07",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.GameScreenTest",
+      "name": "topBarMenuIsAccessibleAndDoesNotCoverTheBoard",
+      "status": "PASS",
+      "seconds": "0.990",
+      "id": "IT-024",
+      "plan": "QA04/QA07",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.ImpossibleOpeningTimingTest",
+      "name": "impossibleOpeningFromEmptyBoardRunsOneMoveAndRecordsSamples",
+      "status": "PASS",
+      "seconds": "0.241",
+      "id": "IT-025",
+      "plan": "QA10",
+      "capability": "specs/tic-tac-toe-game"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.LauncherIconTest",
+      "name": "monochromeLayerRendersWhiteForegroundOverBackground",
+      "status": "PASS",
+      "seconds": "0.132",
+      "id": "IT-026",
+      "plan": "QA08",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.LauncherIconTest",
+      "name": "adaptiveMipmapsResolveAndRenderOwnMotif",
+      "status": "PASS",
+      "seconds": "0.075",
+      "id": "IT-027",
+      "plan": "QA08",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityAccessibilityTest",
+      "name": "menuEntriesExposeLabelsAndClickActionsMatchingTheDifficultyGate",
+      "status": "PASS",
+      "seconds": "2.336",
+      "id": "IT-028",
+      "plan": "QA09",
+      "capability": "specs/game-options + specs/tic-tac-toe-game"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityAccessibilityTest",
+      "name": "realPortraitAndLandscapeKeepTopBarBoardAndControlsReachable",
+      "status": "PASS",
+      "seconds": "2.180",
+      "id": "IT-029",
+      "plan": "QA09",
+      "capability": "specs/game-options + specs/tic-tac-toe-game"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityAccessibilityTest",
+      "name": "aboutAndExitDialogButtonsExposeLabelsRolesAndTouchTargets",
+      "status": "PASS",
+      "seconds": "1.816",
+      "id": "IT-030",
+      "plan": "QA09",
+      "capability": "specs/game-options + specs/tic-tac-toe-game"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityAccessibilityTest",
+      "name": "difficultyDialogOptionsExposeRadioSemanticsAndCancelKeepsTheValue",
+      "status": "PASS",
+      "seconds": "1.762",
+      "id": "IT-031",
+      "plan": "QA09",
+      "capability": "specs/game-options + specs/tic-tac-toe-game"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityOptionsTest",
+      "name": "exitDialogBlocksBackAndOutsideThenNoPreservesTheActiveSession",
+      "status": "PASS",
+      "seconds": "1.588",
+      "id": "IT-032",
+      "plan": "QA06",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityOptionsTest",
+      "name": "impossibleSelectionAndGateSurviveRecreationBackgroundAndMenuBack",
+      "status": "PASS",
+      "seconds": "2.624",
+      "id": "IT-033",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityOptionsTest",
+      "name": "newSessionAfterExitStartsInExpertWithoutPersistence",
+      "status": "PASS",
+      "seconds": "2.713",
+      "id": "IT-034",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityOptionsTest",
+      "name": "terminalGameEnablesDifficultyAndKeepsNewGameRulesAndScore",
+      "status": "PASS",
+      "seconds": "1.874",
+      "id": "IT-035",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityOptionsTest",
+      "name": "exitDialogConfirmYesFinishesTheRealActivity",
+      "status": "PASS",
+      "seconds": "1.337",
+      "id": "IT-036",
+      "plan": "QA06",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityOptionsTest",
+      "name": "aboutDialogDuringAnActiveGameShowsTheAuthorAndKeepsTheSnapshot",
+      "status": "PASS",
+      "seconds": "1.286",
+      "id": "IT-037",
+      "plan": "QA08",
+      "capability": "specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityTest",
+      "name": "humanMoveUsesActivityViewModelAndRecompositionDoesNotRepeatIt",
+      "status": "PASS",
+      "seconds": "1.025",
+      "id": "IT-038",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityTest",
+      "name": "activeAndTerminalGamesSurviveRealBackgroundAndForegroundTransitions",
+      "status": "PASS",
+      "seconds": "2.534",
+      "id": "IT-039",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityTest",
+      "name": "newGameActionStartsOOnceAndPreservesScoreAcrossRedraws",
+      "status": "PASS",
+      "seconds": "0.913",
+      "id": "IT-040",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityTest",
+      "name": "activityRecreationKeepsTheSameViewModelAndCurrentGame",
+      "status": "PASS",
+      "seconds": "1.134",
+      "id": "IT-041",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityTest",
+      "name": "openingOAndFollowingXOpeningSurviveRecreationWithoutExtraOpening",
+      "status": "PASS",
+      "seconds": "1.229",
+      "id": "IT-042",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityTest",
+      "name": "terminalGameKeepsResultBoardAndSingleScoreAfterRecreation",
+      "status": "PASS",
+      "seconds": "1.320",
+      "id": "IT-043",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.MainActivityTest",
+      "name": "closingActivityAndLaunchingNewInstanceStartsANewSession",
+      "status": "PASS",
+      "seconds": "2.268",
+      "id": "IT-044",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "rendersBoardStatusScoreAndNewGameInOrder",
+      "status": "PASS",
+      "seconds": "0.889",
+      "id": "IT-045",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "terminalResultsAndComputerTurnRejectCellTouchesButAllowNewGame",
+      "status": "PASS",
+      "seconds": "1.824",
+      "id": "IT-046",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "occupiedCellsKeepTheirMarksAndAreDisabled",
+      "status": "PASS",
+      "seconds": "0.945",
+      "id": "IT-047",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "largeFontKeepsTerminalMarksVisibleAndControlsReachableInBothThemes",
+      "status": "PASS",
+      "seconds": "1.230",
+      "id": "IT-048",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "cellAndNewGameCallbacksAreOnlyInvokedByActions",
+      "status": "PASS",
+      "seconds": "0.890",
+      "id": "IT-049",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "rendersComputerResultFromResources",
+      "status": "PASS",
+      "seconds": "0.843",
+      "id": "IT-050",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "boardAndControlsAdaptToPortraitAndLandscapeConstraints",
+      "status": "PASS",
+      "seconds": "1.593",
+      "id": "IT-051",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "recompositionDoesNotInvokeCallbacksOrChangeSnapshot",
+      "status": "PASS",
+      "seconds": "0.914",
+      "id": "IT-052",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "realViewModelUiFlowCoversHumanComputerAndTieResults",
+      "status": "PASS",
+      "seconds": "2.689",
+      "id": "IT-053",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "rendersTieFromResources",
+      "status": "PASS",
+      "seconds": "0.948",
+      "id": "IT-054",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "rendersNineCellsAndLocalizedCellDescription",
+      "status": "PASS",
+      "seconds": "1.004",
+      "id": "IT-055",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "realViewModelUiFlowAlternatesAfterAbandonmentWithoutScoringOrDuplicateOpening",
+      "status": "PASS",
+      "seconds": "1.627",
+      "id": "IT-056",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "rendersComputerTurnFromResources",
+      "status": "PASS",
+      "seconds": "0.809",
+      "id": "IT-057",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "cellsArePositiveSquareAndStayInsideTheBoard",
+      "status": "PASS",
+      "seconds": "0.958",
+      "id": "IT-058",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    },
+    {
+      "classname": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "rendersActiveTurnStatesFromResources",
+      "status": "PASS",
+      "seconds": "0.810",
+      "id": "IT-059",
+      "plan": "QA05/QA09",
+      "capability": "specs/game-session + specs/tic-tac-toe-game + specs/game-options"
+    }
+  ]
+}

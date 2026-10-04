@@ -1,0 +1,144 @@
+{
+  "expected_total": 20,
+  "verified_pass_total": 20,
+  "all_suites_pass": true,
+  "protected_files_unchanged": true,
+  "suites": [
+    {
+      "suite": "MainActivitySoundOptionsTest",
+      "expected": 1,
+      "adb_exit": 0,
+      "starts": 1,
+      "passed": 1,
+      "status_codes": [
+        1,
+        0
+      ],
+      "passed_methods": [
+        "muteIsAccessibleAndSurvivesNewGameRecreationAndBackgroundButNotNewSession"
+      ],
+      "ok_summary": true,
+      "runner_finished": true,
+      "failure_marker": false,
+      "verified_pass": true
+    },
+    {
+      "suite": "MainActivityOptionsTest",
+      "expected": 6,
+      "adb_exit": 0,
+      "starts": 6,
+      "passed": 6,
+      "status_codes": [
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      "passed_methods": [
+        "exitDialogBlocksBackAndOutsideThenNoPreservesTheActiveSession",
+        "impossibleSelectionAndGateSurviveRecreationBackgroundAndMenuBack",
+        "newSessionAfterExitStartsInExpertWithoutPersistence",
+        "terminalGameEnablesDifficultyAndKeepsNewGameRulesAndScore",
+        "exitDialogConfirmYesFinishesTheRealActivity",
+        "aboutDialogDuringAnActiveGameShowsTheAuthorAndKeepsTheSnapshot"
+      ],
+      "ok_summary": true,
+      "runner_finished": true,
+      "failure_marker": false,
+      "verified_pass": true
+    },
+    {
+      "suite": "MainActivityAccessibilityTest",
+      "expected": 4,
+      "adb_exit": 0,
+      "starts": 4,
+      "passed": 4,
+      "status_codes": [
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      "passed_methods": [
+        "menuEntriesExposeLabelsAndClickActionsMatchingTheDifficultyGate",
+        "realPortraitAndLandscapeKeepTopBarBoardAndControlsReachable",
+        "aboutAndExitDialogButtonsExposeLabelsRolesAndTouchTargets",
+        "difficultyDialogOptionsExposeRadioSemanticsAndCancelKeepsTheValue"
+      ],
+      "ok_summary": true,
+      "runner_finished": true,
+      "failure_marker": false,
+      "verified_pass": true
+    },
+    {
+      "suite": "MainActivityPendingTurnOptionsTest",
+      "expected": 3,
+      "adb_exit": 0,
+      "starts": 3,
+      "passed": 3,
+      "status_codes": [
+        1,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      "passed_methods": [
+        "acceptedDifficultyDuringEmptyOpeningAppliesToThatOpening",
+        "openMenuDoesNotPauseResponseAndRemainsUsableAfterOneComputerMove",
+        "difficultyDialogOpenedDuringOpeningCannotApplyAfterOHasMoved"
+      ],
+      "ok_summary": true,
+      "runner_finished": true,
+      "failure_marker": false,
+      "verified_pass": true
+    },
+    {
+      "suite": "GameMenuTest",
+      "expected": 6,
+      "adb_exit": 0,
+      "starts": 6,
+      "passed": 6,
+      "status_codes": [
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      "passed_methods": [
+        "menuHasExactlyFiveEntriesInSpecifiedOrder",
+        "disabledDifficultyStaysVisibleAndClickingItDoesNotInvokeOrClose",
+        "eachEnabledEntryShowsItsLabelClosesMenuAndInvokesCallbackOnce",
+        "soundShowsEnabledAndDisabledTextAndSemanticStateAndRemainsActionable",
+        "recompositionReflectsCanChangeWithoutInvokingCallbacks",
+        "backDismissesMenuWithoutLeavingTheContent"
+      ],
+      "ok_summary": true,
+      "runner_finished": true,
+      "failure_marker": false,
+      "verified_pass": true
+    }
+  ],
+  "finish": "2026-10-03T15:44:42.100221+00:00"
+}

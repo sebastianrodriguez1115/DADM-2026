@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="6" failures="0" errors="0" skipped="0" time="0.000" timestamp="2026-10-03T12:51:50" hostname="REDACTED">
+  <testsuite name="com.edu.unal.tictactoe.GameScreenTest" tests="6" failures="0" errors="0" skipped="0" time="20.891" timestamp="2026-10-03T12:51:50" hostname="REDACTED">
+    <properties>
+      <property name="device" value="DEVICE_REDACTED" />
+    </properties>
+    <testcase name="boardStaysSquareAndNewGameIsReachableInsideTopBarViewport" classname="com.edu.unal.tictactoe.GameScreenTest" time="3.497" />
+    <testcase name="difficultyEntryUpdatesVmClosesWindowsAndToastsOnceEvenWhenRepeatingLevel" classname="com.edu.unal.tictactoe.GameScreenTest" time="3.888" />
+    <testcase name="disabledDifficultyDuringActiveGameDoesNotOpenOrNotify" classname="com.edu.unal.tictactoe.GameScreenTest" time="3.228" />
+    <testcase name="hostRecompositionAndRecreationDoNotReplayTheToast" classname="com.edu.unal.tictactoe.GameScreenTest" time="3.381" />
+    <testcase name="menuAndShortcutNewGameRunTheSameActionPreservingScore" classname="com.edu.unal.tictactoe.GameScreenTest" time="4.128" />
+    <testcase name="topBarMenuIsAccessibleAndDoesNotCoverTheBoard" classname="com.edu.unal.tictactoe.GameScreenTest" time="2.769" />
+  </testsuite>
+</testsuites>

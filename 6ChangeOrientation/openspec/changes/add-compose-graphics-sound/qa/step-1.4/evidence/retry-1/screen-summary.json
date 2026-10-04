@@ -1,0 +1,106 @@
+{
+  "run": "screen",
+  "command": [
+    "./gradlew",
+    "connectedDebugAndroidTest",
+    "-Pandroid.testInstrumentationRunnerArguments.class=com.edu.unal.tictactoe.TicTacToeScreenTest",
+    "--no-configuration-cache",
+    "--console=plain"
+  ],
+  "exit": 0,
+  "seconds": 49.01,
+  "expected_count": 15,
+  "verified": true,
+  "cases": [
+    {
+      "class": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "rendersBoardStatusScoreAndNewGameInOrder",
+      "result": "PASS",
+      "evidence": "screen-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "terminalResultsAndComputerTurnRejectCellTouchesButAllowNewGame",
+      "result": "PASS",
+      "evidence": "screen-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "occupiedCellsKeepTheirMarksAndAreDisabled",
+      "result": "PASS",
+      "evidence": "screen-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "largeFontKeepsTerminalMarksVisibleAndControlsReachableInBothThemes",
+      "result": "PASS",
+      "evidence": "screen-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "cellAndNewGameCallbacksAreOnlyInvokedByActions",
+      "result": "PASS",
+      "evidence": "screen-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "rendersComputerResultFromResources",
+      "result": "PASS",
+      "evidence": "screen-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "boardAndControlsAdaptToPortraitAndLandscapeConstraints",
+      "result": "PASS",
+      "evidence": "screen-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "recompositionDoesNotInvokeCallbacksOrChangeSnapshot",
+      "result": "PASS",
+      "evidence": "screen-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "realViewModelUiFlowCoversHumanComputerAndTieResults",
+      "result": "PASS",
+      "evidence": "screen-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "rendersTieFromResources",
+      "result": "PASS",
+      "evidence": "screen-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "rendersNineCellsAndLocalizedCellDescription",
+      "result": "PASS",
+      "evidence": "screen-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "realViewModelUiFlowAlternatesAfterAbandonmentWithoutScoringOrDuplicateOpening",
+      "result": "PASS",
+      "evidence": "screen-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "rendersComputerTurnFromResources",
+      "result": "PASS",
+      "evidence": "screen-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "cellsArePositiveSquareAndStayInsideTheBoard",
+      "result": "PASS",
+      "evidence": "screen-results-0.xml"
+    },
+    {
+      "class": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+      "name": "rendersActiveTurnStatesFromResources",
+      "result": "PASS",
+      "evidence": "screen-results-0.xml"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="5" failures="0" errors="0" skipped="0" time="0.000" timestamp="2026-10-02T15:23:12" hostname="localhost">
+  <testsuite name="com.edu.unal.tictactoe.GameBoardInteractionTest" tests="5" failures="0" errors="0" skipped="0" time="6.357" timestamp="2026-10-02T15:23:12" hostname="localhost">
+    <properties>
+      <property name="device" value="DEVICE_REDACTED" />
+    </properties>
+    <testcase name="keyboardTabSkipsOccupiedCellAndEnterActivatesTheFocusedAvailableCell" classname="com.edu.unal.tictactoe.GameBoardInteractionTest" time="1.651" />
+    <testcase name="availableCellAcceptsKeyboardEnterAndDisabledCellHasNoActivationAction" classname="com.edu.unal.tictactoe.GameBoardInteractionTest" time="0.994" />
+    <testcase name="computerTurnAndTerminalStateExposeDisabledCellsWithoutCallbacks" classname="com.edu.unal.tictactoe.GameBoardInteractionTest" time="1.388" />
+    <testcase name="availableCellClickRequestsExactlyOneMove" classname="com.edu.unal.tictactoe.GameBoardInteractionTest" time="0.801" />
+    <testcase name="exposesNineLabeledButtonHitboxesAndEachTouchRequestsOneMove" classname="com.edu.unal.tictactoe.GameBoardInteractionTest" time="1.523" />
+  </testsuite>
+</testsuites>

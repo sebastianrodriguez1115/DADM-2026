@@ -1,0 +1,274 @@
+[
+  {
+    "text": "",
+    "content-desc": "",
+    "bounds": "[0,0][1440,3200]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.widget.FrameLayout"
+  },
+  {
+    "text": "",
+    "content-desc": "",
+    "bounds": "[0,0][1440,3200]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.widget.LinearLayout"
+  },
+  {
+    "text": "",
+    "content-desc": "",
+    "bounds": "[0,0][1440,3200]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.widget.FrameLayout"
+  },
+  {
+    "text": "",
+    "content-desc": "",
+    "bounds": "[0,0][1440,3200]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "androidx.compose.ui.platform.ComposeView"
+  },
+  {
+    "text": "",
+    "content-desc": "",
+    "bounds": "[0,0][1440,3200]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.view.View"
+  },
+  {
+    "text": "",
+    "content-desc": "",
+    "bounds": "[0,0][1440,3200]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.view.View"
+  },
+  {
+    "text": "",
+    "content-desc": "",
+    "bounds": "[60,402][1380,2960]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.widget.ScrollView"
+  },
+  {
+    "text": "",
+    "content-desc": "Tablero de tres en raya",
+    "bounds": "[60,402][1380,1722]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.view.View"
+  },
+  {
+    "text": "",
+    "content-desc": "Casilla, fila 1, columna 1, vacía",
+    "bounds": "[68,410][492,834]",
+    "clickable": "true",
+    "enabled": "true",
+    "class": "android.widget.Button"
+  },
+  {
+    "text": "",
+    "content-desc": "Casilla, fila 1, columna 2, vacía",
+    "bounds": "[508,410][932,834]",
+    "clickable": "true",
+    "enabled": "true",
+    "class": "android.widget.Button"
+  },
+  {
+    "text": "",
+    "content-desc": "Casilla, fila 1, columna 3, vacía",
+    "bounds": "[948,410][1372,834]",
+    "clickable": "true",
+    "enabled": "true",
+    "class": "android.widget.Button"
+  },
+  {
+    "text": "",
+    "content-desc": "Casilla, fila 2, columna 1, vacía",
+    "bounds": "[68,850][492,1274]",
+    "clickable": "true",
+    "enabled": "true",
+    "class": "android.widget.Button"
+  },
+  {
+    "text": "",
+    "content-desc": "Casilla, fila 2, columna 2, vacía",
+    "bounds": "[508,850][932,1274]",
+    "clickable": "true",
+    "enabled": "true",
+    "class": "android.widget.Button"
+  },
+  {
+    "text": "",
+    "content-desc": "Casilla, fila 2, columna 3, vacía",
+    "bounds": "[948,850][1372,1274]",
+    "clickable": "true",
+    "enabled": "true",
+    "class": "android.widget.Button"
+  },
+  {
+    "text": "",
+    "content-desc": "Casilla, fila 3, columna 1, vacía",
+    "bounds": "[68,1290][492,1714]",
+    "clickable": "true",
+    "enabled": "true",
+    "class": "android.widget.Button"
+  },
+  {
+    "text": "",
+    "content-desc": "Casilla, fila 3, columna 2, vacía",
+    "bounds": "[508,1290][932,1714]",
+    "clickable": "true",
+    "enabled": "true",
+    "class": "android.widget.Button"
+  },
+  {
+    "text": "",
+    "content-desc": "Casilla, fila 3, columna 3, vacía",
+    "bounds": "[948,1290][1372,1714]",
+    "clickable": "true",
+    "enabled": "true",
+    "class": "android.widget.Button"
+  },
+  {
+    "text": "La persona hace la primera jugada",
+    "content-desc": "",
+    "bounds": "[60,1767][1042,1857]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.widget.TextView"
+  },
+  {
+    "text": "",
+    "content-desc": "",
+    "bounds": "[60,1902][1380,2292]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.view.View"
+  },
+  {
+    "text": "Marcador",
+    "content-desc": "",
+    "bounds": "[60,1902][331,1992]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.widget.TextView"
+  },
+  {
+    "text": "Victorias de X: 0",
+    "content-desc": "",
+    "bounds": "[60,1992][526,2082]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.widget.TextView"
+  },
+  {
+    "text": "Victorias de O: 0",
+    "content-desc": "",
+    "bounds": "[60,2097][529,2187]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.widget.TextView"
+  },
+  {
+    "text": "Empates: 0",
+    "content-desc": "",
+    "bounds": "[60,2202][379,2292]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.widget.TextView"
+  },
+  {
+    "text": "",
+    "content-desc": "",
+    "bounds": "[60,2337][1380,2517]",
+    "clickable": "true",
+    "enabled": "true",
+    "class": "android.view.View"
+  },
+  {
+    "text": "Nueva partida",
+    "content-desc": "",
+    "bounds": "[555,2390][885,2465]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.widget.TextView"
+  },
+  {
+    "text": "",
+    "content-desc": "",
+    "bounds": "[60,2352][1380,2502]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.widget.Button"
+  },
+  {
+    "text": "",
+    "content-desc": "",
+    "bounds": "[0,0][1440,342]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.view.View"
+  },
+  {
+    "text": "",
+    "content-desc": "",
+    "bounds": "[0,102][1440,342]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.view.View"
+  },
+  {
+    "text": "",
+    "content-desc": "",
+    "bounds": "[60,132][440,312]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.view.View"
+  },
+  {
+    "text": "TicTacToe",
+    "content-desc": "",
+    "bounds": "[60,169][440,274]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.widget.TextView"
+  },
+  {
+    "text": "",
+    "content-desc": "",
+    "bounds": "[1245,132][1425,312]",
+    "clickable": "true",
+    "enabled": "true",
+    "class": "android.view.View"
+  },
+  {
+    "text": "",
+    "content-desc": "Abrir menú",
+    "bounds": "[1290,177][1380,267]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.view.View"
+  },
+  {
+    "text": "",
+    "content-desc": "",
+    "bounds": "[1260,147][1410,297]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.widget.Button"
+  },
+  {
+    "text": "",
+    "content-desc": "",
+    "bounds": "[0,3020][1440,3200]",
+    "clickable": "false",
+    "enabled": "true",
+    "class": "android.view.View"
+  }
+]

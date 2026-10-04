@@ -1,0 +1,98 @@
+{
+  "class": "com.edu.unal.tictactoe.TicTacToeScreenTest",
+  "expected_count": 15,
+  "count": 15,
+  "counts": {
+    "passed": 15,
+    "failed": 0,
+    "skipped": 0
+  },
+  "gradle_exit": 0,
+  "fresh_xml_files": 1,
+  "validated": true,
+  "elapsed_seconds": 27.98,
+  "command": [
+    "./gradlew",
+    "connectedDebugAndroidTest",
+    "--no-configuration-cache",
+    "--console=plain",
+    "-Pandroid.testInstrumentationRunnerArguments.class=com.edu.unal.tictactoe.TicTacToeScreenTest"
+  ],
+  "cases": [
+    {
+      "name": "rendersBoardStatusScoreAndNewGameInOrder",
+      "time_seconds": "1.588",
+      "result": "passed"
+    },
+    {
+      "name": "terminalResultsAndComputerTurnRejectCellTouchesButAllowNewGame",
+      "time_seconds": "1.923",
+      "result": "passed"
+    },
+    {
+      "name": "occupiedCellsKeepTheirMarksAndAreDisabled",
+      "time_seconds": "1.066",
+      "result": "passed"
+    },
+    {
+      "name": "largeFontKeepsTerminalMarksVisibleAndControlsReachableInBothThemes",
+      "time_seconds": "1.465",
+      "result": "passed"
+    },
+    {
+      "name": "cellAndNewGameCallbacksAreOnlyInvokedByActions",
+      "time_seconds": "0.928",
+      "result": "passed"
+    },
+    {
+      "name": "rendersComputerResultFromResources",
+      "time_seconds": "0.912",
+      "result": "passed"
+    },
+    {
+      "name": "boardAndControlsAdaptToPortraitAndLandscapeConstraints",
+      "time_seconds": "1.707",
+      "result": "passed"
+    },
+    {
+      "name": "recompositionDoesNotInvokeCallbacksOrChangeSnapshot",
+      "time_seconds": "1.004",
+      "result": "passed"
+    },
+    {
+      "name": "realViewModelUiFlowCoversHumanComputerAndTieResults",
+      "time_seconds": "2.612",
+      "result": "passed"
+    },
+    {
+      "name": "rendersTieFromResources",
+      "time_seconds": "0.905",
+      "result": "passed"
+    },
+    {
+      "name": "rendersNineCellsAndLocalizedCellDescription",
+      "time_seconds": "1.163",
+      "result": "passed"
+    },
+    {
+      "name": "realViewModelUiFlowAlternatesAfterAbandonmentWithoutScoringOrDuplicateOpening",
+      "time_seconds": "1.960",
+      "result": "passed"
+    },
+    {
+      "name": "rendersComputerTurnFromResources",
+      "time_seconds": "0.935",
+      "result": "passed"
+    },
+    {
+      "name": "cellsArePositiveSquareAndStayInsideTheBoard",
+      "time_seconds": "0.993",
+      "result": "passed"
+    },
+    {
+      "name": "rendersActiveTurnStatesFromResources",
+      "time_seconds": "0.943",
+      "result": "passed"
+    }
+  ]
+}

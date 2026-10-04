@@ -1,0 +1,537 @@
+{
+  "exit": 0,
+  "counts": {
+    "tests": 131,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "classes": 17,
+  "verified_pass": true,
+  "cases": [
+    {
+      "id": "com.edu.unal.tictactoe.ExampleUnitTest#addition_isCorrect",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.DifficultyPolicyTest#hardDoesNotDeliberatelyBlockAndUsesTheRandomizerWhenItCannotWin",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.DifficultyPolicyTest#easyAndHardUseTheRandomizerWhenNoTacticsExist",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.DifficultyPolicyTest#everyDifficultyKeepsTheTerminalGuardsWithoutUsingTheRandomizer",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.DifficultyPolicyTest#easyUsesTheRandomizerEvenWhenTacticsAreAvailable",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.DifficultyPolicyTest#hardTakesItsImmediateWinBeforeConsultingTheRandomizer",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.ImpossibleExhaustiveTest#impossibleNeverLosesWhenHumanXStarts",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.ImpossibleExhaustiveTest#impossibleNeverLosesWhenComputerOStarts",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.ImpossiblePolicyTest#impossibleOnAnAlreadyLostBoardReturnsTheOptimalMoveWithoutPromisingARescue",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.ImpossiblePolicyTest#impossibleEmptyBoardOpensAtTheLowestIndexForADraw",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.ImpossiblePolicyTest#impossibleDefendsTheForkWithAnEdge",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.ImpossiblePolicyTest#impossibleAgainstCornerOpeningTakesTheCenter",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.ImpossiblePolicyTest#impossibleAgainstCenterOpeningTakesTheLowestCornerToHoldTheDraw",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.ImpossiblePolicyTest#impossibleCompletesItsOwnWinningLine",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#computerBlocksTheFirstHumanThreatWhenItCannotWin",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#boardSnapshotsDoNotExposeTheGameContainer",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#fullBoardWithoutAWinningLineIsATie",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#occupiedCellsRejectBothPlayersWithoutChangingTheBoard",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#invalidLocationsDoNotChangeTheBoard",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#clearBoardLeavesTheBoardEmptyAndIsIdempotent",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#appliedMovesPlaceTheCorrespondingMark",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#randomSelectionUsesEachControlledFreeListIndexWithoutMutatingTheBoard",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#omittedDifficultyMatchesExpertAndRepeatedQueriesDoNotMutateTheBoard",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#clearBoardResetsOccupiedAndFinishedGamesAndAllowsMovesAgain",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#selectedMovesAreValidFreeLocationsForEmptyOccupiedAndLastFreeBoards",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#markSymbolsMatchTheDomainContract",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#everyWinningLineWinsForBothPlayersOnlyOnTheThirdMark",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#fullWinningBoardIsFinishedBeforeNoMovesAndDoesNotInvokeRandomizer",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#computerChoosesTheFirstImmediateWinInBoardOrder",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#terminalWinnerOrTieRejectsMovesWithoutChangingTheBoard",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#fullTieReturnsNoMovesWithoutProbingOrInvokingRandomizer",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#oldSnapshotsRemainStableAfterMovesAndClearBoard",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#terminalWinnerWithFreeCellsDoesNotProbeOrInvokeRandomizer",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#computerChoosesItsWinBeforeBlockingAWinWithALowerIndex",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#initialBoardHasNineEmptyCells",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#checkingTheWinnerDoesNotMutateTheBoard",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#computerBlocksTheFirstOfMultipleHumanThreats",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.TicTacToeGameTest#aWinningLastCellTakesPriorityOverTieForBothPlayers",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.models.GameModelContractsTest#difficultyLevelsKeepTheirExactNamesAndStableOrder",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.models.GameModelContractsTest#resultsKeepTheirAssociatedValuesAndRemainDistinct",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.models.GameModelContractsTest#playerAndMarkSymbolsMatchTheGameContract",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.game.models.GameModelContractsTest#scoreDefaultsToZeroAndCopyDoesNotMutateTheOriginal",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.DifficultyLabelsTest#mapsEveryDifficultyToItsSpanishLabel",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.DifficultyLabelsTest#keepsTheLabelsInTheDifficultyOrder",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.DifficultyLabelsTest#usesADistinctLabelResourcePerDifficulty",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest#acceptedXPublishesComputerTurnAndWaitsWithoutAcceptingMoreHumanInput",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest#noArgumentViewModelConstructorRemainsUsableUnderMainRule",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest#coroutineDispatchDelayConsumesTimeFromAcceptanceBeforeSchedulingDelay",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest#startingANewGameCancelsThePendingResponseJob",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest#earlySubMillisecondWakeIsRoundedUpAndNeverMovesBeforeMonotonicDeadline",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest#newOpeningDoesNotRunAtDeadlineOfCancelledResponse",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest#newGameAtOldDeadlineCancelsCallbackNotYetDispatched",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest#OOpeningUsesSameOneSecondWaitAndIsCancelledByNewXGame",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest#terminalHumanWinAndTieNeverSelectOrScheduleAComputerMove",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelCoroutineHarnessTest#clockTracksTheSharedSchedulerAcross999Plus1Milliseconds",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest#newGameConservesDifficultyAndScoreAndLocksDifficultyOnlyForTheOOpening",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest#easyDifficultyIsForwardedToTheEngineOnEveryComputerTurn",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest#aStaleRequestCapturedWhileEditableIsRejectedOnceTheGameIsActive",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest#setDifficultyAcceptsTheCurrentLevelWhenEditablePublishingTheSameValues",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest#aNewSessionStartsInExpertWithAnEditableEmptyBoard",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest#reentrantNewGamesDiscardTheOldOpeningSelectionAndKeepTheNewOpeningDeadline",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest#setDifficultyBeforeTheFirstMoveAcceptsPublishesAndDoesNotMoveOrScore",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest#difficultyIsPreservedAcrossTurnsAndTheTerminalPublication",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest#openingMoveUsesTheCanonicalDifficultyAndAvoidsTheRandomizerForImpossible",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest#setDifficultyAfterTerminalKeepsBoardResultAndScore",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest#difficultyChangedAt400MillisecondsDoesNotRestartOpeningDeadline",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest#selectingImpossibleDoesNotLeakIntoANewViewModelSession",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest#setDifficultyDuringAnActiveGameIsRejectedWithoutPublishingOrMoving",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest#staleEasySelectionIsDiscardedAfterReentrantDifficultyChange",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest#difficultyGateFollowsTheDerivedStateThroughPlayAndTerminal",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelLifecycleTest#pauseDuringSynchronousSelectionDiscardsItAndResumeCompletesExactlyOnce",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelLifecycleTest#pausedInitiallyForBothResponseAndOpening",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelLifecycleTest#pauseRetainsTimeAndRepeatedResumeDoesNotResetIt",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelLifecycleTest#repeatedPauseDoesNotOverConsumeRemainingTime",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelLifecycleTest#newGameWhilePausedInvalidatesPendingAndRotationUsesSameViewModel",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelLifecycleTest#clearingViewModelStoreCancelsQueuedDeadlineAndLeavesStateStable",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelLifecycleTest#zeroRemainingFiresOnceAndRemainsStableAcrossPauseAndResume",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelMoveSoundTest#openingAndTerminalComputerMoveEmitOnce",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelMoveSoundTest#emitsOnceForAcceptedHumanComputerAndTerminalMovesOnly",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelMoveSoundTest#registeringLaterDoesNotReplayAndMissingSinkDropsHumanAndComputerAttempts",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelMoveSoundTest#unregisterCurrentOwnerDetachesAndStopsBeforeReturning",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelMoveSoundTest#pauseAccountsForForegroundTimeBeforeAudioStopCost",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelMoveSoundTest#replacingOwnerStopsOldSinkAndLateUnregisterCannotAffectCurrentOwner",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelMoveSoundTest#throwingSinkCannotRollbackMoveOrPreventResponseAndStopFailuresAreAbsorbed",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelMoveSoundTest#reentrantSoundNewGamesCannotBeOverwrittenByOldPendingTurn",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelMoveSoundTest#mutedAndPausedAcceptedMovesAreDroppedWithoutReplay",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelSoundTest#mutedPreferenceSurvivesPauseAndResumeDuringPendingResponseAndNewGame",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelSoundTest#mutedPreferenceSurvivesAcceptedComputerAndTerminalHumanMoves",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelSoundTest#soundTogglesDuringOpeningWaitPreserveStateAndOriginalDeadline",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelSoundTest#mutePersistsAcrossNewGamesMovesAndDifficultyChangesWithoutChangingOtherState",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelTest#newGamesPreserveScoresAcrossTerminalGamesAndKeepOldSnapshotsIntact",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelTest#incompleteGamesDoNotUpdateAnyScore",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelTest#humanFillingTheLastCellWithNoWinProducesATieWithoutComputerMove",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelTest#newGameAlternatesAfterAbandoningActiveXAndActiveOOpening",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelTest#newGamesAlternateOpenersAndRepeatedReadsDoNotStartAnotherGame",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelTest#repeatedStateReadsReturnTheSameSnapshotWithoutStartingOrScoring",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelTest#invalidAndOccupiedLocationsAreExactNoOpsWithoutInvokingComputer",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelTest#legalHumanMovePlacesXAndExactlyOneComputerMoveReturnsToHuman",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelTest#initialStateStartsWithAnEmptyBoardAndZeroScore",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelTest#stateFlowIsReadOnlyToConsumers",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelTest#humanVictoryIsDetectedBeforeComputerCanMove",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelTest#independentViewModelStartsWithAZeroScoreAndX",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelTest#humanInputDuringComputerTurnIsRejectedReentrantlyBeforeComputerMove",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelTest#initializationClearsAnInjectedGameWithoutCallingTheRandomizer",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.GameViewModelTest#computerVictoryLeavesComputerTurnAndDoesNotEnableHumanMoves",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.audio.MoveSoundControllerTest#oldOwnerCannotPlayEvenWhenItsPoolAndSampleRemainReady",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.audio.MoveSoundControllerTest#stopTracksOnlyTheMostRecentMaximumStreams",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.audio.MoveSoundControllerTest#stopAndReleaseExceptionsAreIsolated",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.audio.MoveSoundControllerTest#noReadyFailureMuteOrForegroundMeansNoPlaybackAndNoRetry",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.audio.MoveSoundControllerTest#muteStopsImmediatelyAndDoesNotAutoplayAfterToggle",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.audio.MoveSoundControllerTest#staleOwnerCannotPlayOrMarkCurrentPoolReadyButPreloadMayStartBeforeRegistration",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.audio.MoveSoundControllerTest#factoryAndResourceLoadFailuresAreIsolated",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.audio.MoveSoundControllerTest#readySamplesPlayMatchingResourceOnceAndLoadNeverPlays",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.audio.MoveSoundControllerTest#prepareIsIdempotentAndLateOldPoolCallbackCannotReadySameSampleInNewPool",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.audio.MoveSoundControllerTest#backendPlayFailureOrZeroIsIsolatedWithoutQueuedRetry",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.audio.MoveSoundControllerTest#pauseStopsAndReleasesAndReleaseIsIdempotent",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.audio.MoveSoundHostTest#viewModelMuteStopsActiveStreamImmediatelyAndKeepsPendingTurn",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.audio.MoveSoundHostTest#zeroRemainingTurnCompletesOnReplacementResumeWithoutAudioReplay",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.audio.MoveSoundHostTest#preparesRegistersThenResumesAndStaleHostCannotAffectReplacement",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.models.GameUiStateDifficultyTest#addingDifficultyKeepsTheBoardSnapshotDefensiveAndImmutable",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.models.GameUiStateDifficultyTest#defaultsToExpertDifficulty",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.models.GameUiStateDifficultyTest#difficultyIsEditableAfterATerminalResultEvenWithAFullBoard",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.models.GameUiStateDifficultyTest#explicitDifficultyIsExposedWithoutChangingTheOtherFields",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.models.GameUiStateDifficultyTest#difficultyIsLockedOnAnActiveBoardWithAtLeastOneMark",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.models.GameUiStateDifficultyTest#difficultyIsEditableOnAnInitialEmptyInProgressBoard",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.models.GameUiStateTest#boardMustContainExactlyNineMarks",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.models.GameUiStateTest#snapshotComposesTheDomainModels",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.models.GameUiStateTest#originalBoardMutationDoesNotChangeTheSnapshot",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.models.GameUiStateTest#soundPreferenceCanBeInitializedDisabledAsAnImmutableValue",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.models.GameUiStateTest#defaultsRepresentTheFirstHumanStartedSession",
+      "status": "PASS"
+    },
+    {
+      "id": "com.edu.unal.tictactoe.ui.game.models.GameUiStateTest#exposedBoardCannotBeMutated",
+      "status": "PASS"
+    }
+  ]
+}

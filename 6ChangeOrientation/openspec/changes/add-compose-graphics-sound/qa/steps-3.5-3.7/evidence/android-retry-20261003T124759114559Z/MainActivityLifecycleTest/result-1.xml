@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="4" failures="0" errors="0" skipped="0" time="0.000" timestamp="2026-10-03T12:48:21" hostname="REDACTED">
+  <testsuite name="com.edu.unal.tictactoe.MainActivityLifecycleTest" tests="4" failures="0" errors="0" skipped="0" time="12.396" timestamp="2026-10-03T12:48:21" hostname="REDACTED">
+    <properties>
+      <property name="device" value="DEVICE_REDACTED" />
+    </properties>
+    <testcase name="recreationDuringPendingOpeningRetainsSessionAndExecutesOneOpening" classname="com.edu.unal.tictactoe.MainActivityLifecycleTest" time="2.342" />
+    <testcase name="finishingWithPendingTurnCancelsItAndNextActivityStartsFreshSession" classname="com.edu.unal.tictactoe.MainActivityLifecycleTest" time="2.631" />
+    <testcase name="pauseSuspendsPendingResponseAndResumeCompletesItOnce" classname="com.edu.unal.tictactoe.MainActivityLifecycleTest" time="4.575" />
+    <testcase name="recreationDuringPendingResponseRetainsSessionWithoutDuplicatingTurn" classname="com.edu.unal.tictactoe.MainActivityLifecycleTest" time="2.848" />
+  </testsuite>
+</testsuites>

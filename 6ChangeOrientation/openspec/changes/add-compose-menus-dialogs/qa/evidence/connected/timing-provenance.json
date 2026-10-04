@@ -1,0 +1,6 @@
+{
+  "source": "app/build/outputs/androidTest-results/connected/debug/<model-api>/logcat-com.edu.unal.tictactoe.ImpossibleOpeningTimingTest-impossibleOpeningFromEmptyBoardRunsOneMoveAndRecordsSamples.txt",
+  "source_mtime_utc": "2026-10-02T00:24:40.792398+00:00",
+  "source_is_fresh": true,
+  "note": "UTP captured app logcat during current timing test; post-run ring buffer query returned no samples. Pre-run shell date quoting was invalid; not used as timing provenance."
+}

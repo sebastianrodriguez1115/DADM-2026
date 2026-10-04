@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="7" failures="0" errors="0" skipped="0" time="0.000" timestamp="2026-10-03T12:48:56" hostname="REDACTED">
+  <testsuite name="com.edu.unal.tictactoe.MainActivityTest" tests="7" failures="0" errors="0" skipped="0" time="24.228" timestamp="2026-10-03T12:48:56" hostname="REDACTED">
+    <properties>
+      <property name="device" value="DEVICE_REDACTED" />
+    </properties>
+    <testcase name="humanMoveUsesActivityViewModelAndRecompositionDoesNotRepeatIt" classname="com.edu.unal.tictactoe.MainActivityTest" time="2.255" />
+    <testcase name="activeAndTerminalGamesSurviveRealBackgroundAndForegroundTransitions" classname="com.edu.unal.tictactoe.MainActivityTest" time="5.189" />
+    <testcase name="newGameActionStartsOOnceAndPreservesScoreAcrossRedraws" classname="com.edu.unal.tictactoe.MainActivityTest" time="1.815" />
+    <testcase name="activityRecreationKeepsTheSameViewModelAndCurrentGame" classname="com.edu.unal.tictactoe.MainActivityTest" time="1.827" />
+    <testcase name="openingOAndFollowingXOpeningSurviveRecreationWithoutExtraOpening" classname="com.edu.unal.tictactoe.MainActivityTest" time="1.982" />
+    <testcase name="terminalGameKeepsResultBoardAndSingleScoreAfterRecreation" classname="com.edu.unal.tictactoe.MainActivityTest" time="5.388" />
+    <testcase name="closingActivityAndLaunchingNewInstanceStartsANewSession" classname="com.edu.unal.tictactoe.MainActivityTest" time="5.772" />
+  </testsuite>
+</testsuites>
