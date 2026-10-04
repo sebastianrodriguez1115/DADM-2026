@@ -7,144 +7,204 @@ Esta capacidad define cómo se agrupan las partidas en una sesión temporal, có
 ## Requirements
 
 ### Requirement: Inicio de sesión y alternancia del iniciador
-
-Una sesión nueva MUST comenzar con los contadores de X, O y empates en cero, y su primera partida MUST iniciar con el humano X. Cada solicitud explícita de nueva partida MUST alternar el iniciador respecto de la partida anterior, incluso si la partida anterior fue abandonada sin terminar.
+Una sesión nueva MUST cargar scores persistentes mediante SharedPreferences, independientemente de la partida temporal, normalizando cada contador inválido individualmente a cero; si no existen valores válidos, el valor será cero. Su primera partida MUST iniciar con X. Toda nueva partida MUST alternar iniciador, incluso si la anterior fue abandonada.
 
 #### Scenario: Primera partida de una sesión nueva
-
-- **GIVEN** que no existe una sesión viva al abrir el juego
+- **GIVEN** que no existe sesión lógica viva y las preferencias tienen contadores válidos
 - **WHEN** se muestra la primera partida
-- **THEN** X inicia y los contadores de victorias de X, victorias de O y empates muestran cero
+- **THEN** X inicia y se muestran los scores persistidos
+
+#### Scenario: Contadores ausentes o inválidos individualmente
+- **GIVEN** que no hay snapshot temporal válido y faltan valores o algunos scores no son enteros no negativos
+- **WHEN** se carga el marcador de SharedPreferences
+- **THEN** cada contador inválido se normaliza a cero y los demás valores válidos se conservan
 
 #### Scenario: Alternancia después de una partida terminada
-
 - **GIVEN** que la partida anterior inició con X
-- **WHEN** la persona solicita explícitamente una nueva partida
+- **WHEN** la persona solicita explícitamente nueva partida
 - **THEN** la nueva partida inicia con O
 
 #### Scenario: Alternancia después de abandonar una partida
-
 - **GIVEN** que la partida actual está incompleta y había iniciado con O
-- **WHEN** la persona solicita explícitamente una nueva partida
-- **THEN** la nueva partida inicia con X y la partida abandonada no suma a ningún contador
+- **WHEN** la persona solicita explícitamente nueva partida
+- **THEN** la nueva partida inicia con X y la abandonada no suma puntos
 
 ### Requirement: Nueva partida y apertura de O
-La acción de nueva partida MUST limpiar todas las marcas y el resultado de la partida anterior, y MUST conservar los contadores acumulados de la sesión. Cuando el iniciador sea O, la computadora MUST realizar exactamente una jugada inicial después de completar 1000 ms de primer plano desde el inicio de esa partida y después MUST quedar el turno humano. La espera no congela la selección de dificultad permitida por sus reglas vigentes; O usa el nivel vigente al ejecutar la jugada.
+Nueva partida MUST limpiar tablero y resultado y cancelar espera anterior, conservar marcador persistente y dificultad, y alternar iniciador. Si O inicia, MUST esperar 1000 ms acumulados en primer plano antes de una sola jugada y luego pasar el turno a X.
 
 #### Scenario: Nueva partida conserva el marcador
-- **GIVEN** que existe un marcador de sesión y una partida activa o terminada
-- **WHEN** la persona solicita una nueva partida
-- **THEN** se eliminan las marcas y el resultado de la partida anterior, los contadores permanecen sin cambios y el estado muestra nueve casillas vacías si inicia X o una O con turno humano tras su apertura si inicia O
+- **GIVEN** que existe marcador de sesión y partida activa o terminada
+- **WHEN** se solicita nueva partida
+- **THEN** se limpian marcas y resultado, se conserva marcador, y el tablero queda vacío si inicia X o vacío con turno O pendiente si inicia O
 
 #### Scenario: O inicia la nueva partida
 - **GIVEN** que la alternancia determina que O inicia
-- **WHEN** se completan 1000 ms de primer plano desde el inicio de la nueva partida y el juego puede procesar la acción
-- **THEN** O ocupa exactamente una casilla libre, no antes del umbral, y el turno pasa a X
+- **WHEN** comienza la nueva partida
+- **THEN** el tablero está vacío, el turno corresponde a O y no hay jugada antes de 1000 ms acumulados de primer plano
+
+#### Scenario: Apertura O tras 1000 ms
+- **GIVEN** que O inicia y la apertura sigue pendiente
+- **WHEN** se completan 1000 ms acumulados de primer plano y el juego puede procesar
+- **THEN** O ocupa exactamente una casilla y el turno pasa a X
+
+#### Scenario: O no mueve a los 999 ms
+- **GIVEN** que O inicia
+- **WHEN** solo han transcurrido 999 ms acumulados en primer plano
+- **THEN** el tablero permanece vacío y el turno sigue siendo O
+
+#### Scenario: Tiempo restante tras pausa
+- **GIVEN** que O espera y ya consumió 400 ms en primer plano
+- **WHEN** pasa a segundo plano y luego vuelve
+- **THEN** no juega durante la pausa y juega una vez tras los 600 ms restantes en primer plano
 
 #### Scenario: X inicia sin movimiento automático
 - **GIVEN** que la alternancia determina que X inicia
-- **WHEN** comienza la nueva partida
+- **WHEN** comienza nueva partida
 - **THEN** el tablero permanece vacío y el turno corresponde a X
 
 #### Scenario: Nueva partida invalida cualquier turno pendiente anterior
-- **GIVEN** que está pendiente una respuesta de O tras X o una apertura de O
-- **WHEN** se solicita otra nueva partida, incluso rápidamente tras la anterior
-- **THEN** todo turno pendiente anterior queda cancelado y nunca coloca una marca ni registra un punto en el tablero nuevo; solo puede ocurrir una apertura de O propia de la nueva partida si inicia O
+- **GIVEN** que está pendiente una respuesta o apertura de O
+- **WHEN** se solicita nueva partida
+- **THEN** la espera anterior se cancela y no modifica tablero nuevo; solo cabe apertura de la nueva partida si inicia O
 
 #### Scenario: X termina en victoria o empate
-- **GIVEN** que la jugada humana termina la partida por victoria o empate
+- **GIVEN** que una jugada de X termina la partida
 - **WHEN** se procesa el desenlace
-- **THEN** no queda pendiente ni se realiza respuesta alguna de O
+- **THEN** no queda pendiente ni se realiza respuesta de O
 
 ### Requirement: Puntuación única de partidas terminadas
-
-La sesión MUST registrar exactamente una vez cada partida que termine, incrementando únicamente el contador correspondiente a la victoria de X, la victoria de O o el empate. Una partida incompleta MUST NOT modificar ningún contador.
+La sesión MUST registrar una vez cada desenlace e incrementar y persistir únicamente el contador correspondiente en SharedPreferences. Una partida incompleta MUST NOT modificar contadores.
 
 #### Scenario: Victoria humana puntuada
-
-- **GIVEN** que una partida termina con victoria de X
+- **GIVEN** que una partida termina con victoria X
 - **WHEN** se registra el desenlace
-- **THEN** el contador de X aumenta en uno y los contadores de O y empates no cambian
+- **THEN** aumenta y persiste solo el contador X
 
 #### Scenario: Victoria de computadora puntuada
-
-- **GIVEN** que una partida termina con victoria de O
+- **GIVEN** que una partida termina con victoria O
 - **WHEN** se registra el desenlace
-- **THEN** el contador de O aumenta en uno y los contadores de X y empates no cambian
+- **THEN** aumenta y persiste solo el contador O
 
 #### Scenario: Empate puntuado
-
 - **GIVEN** que una partida termina en empate
 - **WHEN** se registra el desenlace
-- **THEN** el contador de empates aumenta en uno y los contadores de X y O no cambian
+- **THEN** aumenta y persiste solo el contador de empates
 
 #### Scenario: Resultado no duplicado
-
-- **GIVEN** que una partida ya terminó y su resultado fue registrado
-- **WHEN** se repiten taps sobre el tablero o se recrea la pantalla
-- **THEN** el resultado y sus contadores no vuelven a incrementarse
+- **GIVEN** que el resultado ya fue registrado
+- **WHEN** se repiten taps o se restaura la pantalla
+- **THEN** no vuelve a incrementarse ningún contador
 
 ### Requirement: Conservación del estado durante la sesión viva
-A efectos de esta capacidad, una sesión viva es el estado en memoria asociado a la misma instancia lógica del juego; incluye las recreaciones por cambios de configuración y deja de existir al finalizar la tarea o perder el proceso. Mientras exista, el sistema MUST conservar el tablero, el turno, el resultado, el iniciador siguiente y los contadores, así como el tiempo restante de cualquier jugada de O pendiente. Volver desde segundo plano dentro de esa sesión MUST NOT iniciar una partida, mover una marca ni registrar un punto adicional por el mero retorno. Una espera pendiente MUST acumular únicamente tiempo en primer plano, suspenderse al perderlo y continuar desde el tiempo restante al volver, sin duplicar la jugada.
+A efectos de esta capacidad, una sesión viva es el estado en memoria de la misma instancia lógica; el estado MUST conservar tablero, turno, resultado, iniciador siguiente, estado de sonido y tiempo restante de O durante recreación de configuración o restauración temporal soportada. La vuelta a primer plano MUST NOT iniciar partida o repetir acciones; sí podrá completar una única jugada O que ya estaba pendiente al vencer su tiempo restante.
 
 #### Scenario: Rotación durante una partida activa
-- **GIVEN** que existe una partida activa con tablero, turno e iniciador definidos
+- **GIVEN** que existe partida activa con tablero, turno e iniciador
 - **WHEN** la pantalla se recrea por rotación
-- **THEN** se restauran el tablero y el turno sin movimiento automático ni cambio de iniciador
+- **THEN** se restauran tablero y turno sin reaplicar movimiento, puntuación ni sonido
 
 #### Scenario: Rotación después de un resultado
-- **GIVEN** que una partida terminó y su contador ya fue actualizado
-- **WHEN** la pantalla se recrea por rotación
-- **THEN** se conserva el resultado y el marcador sin registrar otro punto
+- **GIVEN** que terminó una partida y su contador ya fue actualizado
+- **WHEN** la pantalla se recrea
+- **THEN** resultado y marcador se conservan sin nuevo punto ni sonido
 
 #### Scenario: Regreso desde segundo plano
-- **GIVEN** que el juego pasa a segundo plano sin finalizar la sesión
-- **WHEN** la persona vuelve al juego
-- **THEN** se conserva el estado previo y no se dispara una nueva partida ni una jugada adicional salvo completar el tiempo restante de una jugada O que ya estaba pendiente
+- **GIVEN** que el juego pasa a segundo plano sin finalizar sesión
+- **WHEN** vuelve a primer plano
+- **THEN** conserva el estado y solo completa O si había turno pendiente y venció su tiempo restante; esa nueva jugada tiene efectos normales una sola vez
 
 #### Scenario: Pausa y continuación del tiempo restante
-- **GIVEN** que O espera una jugada y parte de su umbral de 1000 ms ya transcurrió en primer plano
-- **WHEN** el juego pierde primer plano y luego vuelve
-- **THEN** no se realizan jugadas ni se reproduce audio en segundo plano, y O actúa solo después de acumular el tiempo restante, sin reiniciar la cuenta ni duplicar la jugada
+- **GIVEN** que O espera y parte de 1000 ms ya transcurrió
+- **WHEN** pierde primer plano y luego vuelve
+- **THEN** no juega ni reproduce audio en background y reanuda desde el tiempo restante sin reiniciar cuenta
 
 #### Scenario: Rotación conserva espera pendiente
-- **GIVEN** que O tiene una jugada pendiente durante una sesión viva
+- **GIVEN** que O tiene jugada pendiente
 - **WHEN** la pantalla rota
-- **THEN** se conserva el tiempo restante y se realiza una única jugada al completar el umbral acumulado en primer plano
+- **THEN** conserva tiempo restante y realiza una única jugada al completar 1000 ms acumulados en primer plano
 
 #### Scenario: Tiempo restante tras pausa
-- **GIVEN** que O espera y ya consumió 400 ms del umbral en primer plano
-- **WHEN** el juego permanece en segundo plano
-- **THEN** quedan 600 ms pendientes y no se realiza ninguna jugada durante la pausa
+- **GIVEN** que O consumió 400 ms en primer plano
+- **WHEN** permanece en segundo plano
+- **THEN** restan 600 ms y no se juega durante la pausa
 
 #### Scenario: Tiempo restante tras rotación
-- **GIVEN** que O espera y ya consumió 400 ms del umbral en primer plano
-- **WHEN** la pantalla rota
-- **THEN** se conservan 600 ms pendientes y O no juega hasta que se completen en primer plano
+- **GIVEN** que O consumió 400 ms antes de rotación
+- **WHEN** termina la recreación
+- **THEN** restan 600 ms y O no juega hasta consumirlos en primer plano
 
 #### Scenario: Cancelación de espera al cerrar sesión
-- **GIVEN** que O tiene una jugada pendiente
-- **WHEN** se cierra explícitamente el juego o finaliza la sesión
-- **THEN** se cancela la jugada pendiente y no se restaura al iniciar otra sesión
+- **GIVEN** que O tiene jugada pendiente
+- **WHEN** la sesión se cierra deliberadamente o finaliza
+- **THEN** se cancela y no se restaura al comenzar otra sesión
+
+#### Scenario: Restauración soportada de O
+- **GIVEN** que el snapshot temporal soportado contiene espera O y su tiempo restante
+- **WHEN** el host restaurado vuelve a RESUMED
+- **THEN** O espera lo restante; la restauración por sí sola no mueve, puntúa ni reproduce sonido, pero la jugada legítima posterior sí sigue reglas normales una sola vez
 
 ### Requirement: Límites de la sesión en memoria
+Un snapshot temporal de SavedStateHandle MUST restaurar únicamente recreación soportada y nunca ser almacén permanente. Sin snapshot válido, se inicia tablero vacío y X; SharedPreferences es la única autoridad de scores y dificultad, incluso tras muerte de proceso soportada. SoundEnabled se conserva solo en snapshot temporal y vuelve a true en sesión nueva. No se restaura una partida tras cierre deliberado, force-stop o nuevo lanzamiento sin snapshot; background no equivale a cierre. Código de dificultad estable: 0 Easy, 1 Hard, 2 Expert, 3 Impossible; códigos ausentes o inválidos usan Expert. Back aplica navegación normal y no garantiza finalizar tarea.
 
-Al abrir el juego sin una sesión viva, el sistema MUST iniciar una sesión nueva con marcador cero y X como iniciador de la primera partida. SHALL NOT restaurar el tablero ni el marcador de una sesión anterior después de finalizar la tarea, perder el proceso o cerrar explícitamente el juego, y SHALL NOT reiniciar la sesión solo por enviar la aplicación a segundo plano.
+#### Scenario: Rotación con estado guardado
+- **GIVEN** que el host se recrea por configuración con estado temporal válido
+- **WHEN** se recrea la pantalla
+- **THEN** se recuperan tablero, turno, resultado, iniciadores, sonido y restante O sin efectos duplicados
 
-#### Scenario: Nueva sesión tras perder el proceso
+#### Scenario: Restauración soportada por muerte de proceso
+- **GIVEN** que Android recrea el host con snapshot temporal válido
+- **WHEN** se restaura
+- **THEN** se restaura estado de partida y sonido de sesión, mientras scores/dificultad provienen de SharedPreferences
 
-- **GIVEN** que el proceso anterior se perdió y se abre el juego sin una sesión viva
-- **WHEN** comienza la nueva sesión
-- **THEN** los contadores vuelven a cero y la primera partida inicia con X
+#### Scenario: Sin snapshot temporal
+- **GIVEN** que se abre sin snapshot válido
+- **WHEN** comienza el juego
+- **THEN** tablero vacío, X, sonido true y scores/dificultad cargados de SharedPreferences o sus defaults
+
+#### Scenario: Snapshot corrupto
+- **GIVEN** que el snapshot tiene campos ausentes, inválidos o incompatibles
+- **WHEN** se intenta restaurar
+- **THEN** no hay crash ni aplicación parcial; se inicia tablero vacío con X y prefs válidas
 
 #### Scenario: Nueva sesión tras finalizar la tarea
-
-- **GIVEN** que la tarea de la aplicación fue finalizada y no queda una sesión viva
-- **WHEN** se abre nuevamente el juego
-- **THEN** se inicia una sesión nueva con marcador cero y X como iniciador
+- **GIVEN** que finalizó la tarea y no hay snapshot válido
+- **WHEN** se vuelve a abrir
+- **THEN** no se restaura la partida y scores/dificultad persistidos válidos permanecen
 
 #### Scenario: Sin persistencia permanente
+- **GIVEN** que el usuario finaliza deliberadamente o fuerza detención
+- **WHEN** vuelve a abrir sin snapshot temporal
+- **THEN** no se restaura tablero ni turno; scores/dificultad persistidos sí
 
-- **GIVEN** que la aplicación se abre en una sesión distinta de la anterior
-- **WHEN** se muestra el marcador
-- **THEN** no se recuperan los contadores ni el estado de la sesión anterior desde almacenamiento permanente
+#### Scenario: Nueva sesión tras perder el proceso
+- **GIVEN** que el proceso anterior se perdió y no hay snapshot temporal válido
+- **WHEN** comienza una nueva sesión
+- **THEN** el tablero inicia vacío con X y scores/dificultad proceden de preferencias válidas o defaults
+
+#### Scenario: Background y Back
+- **GIVEN** que se envía a background o se pulsa Back
+- **WHEN** Android conserva la tarea
+- **THEN** no se fuerza terminación ni se reinicia estado por el mero background
+
+#### Scenario: Códigos de dificultad
+- **GIVEN** que se carga un código entero persistido
+- **WHEN** vale 0, 1, 2 o 3
+- **THEN** se asigna respectivamente Easy, Hard, Expert o Impossible
+
+#### Scenario: Código de dificultad desconocido
+- **GIVEN** que el código falta o no vale 0, 1, 2 o 3
+- **WHEN** se carga
+- **THEN** se usa Expert sin crash
+
+### Requirement: Restablecimiento persistente del marcador
+El sistema SHALL restablecer inmediatamente y persistir a cero los tres contadores sin modificar ninguna otra parte de la partida o sesión.
+
+#### Scenario: Restablecer durante partida
+- **GIVEN** una partida activa con marcador
+- **WHEN** se elige Reiniciar puntajes
+- **THEN** scores visibles y persistidos pasan a cero sin cambiar tablero, turno, resultado, iniciadores, dificultad, espera ni sonido
+
+#### Scenario: Restablecer terminal
+- **GIVEN** que una partida terminal ya fue puntuada
+- **WHEN** se restablece marcador
+- **THEN** resultado permanece y no vuelve a contabilizarse
