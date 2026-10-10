@@ -1,0 +1,22 @@
+# Reintento Android 3.6 y medición 3.9
+
+El reporte original y sus XML conservan el bloqueo histórico sin dispositivo. Este reintento tiene dispositivo reconectado y code review aprobado del host y de los últimos fixes de tests. La ejecución es independiente del resultado comunicado por Worker. No se evalúa audio: assets existentes no equivalen a controlador/play implementados. App nativa; Playwright/Postman no aplican.
+
+Precondiciones: exactamente un dispositivo autorizado, SDK local/JBR, ActivityScenario real, instancias aisladas por test, sin settings globales ni otras apps. Gradle offline, sin configuration cache, rerun-tasks; cada clase se ejecuta en comando separado. Reloj real instrumentado para host; JVM virtual como regresión exacta. Evidencia nueva en `evidence/android-retry-<UTC>/`, sin sobrescribir evidencia anterior.
+
+| ID | Requisito / capability | Técnica / precondición particular | Pasos | Esperado / test |
+|---|---|---|---|---|
+| A36-01 (reintenta QA16) | `specs/game-session`: pausa/restante/foreground, 3.6 | Transiciones y límites, respuesta pendiente | X; ~400 ms; Activity CREATED por >1000 ms; RESUMED; medir timestamp O | Cero O pausado; una O tras restante; tiempo tras resume >=max(remaining−150 ms,0), <=min(remaining+300 ms,950 ms); estable después. `MainActivityLifecycleTest.pauseSuspendsPendingResponseAndResumeCompletesItOnce` |
+| A36-02 (reintenta QA17) | `specs/game-session`: recreación pendiente, sesión; 3.6 | Configuración/retención, respuesta y apertura | Dificultad Hard y mute; respuesta o apertura; ~400 ms; recreate; esperar O | Mismo VM, starter/next/score/dificultad/mute conservados, restante medido conservado, una O. Dos métodos `recreationDuringPending...` de Lifecycle |
+| A36-03 (reintenta QA17) | `specs/game-session`: cierre cancela; 3.6 | Fin de sesión, pendiente | X; finish; esperar >1000 ms; lanzar nueva Activity | VM viejo no muta; VM nuevo distinto, vacío, score cero. `finishingWithPendingTurnCancelsItAndNextActivityStartsFreshSession` |
+| A36-04 | `specs/game-session`, `specs/tic-tac-toe-game`: sesión/score/alternancia | Regresión UI, activa/terminal/iniciadores | Acciones de casilla/nueva, redraw, recreate activa/terminal, background/return, cierre | Sin movimientos/replays/score extra, sesión retenida o nueva según transición. `MainActivityTest` 7 tests |
+| A36-05 | `specs/game-options`: acciones básicas de menú y gate dificultad | Particiones activa/vacía; Compose con VM resumed en Main | Menú/nueva/atajo, selección aceptada/repetida, rechazada activa, recomposición, viewport compacto | Acción correcta, score conservado, gate/Toast no duplicados, tablero cuadrado y acceso. `GameScreenTest` 6 tests; **no cubre menú abierto al vencer O ni selección UI obsoleta** |
+| A39-01 | Diseño verificación y task 3.9; `specs/game-options` nivel Impossible, política IA | Medición aislada, cinco motores vacíos, RNG fail-fast | En Main, cronometrar solo `getComputerMove(Impossible)` cinco veces; comprobar selección/tablero; aplicar O fuera de ventana | Cinco muestras reales, first/median registrados; RNG nunca usado; selección no muta; aplicación una O/8 vacías/no X/InProgress. `ImpossibleOpeningTimingTest` 1 test; sin umbral de performance arbitrario |
+| RJVM | Core 3.5–3.8 y regresión IA | Límites/transiciones/particiones, reloj virtual | Suite JVM completa fresca | 108 métodos, ningún fallo/error/skip; no sustituye Android |
+| UI37 (QA18) | `specs/game-options`: menú no pausa y selección UI obsoleta; 3.7 | Negativo/transición UI | Casos nuevos aún no creados; **no ejecutados** | Mantener pendiente; no inferir pase desde tests de gate básico o revalidación JVM |
+
+Charter: confirmar que cobertura Android utiliza callbacks reales y VM retenido, distinguiendo recreación Activity de la recreación Compose del helper; revisar límites del oráculo temporal y ventana aislada Impossible sin inferir rendimiento general. Sin pruebas manuales TalkBack/escucha, sin cambios al producto/tests/tasks, sin commits/push. Resultados y trazabilidad XML quedarán en el reporte de reintento.
+
+## Resultado final
+
+A36-01–A36-05 y A39-01 PASA: **18/18 Android**; RJVM PASA: **108/108 JVM**. Todos los comandos, wrapper y validador exit 0, sin fallos/error/skip. UI37/QA18 permanece PENDIENTE. **3.6 y 3.9 aprobadas** en el alcance indicado. Resultado detallado, evidencia, medición first/median y observación histórica del parser: `android-retry-report.md`.

@@ -1,0 +1,18 @@
+{
+  "label": "isolated-12-GameScreenSoundIntegrationTest",
+  "expected": 1,
+  "starts": 1,
+  "ended": 1,
+  "passed": 0,
+  "failed": 1,
+  "complete_inventory": true,
+  "actual_ids": [
+    "com.edu.unal.tictactoe.GameScreenSoundIntegrationTest#menuMuteStopsInSameMainEventPreservesTurnAndSuppressesUntilUnmuted"
+  ],
+  "expected_ids": [
+    "com.edu.unal.tictactoe.GameScreenSoundIntegrationTest#menuMuteStopsInSameMainEventPreservesTurnAndSuppressesUntilUnmuted"
+  ],
+  "ok_count": null,
+  "failure_marker": true,
+  "verified": false
+}

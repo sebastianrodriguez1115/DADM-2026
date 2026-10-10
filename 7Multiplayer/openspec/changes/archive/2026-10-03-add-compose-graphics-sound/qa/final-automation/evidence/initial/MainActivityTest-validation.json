@@ -1,0 +1,106 @@
+{
+  "clazz": "com.edu.unal.tictactoe.MainActivityTest",
+  "expected": 7,
+  "adb_exit": 0,
+  "complete_inventory": true,
+  "starts": 7,
+  "passed": 7,
+  "failed": 0,
+  "other_results": 0,
+  "status_counts": {
+    "1": 7,
+    "0": 7
+  },
+  "ok_summary": true,
+  "final_codes": [
+    "-1"
+  ],
+  "failure_marker": false,
+  "verified_pass": true,
+  "events": [
+    {
+      "class": "com.edu.unal.tictactoe.MainActivityTest",
+      "numtests": "7",
+      "test": "humanMoveUsesActivityViewModelAndRecompositionDoesNotRepeatIt",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.MainActivityTest",
+      "numtests": "7",
+      "test": "humanMoveUsesActivityViewModelAndRecompositionDoesNotRepeatIt",
+      "code": 0
+    },
+    {
+      "class": "com.edu.unal.tictactoe.MainActivityTest",
+      "numtests": "7",
+      "test": "activeAndTerminalGamesSurviveRealBackgroundAndForegroundTransitions",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.MainActivityTest",
+      "numtests": "7",
+      "test": "activeAndTerminalGamesSurviveRealBackgroundAndForegroundTransitions",
+      "code": 0
+    },
+    {
+      "class": "com.edu.unal.tictactoe.MainActivityTest",
+      "numtests": "7",
+      "test": "newGameActionStartsOOnceAndPreservesScoreAcrossRedraws",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.MainActivityTest",
+      "numtests": "7",
+      "test": "newGameActionStartsOOnceAndPreservesScoreAcrossRedraws",
+      "code": 0
+    },
+    {
+      "class": "com.edu.unal.tictactoe.MainActivityTest",
+      "numtests": "7",
+      "test": "activityRecreationKeepsTheSameViewModelAndCurrentGame",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.MainActivityTest",
+      "numtests": "7",
+      "test": "activityRecreationKeepsTheSameViewModelAndCurrentGame",
+      "code": 0
+    },
+    {
+      "class": "com.edu.unal.tictactoe.MainActivityTest",
+      "numtests": "7",
+      "test": "openingOAndFollowingXOpeningSurviveRecreationWithoutExtraOpening",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.MainActivityTest",
+      "numtests": "7",
+      "test": "openingOAndFollowingXOpeningSurviveRecreationWithoutExtraOpening",
+      "code": 0
+    },
+    {
+      "class": "com.edu.unal.tictactoe.MainActivityTest",
+      "numtests": "7",
+      "test": "terminalGameKeepsResultBoardAndSingleScoreAfterRecreation",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.MainActivityTest",
+      "numtests": "7",
+      "test": "terminalGameKeepsResultBoardAndSingleScoreAfterRecreation",
+      "code": 0
+    },
+    {
+      "class": "com.edu.unal.tictactoe.MainActivityTest",
+      "numtests": "7",
+      "test": "closingActivityAndLaunchingNewInstanceStartsANewSession",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.MainActivityTest",
+      "numtests": "7",
+      "test": "closingActivityAndLaunchingNewInstanceStartsANewSession",
+      "code": 0
+    }
+  ]
+}

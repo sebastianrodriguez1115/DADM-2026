@@ -1,0 +1,18 @@
+{
+  "label": "isolated-11-GamePreferencesResidueWriterTest",
+  "expected": 1,
+  "starts": 1,
+  "ended": 1,
+  "passed": 1,
+  "failed": 0,
+  "complete_inventory": true,
+  "actual_ids": [
+    "com.edu.unal.tictactoe.GamePreferencesResidueWriterTest#writeContaminatedGamePreferences"
+  ],
+  "expected_ids": [
+    "com.edu.unal.tictactoe.GamePreferencesResidueWriterTest#writeContaminatedGamePreferences"
+  ],
+  "ok_count": 1,
+  "failure_marker": false,
+  "verified": true
+}

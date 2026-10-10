@@ -1,0 +1,33 @@
+{
+  "class": "com.edu.unal.tictactoe.GameBoardLayoutTest",
+  "expected_count": 2,
+  "count": 2,
+  "counts": {
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0
+  },
+  "gradle_exit": 0,
+  "fresh_xml_files": 1,
+  "validated": true,
+  "elapsed_seconds": 12.88,
+  "command": [
+    "./gradlew",
+    "connectedDebugAndroidTest",
+    "--no-configuration-cache",
+    "--console=plain",
+    "-Pandroid.testInstrumentationRunnerArguments.class=com.edu.unal.tictactoe.GameBoardLayoutTest"
+  ],
+  "cases": [
+    {
+      "name": "hitTargetsStayAtLeast48DpInCompactAndResponsiveViewports",
+      "time_seconds": "2.591",
+      "result": "passed"
+    },
+    {
+      "name": "fractionalDensitiesDoNotRoundHitTargetsBelow48Dp",
+      "time_seconds": "1.424",
+      "result": "passed"
+    }
+  ]
+}

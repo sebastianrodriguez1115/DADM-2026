@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="reverse-MainActivityTest" tests="7" failures="0" errors="0" skipped="0">
+  <testcase classname="com.edu.unal.tictactoe.MainActivityTest" name="humanMoveUsesActivityViewModelAndRecompositionDoesNotRepeatIt" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityTest" name="activeAndTerminalGamesSurviveRealBackgroundAndForegroundTransitions" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityTest" name="newGameActionStartsOOnceAndPreservesScoreAcrossRedraws" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityTest" name="activityRecreationKeepsTheSameViewModelAndCurrentGame" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityTest" name="closingActivityAndLaunchingNewInstanceStartsNewGameWithPersistedScore" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityTest" name="openingOAndFollowingXOpeningSurviveRecreationWithoutExtraOpening" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityTest" name="terminalGameKeepsResultBoardAndSingleScoreAfterRecreation" />
+</testsuite>

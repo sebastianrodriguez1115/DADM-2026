@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="isolated-13-GameScreenTest" tests="7" failures="0" errors="0" skipped="0">
+  <testcase classname="com.edu.unal.tictactoe.GameScreenTest" name="boardStaysSquareAndNewGameIsReachableInsideTopBarViewport" />
+  <testcase classname="com.edu.unal.tictactoe.GameScreenTest" name="staleDifficultyChoiceAfterOpeningIsRejectedWithoutToastOrStateChange" />
+  <testcase classname="com.edu.unal.tictactoe.GameScreenTest" name="difficultyEntryUpdatesVmClosesWindowsAndToastsOnceEvenWhenRepeatingLevel" />
+  <testcase classname="com.edu.unal.tictactoe.GameScreenTest" name="disabledDifficultyDuringActiveGameDoesNotOpenOrNotify" />
+  <testcase classname="com.edu.unal.tictactoe.GameScreenTest" name="hostRecompositionAndRecreationDoNotReplayTheToast" />
+  <testcase classname="com.edu.unal.tictactoe.GameScreenTest" name="menuAndShortcutNewGameRunTheSameActionPreservingScore" />
+  <testcase classname="com.edu.unal.tictactoe.GameScreenTest" name="topBarMenuIsAccessibleAndDoesNotCoverTheBoard" />
+</testsuite>

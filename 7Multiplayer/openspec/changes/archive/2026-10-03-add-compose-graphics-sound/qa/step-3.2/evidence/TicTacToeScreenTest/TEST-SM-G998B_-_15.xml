@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="15" failures="2" errors="0" skipped="0" time="0.000" timestamp="2026-10-02T13:53:08" hostname="localhost">
+  <testsuite name="com.edu.unal.tictactoe.TicTacToeScreenTest" tests="15" failures="2" errors="0" skipped="0" time="19.192" timestamp="2026-10-02T13:53:08" hostname="localhost">
+    <properties>
+      <property name="device" value="[DEVICE]" />
+    </properties>
+    <testcase name="rendersBoardStatusScoreAndNewGameInOrder" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="2.028" />
+    <testcase name="terminalResultsAndComputerTurnRejectCellTouchesButAllowNewGame" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="2.138" />
+    <testcase name="occupiedCellsKeepTheirMarksAndAreDisabled" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="1.201" />
+    <testcase name="largeFontKeepsTerminalMarksVisibleAndControlsReachableInBothThemes" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="1.559" />
+    <testcase name="cellAndNewGameCallbacksAreOnlyInvokedByActions" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="1.198" />
+    <testcase name="rendersComputerResultFromResources" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="1.117" />
+    <testcase name="boardAndControlsAdaptToPortraitAndLandscapeConstraints" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="1.819" />
+    <testcase name="recompositionDoesNotInvokeCallbacksOrChangeSnapshot" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="1.084" />
+    <testcase name="realViewModelUiFlowCoversHumanComputerAndTieResults" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="1.131">
+      <failure>java.lang.AssertionError: Failed to assert the following: (is enabled)
+Semantics of the node:
+Node #339 at (l=68.0, t=508.0, r=492.0, b=932.0)px, Tag: 'tic_tac_toe_cell_3'
+ContentDescription = '[Casilla, fila 2, columna 1, vacía]'
+Role = 'Button'
+[Disabled]
+Has 8 siblings
+Selector used: (TestTag = 'tic_tac_toe_cell_3')
+
+	at androidx.compose.ui.test.AssertionsKt.assert(Assertions.kt:264)
+	at androidx.compose.ui.test.AssertionsKt.assert$default(Assertions.kt:254)
+	at androidx.compose.ui.test.AssertionsKt.assertIsEnabled(Assertions.kt:60)
+	at com.edu.unal.tictactoe.TicTacToeScreenTest.clickCell(TicTacToeScreenTest.kt:562)
+	at com.edu.unal.tictactoe.TicTacToeScreenTest.realViewModelUiFlowCoversHumanComputerAndTieResults(TicTacToeScreenTest.kt:389)
+</failure>
+    </testcase>
+    <testcase name="rendersTieFromResources" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="0.911" />
+    <testcase name="rendersNineCellsAndLocalizedCellDescription" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="1.094" />
+    <testcase name="realViewModelUiFlowAlternatesAfterAbandonmentWithoutScoringOrDuplicateOpening" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="1.049">
+      <failure>java.lang.AssertionError: Failed to assert the following: (is enabled)
+Semantics of the node:
+Node #461 at (l=508.0, t=508.0, r=932.0, b=932.0)px, Tag: 'tic_tac_toe_cell_4'
+ContentDescription = '[Casilla, fila 2, columna 2, vacía]'
+Role = 'Button'
+[Disabled]
+Has 8 siblings
+Selector used: (TestTag = 'tic_tac_toe_cell_4')
+
+	at androidx.compose.ui.test.AssertionsKt.assert(Assertions.kt:264)
+	at androidx.compose.ui.test.AssertionsKt.assert$default(Assertions.kt:254)
+	at androidx.compose.ui.test.AssertionsKt.assertIsEnabled(Assertions.kt:60)
+	at com.edu.unal.tictactoe.TicTacToeScreenTest.clickCell(TicTacToeScreenTest.kt:562)
+	at com.edu.unal.tictactoe.TicTacToeScreenTest.realViewModelUiFlowAlternatesAfterAbandonmentWithoutScoringOrDuplicateOpening(TicTacToeScreenTest.kt:427)
+</failure>
+    </testcase>
+    <testcase name="rendersComputerTurnFromResources" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="0.939" />
+    <testcase name="cellsArePositiveSquareAndStayInsideTheBoard" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="1.012" />
+    <testcase name="rendersActiveTurnStatesFromResources" classname="com.edu.unal.tictactoe.TicTacToeScreenTest" time="0.912" />
+  </testsuite>
+</testsuites>

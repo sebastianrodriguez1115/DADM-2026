@@ -1,0 +1,28 @@
+{
+  "label": "isolated-01-DifficultyDialogTest",
+  "expected": 6,
+  "starts": 6,
+  "ended": 6,
+  "passed": 6,
+  "failed": 0,
+  "complete_inventory": true,
+  "actual_ids": [
+    "com.edu.unal.tictactoe.DifficultyDialogTest#hostRecreationAndRecompositionKeepCurrentWithoutNotifying",
+    "com.edu.unal.tictactoe.DifficultyDialogTest#outsideTouchDismissesWithoutSelectionOrToast",
+    "com.edu.unal.tictactoe.DifficultyDialogTest#opensWithFourOrderedLabelsAndOnlyCurrentSelected",
+    "com.edu.unal.tictactoe.DifficultyDialogTest#selectingEachOptionIncludingCurrentUpdatesClosesAndNotifiesOnce",
+    "com.edu.unal.tictactoe.DifficultyDialogTest#rejectedSelectionClosesWithoutChangingValueOrNotifying",
+    "com.edu.unal.tictactoe.DifficultyDialogTest#backDismissesWithoutSelectionOrToast"
+  ],
+  "expected_ids": [
+    "com.edu.unal.tictactoe.DifficultyDialogTest#backDismissesWithoutSelectionOrToast",
+    "com.edu.unal.tictactoe.DifficultyDialogTest#hostRecreationAndRecompositionKeepCurrentWithoutNotifying",
+    "com.edu.unal.tictactoe.DifficultyDialogTest#opensWithFourOrderedLabelsAndOnlyCurrentSelected",
+    "com.edu.unal.tictactoe.DifficultyDialogTest#outsideTouchDismissesWithoutSelectionOrToast",
+    "com.edu.unal.tictactoe.DifficultyDialogTest#rejectedSelectionClosesWithoutChangingValueOrNotifying",
+    "com.edu.unal.tictactoe.DifficultyDialogTest#selectingEachOptionIncludingCurrentUpdatesClosesAndNotifiesOnce"
+  ],
+  "ok_count": 6,
+  "failure_marker": false,
+  "verified": true
+}

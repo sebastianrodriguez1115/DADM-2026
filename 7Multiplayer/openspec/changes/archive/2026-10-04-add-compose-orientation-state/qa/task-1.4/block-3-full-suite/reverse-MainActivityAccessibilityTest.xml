@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="reverse-MainActivityAccessibilityTest" tests="4" failures="0" errors="0" skipped="0">
+  <testcase classname="com.edu.unal.tictactoe.MainActivityAccessibilityTest" name="menuEntriesExposeLabelsAndClickActionsMatchingTheDifficultyGate" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityAccessibilityTest" name="aboutDialogButtonsExposeLabelsRolesAndTouchTargets" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityAccessibilityTest" name="realPortraitAndLandscapeKeepTopBarBoardAndControlsReachable" />
+  <testcase classname="com.edu.unal.tictactoe.MainActivityAccessibilityTest" name="difficultyDialogOptionsExposeRadioSemanticsAndCancelKeepsTheValue" />
+</testsuite>

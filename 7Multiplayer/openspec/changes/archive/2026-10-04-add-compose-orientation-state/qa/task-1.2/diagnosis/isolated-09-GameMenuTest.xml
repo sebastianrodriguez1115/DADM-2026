@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="isolated-09-GameMenuTest" tests="6" failures="0" errors="0" skipped="0">
+  <testcase classname="com.edu.unal.tictactoe.GameMenuTest" name="menuHasExactlyFiveEntriesInSpecifiedOrder" />
+  <testcase classname="com.edu.unal.tictactoe.GameMenuTest" name="disabledDifficultyStaysVisibleAndClickingItDoesNotInvokeOrClose" />
+  <testcase classname="com.edu.unal.tictactoe.GameMenuTest" name="eachEnabledEntryShowsItsLabelClosesMenuAndInvokesCallbackOnce" />
+  <testcase classname="com.edu.unal.tictactoe.GameMenuTest" name="soundShowsEnabledAndDisabledTextAndSemanticStateAndRemainsActionable" />
+  <testcase classname="com.edu.unal.tictactoe.GameMenuTest" name="recompositionReflectsCanChangeWithoutInvokingCallbacks" />
+  <testcase classname="com.edu.unal.tictactoe.GameMenuTest" name="backDismissesMenuWithoutLeavingTheContent" />
+</testsuite>

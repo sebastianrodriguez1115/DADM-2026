@@ -1,0 +1,22 @@
+{
+  "label": "isolated-02-AboutDialogTest",
+  "expected": 3,
+  "starts": 3,
+  "ended": 3,
+  "passed": 2,
+  "failed": 1,
+  "complete_inventory": true,
+  "actual_ids": [
+    "com.edu.unal.tictactoe.AboutDialogTest#showsTitleImageAndExactAuthor",
+    "com.edu.unal.tictactoe.AboutDialogTest#acceptClosesAndInvokesDismissOnce",
+    "com.edu.unal.tictactoe.AboutDialogTest#backDismissesOnceWithoutOtherSideEffects"
+  ],
+  "expected_ids": [
+    "com.edu.unal.tictactoe.AboutDialogTest#acceptClosesAndInvokesDismissOnce",
+    "com.edu.unal.tictactoe.AboutDialogTest#backDismissesOnceWithoutOtherSideEffects",
+    "com.edu.unal.tictactoe.AboutDialogTest#showsTitleImageAndExactAuthor"
+  ],
+  "ok_count": null,
+  "failure_marker": true,
+  "verified": false
+}

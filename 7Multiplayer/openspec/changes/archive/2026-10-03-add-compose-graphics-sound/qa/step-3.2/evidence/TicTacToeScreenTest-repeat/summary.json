@@ -1,0 +1,28 @@
+{
+  "command": [
+    "./gradlew",
+    "--no-configuration-cache",
+    "--rerun-tasks",
+    "connectedDebugAndroidTest",
+    "-Pandroid.testInstrumentationRunnerArguments.class=com.edu.unal.tictactoe.TicTacToeScreenTest"
+  ],
+  "exit": 1,
+  "elapsed_seconds": 26.56,
+  "expected_tests": 15,
+  "totals": {
+    "tests": 15,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "name": "TEST-redacted-model - 15",
+      "tests": 15,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "accepted": false
+}

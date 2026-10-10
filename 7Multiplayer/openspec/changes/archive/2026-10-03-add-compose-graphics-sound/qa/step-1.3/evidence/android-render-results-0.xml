@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="2" failures="0" errors="0" skipped="0" time="0.000" timestamp="2026-10-02T02:05:09" hostname="localhost">
+  <testsuite name="com.edu.unal.tictactoe.GameBoardRenderingTest" tests="2" failures="0" errors="0" skipped="0" time="3.335" timestamp="2026-10-02T02:05:09" hostname="localhost">
+    <properties>
+      <property name="device" value="AUTHORIZED_DEVICE" />
+    </properties>
+    <testcase name="rendersFourThirdsGridLinesWithoutBlockingNineCellActions" classname="com.edu.unal.tictactoe.GameBoardRenderingTest" time="2.064" />
+    <testcase name="cellsRemainSemanticallyClickable" classname="com.edu.unal.tictactoe.GameBoardRenderingTest" time="1.271" />
+  </testsuite>
+</testsuites>

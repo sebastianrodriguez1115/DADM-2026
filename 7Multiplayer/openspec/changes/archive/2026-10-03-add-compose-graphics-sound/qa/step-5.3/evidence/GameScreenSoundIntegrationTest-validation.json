@@ -1,0 +1,17 @@
+{
+  "expected": 1,
+  "starts": 1,
+  "passed": 1,
+  "status_codes": [
+    "1",
+    "0"
+  ],
+  "methods": [
+    "menuMuteStopsInSameMainEventPreservesTurnAndSuppressesUntilUnmuted",
+    "menuMuteStopsInSameMainEventPreservesTurnAndSuppressesUntilUnmuted"
+  ],
+  "ok_summary": true,
+  "finished": true,
+  "failure_marker": false,
+  "verified_pass": true
+}

@@ -1,0 +1,14 @@
+{
+  "environment": "DADM_GraphicsSound_API35 emulator; not physical hardware",
+  "sdk": 35,
+  "samples_ns": [
+    407021625,
+    44876208,
+    23435000,
+    22518542,
+    20329125
+  ],
+  "first_ms": 407.021625,
+  "median_ms": 23.435,
+  "measurement": "Main-thread Impossible selection only; excludes setup/apply/1000ms delay"
+}

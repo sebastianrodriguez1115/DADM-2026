@@ -1,0 +1,333 @@
+16:35:58 original settings accelerometer_rotation=0 user_rotation=1
+16:35:58 install: Performing Streamed Install
+Success
+16:35:58 === TC-01: Arranque limpio (datos borrados), vertical
+16:36:03   [ok] tablero vacío .........
+16:36:03   [ok] inicia X (texto 'La persona hace la primera jugada') La persona hace la primera jugada
+16:36:03   [ok] marcador en cero (0, 0, 0)
+16:36:03   [ok] vertical limpio: tablero, estado, marcador y controles presentes 
+16:36:03   [ok] vertical limpio: sin título de aplicación 'TicTacToe' 
+16:36:03   [ok] vertical limpio: ningún texto (barra/título) por encima del tablero []
+16:36:03   [ok] vertical limpio: tablero cuadrado 996x996px
+16:36:03   [ok] vertical limpio: botón de menú junto a 'Nueva partida' (misma fila, a la derecha) newgame=[42,891] menu=[913,1039] cy 1662/1663
+16:36:03   [ok] vertical limpio: vertical - orden tablero > estado > marcador > controles 1166/1198/1293/1599
+16:36:03   [ok] vertical limpio: objetivos del menú y 'Nueva partida' >= 48 dp menu 126x126, newgame h=126
+16:36:03   [ok] vertical limpio: casillas >= 48 dp min=322px
+16:36:03   [ok] vertical limpio: contenido dentro de pantalla 
+16:36:08   [ok] tras 3 s el tablero sigue vacío (X inicia, sin jugada automática) .........
+16:36:15   [ok] dificultad por defecto Experto 
+16:36:17   [ok] no existen claves de partida en preferencias (solo dificultad/marcador) 
+16:36:17 === TC-01 -> pasa
+16:36:17 === TC-02: Menú: cinco entradas en orden, sin Salir; cierre con Atrás
+16:36:26   [ok] exactamente cinco entradas ['Nueva partida', 'Dificultad', 'Sonido', 'Reiniciar puntajes', 'Acerca de']
+16:36:26   [ok] orden: Nueva partida, Dificultad, Sonido, Reiniciar puntajes, Acerca de ['Nueva partida', 'Dificultad', 'Sonido', 'Reiniciar puntajes', 'Acerca de']
+16:36:26   [ok] no existe 'Salir' 
+16:36:26   [ok] Sonido expone su estado ('Habilitado') ['Sonido', 'Habilitado']
+16:36:26   [ok] todas las entradas habilitadas con tablero vacío 
+16:36:26   [ok] menú no deja ver título/barra 
+16:36:29   [ok] Atrás cierra el menú 
+16:36:29   [ok] la app sigue en primer plano y la partida no cambia 
+16:36:36   [ok] Acerca de abre su diálogo y el menú se cerró (sin ventanas apiladas) 
+16:36:39   [ok] Atrás cierra el diálogo Acerca de y la partida no cambia 
+16:36:48   [ok] Atrás cierra el diálogo de dificultad sin Toast 
+16:36:55   [ok] dificultad sigue Experto tras cancelar 
+16:36:55 === TC-02 -> pasa
+16:36:55 === TC-03: Atrás sin overlay: navegación normal del sistema (sin intercepción)
+16:37:06   note: Tras Atrás sin overlay, topResumedActivity = 'topResumedActivity=ActivityRecord{19c7373 u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t2976}'. Aplicación salió de primer plano.
+16:37:06   [ok] Atrás sin overlay no provoca cierre abrupto (sin FATAL EXCEPTION) 
+16:37:06   [ok] Atrás sin overlay hace que la app salga de primer plano (navegación normal) topResumedActivity=ActivityRecord{19c7373 u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t2976}
+16:37:06   note: Proceso vivo tras Atrás (la especificación no garantiza finalizar la tarea).
+16:37:08   note: Relanzamiento tras Atrás: tablero=......... estado=La persona hace la primera jugada (informativo; ambos comportamientos son navegación normal).
+16:37:08 === TC-03 -> pasa
+16:37:08 === TC-04: Partida completa hasta un desenlace: punto único y taps posteriores sin efecto
+16:37:36   [ok] G1-Fácil-X-gana: 'Victoria humana' suma exactamente un punto en el contador correcto delta=(1, 0, 0) esperado=(1, 0, 0)
+16:37:40   [ok] G1-Fácil-X-gana: taps posteriores no cambian tablero, estado ni marcador ('XXXOX.O.O', 'Victoria humana', (1, 0, 0)) -> ('XXXOX.O.O', 'Victoria humana', (1, 0, 0))
+16:37:40   [ok] G1-Fácil-X-gana: casillas deshabilitadas tras el desenlace 
+16:38:01   [ok] G2-Experto-O-gana: 'Victoria de la computadora' suma exactamente un punto en el contador correcto delta=(0, 1, 0) esperado=(0, 1, 0)
+16:38:05   [ok] G2-Experto-O-gana: taps posteriores no cambian tablero, estado ni marcador ('.X.X..OOO', 'Victoria de la computadora', (1, 1, 0)) -> ('.X.X..OOO', 'Victoria de la computadora', (1, 1, 0))
+16:38:05   [ok] G2-Experto-O-gana: casillas deshabilitadas tras el desenlace 
+16:38:34   [ok] G3-Experto-empate: 'Empate' suma exactamente un punto en el contador correcto delta=(0, 0, 1) esperado=(0, 0, 1)
+16:38:38   [ok] G3-Experto-empate: taps posteriores no cambian tablero, estado ni marcador ('XOXOXXOXO', 'Empate', (1, 1, 1)) -> ('XOXOXXOXO', 'Empate', (1, 1, 1))
+16:38:38   [ok] G3-Experto-empate: casillas deshabilitadas tras el desenlace 
+16:38:38   note: Desenlaces observados: {'Victoria humana': 1, 'Victoria de la computadora': 1, 'Empate': 1}
+16:38:40   [ok] marcador final = suma de desenlaces (1, 1, 1)
+16:38:40 === TC-04 -> pasa
+16:38:40 === TC-05: Rotación con tablero vacío
+16:38:44   [ok] vertical inicial: tablero, estado, marcador y controles presentes 
+16:38:44   [ok] vertical inicial: sin título de aplicación 'TicTacToe' 
+16:38:44   [ok] vertical inicial: ningún texto (barra/título) por encima del tablero []
+16:38:44   [ok] vertical inicial: tablero cuadrado 996x996px
+16:38:44   [ok] vertical inicial: botón de menú junto a 'Nueva partida' (misma fila, a la derecha) newgame=[42,891] menu=[913,1039] cy 1662/1663
+16:38:44   [ok] vertical inicial: vertical - orden tablero > estado > marcador > controles 1166/1198/1293/1599
+16:38:44   [ok] vertical inicial: objetivos del menú y 'Nueva partida' >= 48 dp menu 126x126, newgame h=126
+16:38:44   [ok] vertical inicial: casillas >= 48 dp min=322px
+16:38:44   [ok] vertical inicial: contenido dentro de pantalla 
+16:38:52   [ok] vacío horizontal: tablero, estado, marcador y controles presentes 
+16:38:52   [ok] vacío horizontal: sin título de aplicación 'TicTacToe' 
+16:38:52   [ok] vacío horizontal: ningún texto (barra/título) por encima del tablero []
+16:38:52   [ok] vacío horizontal: tablero cuadrado 709x709px
+16:38:52   [ok] vacío horizontal: botón de menú junto a 'Nueva partida' (misma fila, a la derecha) newgame=[921,2211] menu=[2233,2359] cy 741/742
+16:38:52   [ok] vacío horizontal: horizontal - tablero a la izquierda del panel board.r=879 status.l=921 newgame.l=921
+16:38:52   [ok] vacío horizontal: horizontal - estado, marcador y controles a la derecha del tablero 
+16:38:52   [ok] vacío horizontal: horizontal - tablero <= 270 dp (referencia) 709px = 270 dp
+16:38:52   [ok] vacío horizontal: horizontal - tablero ocupa el lado izquierdo (centro en la mitad izquierda) 
+16:38:52   [ok] vacío horizontal: objetivos del menú y 'Nueva partida' >= 48 dp menu 126x126, newgame h=126
+16:38:52   [ok] vacío horizontal: casillas >= 48 dp min=226px
+16:38:52   [ok] vacío horizontal: contenido dentro de pantalla 
+16:38:52   [ok] vacío horizontal: tablero, estado y marcador conservados ('.........', 'La persona hace la primera jugada', (0, 0, 0)) -> ('.........', 'La persona hace la primera jugada', (0, 0, 0))
+16:39:01   [ok] vacío vertical: tablero, estado, marcador y controles presentes 
+16:39:01   [ok] vacío vertical: sin título de aplicación 'TicTacToe' 
+16:39:01   [ok] vacío vertical: ningún texto (barra/título) por encima del tablero []
+16:39:01   [ok] vacío vertical: tablero cuadrado 996x996px
+16:39:01   [ok] vacío vertical: botón de menú junto a 'Nueva partida' (misma fila, a la derecha) newgame=[42,891] menu=[913,1039] cy 1662/1663
+16:39:01   [ok] vacío vertical: vertical - orden tablero > estado > marcador > controles 1166/1198/1293/1599
+16:39:01   [ok] vacío vertical: objetivos del menú y 'Nueva partida' >= 48 dp menu 126x126, newgame h=126
+16:39:01   [ok] vacío vertical: casillas >= 48 dp min=322px
+16:39:01   [ok] vacío vertical: contenido dentro de pantalla 
+16:39:01   [ok] vacío vertical: tablero, estado y marcador conservados ('.........', 'La persona hace la primera jugada', (0, 0, 0)) -> ('.........', 'La persona hace la primera jugada', (0, 0, 0))
+16:39:03   [ok] sin jugada automática tras rotar (X inicia) 
+16:39:03 === TC-05 -> pasa
+16:39:03 === TC-06: Rotación en partida activa con turno humano
+16:39:20   [ok] activa horizontal: tablero, estado, marcador y controles presentes 
+16:39:20   [ok] activa horizontal: sin título de aplicación 'TicTacToe' 
+16:39:20   [ok] activa horizontal: ningún texto (barra/título) por encima del tablero []
+16:39:20   [ok] activa horizontal: tablero cuadrado 709x709px
+16:39:20   [ok] activa horizontal: botón de menú junto a 'Nueva partida' (misma fila, a la derecha) newgame=[921,2211] menu=[2233,2359] cy 741/742
+16:39:20   [ok] activa horizontal: horizontal - tablero a la izquierda del panel board.r=879 status.l=921 newgame.l=921
+16:39:20   [ok] activa horizontal: horizontal - estado, marcador y controles a la derecha del tablero 
+16:39:20   [ok] activa horizontal: horizontal - tablero <= 270 dp (referencia) 709px = 270 dp
+16:39:20   [ok] activa horizontal: horizontal - tablero ocupa el lado izquierdo (centro en la mitad izquierda) 
+16:39:20   [ok] activa horizontal: objetivos del menú y 'Nueva partida' >= 48 dp menu 126x126, newgame h=126
+16:39:20   [ok] activa horizontal: casillas >= 48 dp min=226px
+16:39:20   [ok] activa horizontal: contenido dentro de pantalla 
+16:39:20   [ok] activa horizontal: tablero, estado y marcador conservados ('....X..O.', 'Tu turno', (0, 0, 0)) -> ('....X..O.', 'Tu turno', (0, 0, 0))
+16:39:28   [ok] activa vertical: tablero, estado, marcador y controles presentes 
+16:39:28   [ok] activa vertical: sin título de aplicación 'TicTacToe' 
+16:39:28   [ok] activa vertical: ningún texto (barra/título) por encima del tablero []
+16:39:28   [ok] activa vertical: tablero cuadrado 996x996px
+16:39:28   [ok] activa vertical: botón de menú junto a 'Nueva partida' (misma fila, a la derecha) newgame=[42,891] menu=[913,1039] cy 1662/1663
+16:39:28   [ok] activa vertical: vertical - orden tablero > estado > marcador > controles 1166/1198/1293/1599
+16:39:28   [ok] activa vertical: objetivos del menú y 'Nueva partida' >= 48 dp menu 126x126, newgame h=126
+16:39:28   [ok] activa vertical: casillas >= 48 dp min=322px
+16:39:28   [ok] activa vertical: contenido dentro de pantalla 
+16:39:28   [ok] activa vertical: tablero, estado y marcador conservados ('....X..O.', 'Tu turno', (0, 0, 0)) -> ('....X..O.', 'Tu turno', (0, 0, 0))
+16:39:28   [ok] exactamente 1 X y 1 O (ninguna jugada duplicada) ....X..O.
+16:39:30   [ok] la partida continúa tras rotar (X y O juegan normalmente) X...X..OO
+16:39:30 === TC-06 -> pasa
+16:39:30 === TC-07: Rotación con turno de O pendiente (tap + rotación inmediata)
+16:39:43   [ok] R1-vert-a-horiz: exactamente una X y una O (una sola jugada de O) ....X..O.
+16:39:43   [ok] R1-vert-a-horiz: turno de la persona (no se perdió el turno de O) Tu turno
+16:39:43   [ok] R1-vert-a-horiz: marcador sin cambios (0, 0, 0)
+16:39:58   [ok] R2-vert-a-horiz: exactamente una X y una O (una sola jugada de O) .O..X....
+16:39:58   [ok] R2-vert-a-horiz: turno de la persona (no se perdió el turno de O) Tu turno
+16:39:58   [ok] R2-vert-a-horiz: marcador sin cambios (0, 0, 0)
+16:40:14   [ok] R3-vert-a-horiz: exactamente una X y una O (una sola jugada de O) ....X..O.
+16:40:14   [ok] R3-vert-a-horiz: turno de la persona (no se perdió el turno de O) Tu turno
+16:40:14   [ok] R3-vert-a-horiz: marcador sin cambios (0, 0, 0)
+16:40:30   [ok] D1-doble-rotacion: exactamente una X y una O (una sola jugada de O) .O..X....
+16:40:30   [ok] D1-doble-rotacion: turno de la persona (no se perdió el turno de O) Tu turno
+16:40:30   [ok] D1-doble-rotacion: marcador sin cambios (0, 0, 0)
+16:40:43   [ok] D2-doble-rotacion: exactamente una X y una O (una sola jugada de O) O...X....
+16:40:43   [ok] D2-doble-rotacion: turno de la persona (no se perdió el turno de O) Tu turno
+16:40:43   [ok] D2-doble-rotacion: marcador sin cambios (0, 0, 0)
+16:40:43   note: La ventana de 1000 ms de O no es observable con precisión desde adb: la rotación se dispara ~0.3 s después del tap; los milisegundos exactos (400/600 ms, 999 ms) quedan cubiertos por las pruebas JVM/instrumentadas con reloj virtual.
+16:40:43 === TC-07 -> pasa
+16:40:43 === TC-08: Rotación con partida terminada: sin punto ni jugada duplicados
+16:41:16   [ok] terminal horizontal: tablero, estado, marcador y controles presentes 
+16:41:16   [ok] terminal horizontal: sin título de aplicación 'TicTacToe' 
+16:41:16   [ok] terminal horizontal: ningún texto (barra/título) por encima del tablero []
+16:41:16   [ok] terminal horizontal: tablero cuadrado 709x709px
+16:41:16   [ok] terminal horizontal: botón de menú junto a 'Nueva partida' (misma fila, a la derecha) newgame=[921,2211] menu=[2233,2359] cy 741/742
+16:41:16   [ok] terminal horizontal: horizontal - tablero a la izquierda del panel board.r=879 status.l=921 newgame.l=921
+16:41:16   [ok] terminal horizontal: horizontal - estado, marcador y controles a la derecha del tablero 
+16:41:16   [ok] terminal horizontal: horizontal - tablero <= 270 dp (referencia) 709px = 270 dp
+16:41:16   [ok] terminal horizontal: horizontal - tablero ocupa el lado izquierdo (centro en la mitad izquierda) 
+16:41:16   [ok] terminal horizontal: objetivos del menú y 'Nueva partida' >= 48 dp menu 126x126, newgame h=126
+16:41:16   [ok] terminal horizontal: casillas >= 48 dp min=226px
+16:41:16   [ok] terminal horizontal: contenido dentro de pantalla 
+16:41:16   [ok] terminal horizontal: tablero, estado y marcador conservados ('XOX.XOX.O', 'Victoria humana', (1, 0, 0)) -> ('XOX.XOX.O', 'Victoria humana', (1, 0, 0))
+16:41:23   [ok] terminal vertical: tablero, estado, marcador y controles presentes 
+16:41:23   [ok] terminal vertical: sin título de aplicación 'TicTacToe' 
+16:41:23   [ok] terminal vertical: ningún texto (barra/título) por encima del tablero []
+16:41:23   [ok] terminal vertical: tablero cuadrado 996x996px
+16:41:23   [ok] terminal vertical: botón de menú junto a 'Nueva partida' (misma fila, a la derecha) newgame=[42,891] menu=[913,1039] cy 1662/1663
+16:41:23   [ok] terminal vertical: vertical - orden tablero > estado > marcador > controles 1166/1198/1293/1599
+16:41:23   [ok] terminal vertical: objetivos del menú y 'Nueva partida' >= 48 dp menu 126x126, newgame h=126
+16:41:23   [ok] terminal vertical: casillas >= 48 dp min=322px
+16:41:23   [ok] terminal vertical: contenido dentro de pantalla 
+16:41:23   [ok] terminal vertical: tablero, estado y marcador conservados ('XOX.XOX.O', 'Victoria humana', (1, 0, 0)) -> ('XOX.XOX.O', 'Victoria humana', (1, 0, 0))
+16:41:32   [ok] tras varias rotaciones el marcador sigue igual (sin punto extra) (1, 0, 0) -> (1, 0, 0)
+16:41:32 === TC-08 -> pasa
+16:41:32 === TC-09: Rotación con sonido silenciado
+16:41:49   [ok] Sonido muestra 'Deshabilitado' tras silenciar ['Sonido', 'Deshabilitado']
+16:42:00   [ok] rotación 1: Sonido sigue 'Deshabilitado' ['Sonido', 'Deshabilitado']
+16:42:10   [ok] rotación 0: Sonido sigue 'Deshabilitado' ['Sonido', 'Deshabilitado']
+16:42:19   [ok] rotación 1: Sonido sigue 'Deshabilitado' ['Sonido', 'Deshabilitado']
+16:42:29   [ok] rotación 0: Sonido sigue 'Deshabilitado' ['Sonido', 'Deshabilitado']
+16:42:31   [ok] tablero y marcador conservados 
+16:42:31   note: Que NO suene audio al rotar y que el sonido se oiga al jugar es verificación manual (TC-30); el emulador corre sin audio.
+16:42:31 === TC-09 -> pasa
+16:42:31 === TC-10: Rotación con menú o diálogo abierto
+16:42:49   note: menu: tras rotar a horizontal el overlay se cierra (la especificación no exige conservarlo).
+16:42:49   [ok] menu: sin crash y partida intacta tras rotar 
+16:43:13   note: dificultad: tras rotar a horizontal el overlay se cierra (la especificación no exige conservarlo).
+16:43:13   [ok] dificultad: sin crash y partida intacta tras rotar 
+16:43:36   note: acerca: tras rotar a horizontal el overlay se cierra (la especificación no exige conservarlo).
+16:43:36   [ok] acerca: sin crash y partida intacta tras rotar 
+16:43:47   [ok] sin FATAL EXCEPTION en el buffer de crash 
+16:43:47 === TC-10 -> pasa
+16:43:47 === TC-11: Nueva partida: alternancia del iniciador y apertura única de O
+16:43:51   [ok] partida 1 inicia X 
+16:44:04   [ok] partida 2 (tras abandonar): inicia O, apertura única ....O....
+16:44:09   [ok] la apertura ocurre una sola vez (sigue 1 O tras 3.5 s) ....O....
+16:44:09   [ok] la partida abandonada no sumó puntos (0, 0, 0) -> (0, 0, 0)
+16:44:13   [ok] tras la apertura de O la entrada Dificultad queda deshabilitada 
+16:44:21   [ok] partida 3 (desde el menú) inicia X con tablero vacío ......... La persona hace la primera jugada
+16:44:26   [ok] X inicia: sin jugada automática tras 3 s 
+16:44:30   [ok] partida 4 inicia O de nuevo (alternancia) .O.......
+16:44:35   [ok] partida 5 inicia X 
+16:44:43   [ok] rotación durante la apertura pendiente de O: una sola O y turno humano ....O.... Tu turno
+16:44:46 === TC-11 -> pasa
+16:44:46 === TC-12: Dificultad: cuatro niveles, Toast, bloqueo en partida activa, edición al terminar
+16:44:57   [ok] exactamente cuatro radios en orden Fácil, Difícil, Experto, Imposible [('Fácil', False), ('Difícil', False), ('Experto', True), ('Imposible', False)]
+16:44:57   [ok] un solo radio marcado (Experto) [('Fácil', False), ('Difícil', False), ('Experto', True), ('Imposible', False)]
+16:44:57   [ok] filas de radio >= 48 dp [126, 126, 126, 126]
+16:45:08   [ok] seleccionar Fácil: se cierra el diálogo y aparece un Toast (ventana Toast) toast=True
+16:45:12   [ok] seleccionar Fácil: el Toast no persiste/repite tras expirar 
+16:45:19   [ok] reabrir tras elegir Fácil: radio marcado = Fácil 
+16:45:29   [ok] seleccionar Imposible: se cierra el diálogo y aparece un Toast (ventana Toast) toast=True
+16:45:34   [ok] seleccionar Imposible: el Toast no persiste/repite tras expirar 
+16:45:41   [ok] reabrir tras elegir Imposible: radio marcado = Imposible 
+16:45:51   [ok] seleccionar Difícil: se cierra el diálogo y aparece un Toast (ventana Toast) toast=True
+16:45:55   [ok] seleccionar Difícil: el Toast no persiste/repite tras expirar 
+16:46:03   [ok] reabrir tras elegir Difícil: radio marcado = Difícil 
+16:46:12   [ok] seleccionar Experto: se cierra el diálogo y aparece un Toast (ventana Toast) toast=True
+16:46:17   [ok] seleccionar Experto: el Toast no persiste/repite tras expirar 
+16:46:24   [ok] reabrir tras elegir Experto: radio marcado = Experto 
+16:46:34   [ok] seleccionar Experto: se cierra el diálogo y aparece un Toast (ventana Toast) toast=True
+16:46:38   [ok] seleccionar Experto: el Toast no persiste/repite tras expirar 
+16:46:46   [ok] reabrir tras elegir Experto: radio marcado = Experto 
+16:46:48   [ok] preferencia persistida con código 2 (Experto) <?xml version='1.0' encoding='utf-8' standalone='yes' ?> <map>     <int name="difficulty_code" value="2" /> </map> 
+16:47:04   [ok] rotar tras elegir no vuelve a emitir el Toast 
+16:47:08   [ok] preferencia persistida con código 3 (Imposible) <?xml version='1.0' encoding='utf-8' standalone='yes' ?> <map>     <int name="difficulty_code" value="3" /> </map> 
+16:47:18   [ok] persistencia tras detención forzada y relanzamiento: Imposible 
+16:47:26   [ok] partida activa con marcas: Dificultad deshabilitada 
+16:47:29   [ok] tocar la entrada deshabilitada no abre el diálogo de dificultad 
+16:47:32   [ok] tras tocar la entrada deshabilitada la partida no cambia O...X.... -> O...X....
+16:47:48   [ok] partida terminada: Dificultad habilitada 
+16:47:56   [ok] partida terminada: se acepta el cambio de dificultad (Toast) 
+16:47:58   [ok] el cambio tras desenlace no altera tablero ni marcador 
+16:47:58 === TC-12 -> pasa
+16:47:58 === TC-13: Persistencia del marcador tras detención forzada
+16:48:37   [ok] se registraron 2 desenlaces (2, 0, 0)
+16:48:40   [ok] marcador conservado tras force-stop + relanzamiento (2, 0, 0) -> (2, 0, 0)
+16:48:40   [ok] partida nueva (tablero vacío, inicia X) ......... La persona hace la primera jugada
+16:48:48   [ok] dificultad conservada (Fácil) 
+16:48:48 === TC-13 -> pasa
+16:48:48 === TC-14: Reiniciar puntajes: en partida activa y terminada; el cero persiste
+16:49:18   [ok] precondición: marcador distinto de cero y partida activa (1, 0, 0) Tu turno
+16:49:25   [ok] A: marcador pasa a 0/0/0 de inmediato (0, 0, 0)
+16:49:25   [ok] A: tablero, turno y resultado sin cambios ....X..OO/Tu turno -> ....X..OO/Tu turno
+16:49:29   [ok] A: sin jugada extra ni cambios tras 2.5 s 
+16:49:29   [ok] A: preferencias con ceros <?xml version='1.0' encoding='utf-8' standalone='yes' ?> <map>     <int name="score_x_wins" value="0" />     <int name="score_o_wins" value="0" />     <int name="score_ties" value="0" />     <int name="difficulty_code" value="0" /> </map> 
+16:49:36   [ok] A: al terminar la partida el marcador suma exactamente 1 (1, 0, 0)
+16:49:43   [ok] B: marcador 0/0/0 en partida terminada (0, 0, 0)
+16:49:43   [ok] B: resultado y tablero permanecen 
+16:49:48   [ok] B: el resultado terminal no se recuenta 
+16:49:55   [ok] B: rotar tras reset mantiene ceros 
+16:50:01   [ok] B: el cero persiste tras detención forzada y relanzamiento (0, 0, 0)
+16:50:06   [ok] Reiniciar puntajes siempre habilitada y etiquetada 
+16:50:06 === TC-14 -> pasa
+16:50:06 === TC-15: Muerte de proceso en segundo plano: partida activa (y sonido silenciado)
+16:50:25   [ok] proceso terminado por `am kill` 
+16:50:33   [ok] nuevo proceso 10704 -> 10919
+16:50:33   [ok] tablero, turno y marcador restaurados ('X...X..OO', 'Tu turno', (0, 0, 0)) -> ('X...X..OO', 'Tu turno', (0, 0, 0))
+16:50:33   [ok] no hay jugada extra de O 
+16:50:37   [ok] el silencio de sesión se restaura (Deshabilitado) ['Sonido', 'Deshabilitado']
+16:50:44   [ok] el juego continúa normalmente tras restaurar 
+16:50:44 === TC-15 -> pasa
+16:50:44 === TC-16: Muerte de proceso con partida terminada: sin punto duplicado
+16:51:16   [ok] resultado, tablero y marcador restaurados sin punto extra ('XO.OX...X', 'Victoria humana', (1, 0, 0)) -> ('XO.OX...X', 'Victoria humana', (1, 0, 0))
+16:51:25   [ok] segunda muerte de proceso: marcador intacto (1, 0, 0) -> (1, 0, 0)
+16:51:25 === TC-16 -> pasa
+16:51:25 === TC-17: Muerte de proceso con turno de O pendiente (tap + HOME + kill)
+16:51:40   [ok] rep1: tras restaurar hay exactamente una X y una O y turno humano (O jugó una vez) ..O.X.... Tu turno
+16:51:40   [ok] rep1: marcador intacto 
+16:51:55   [ok] rep2: tras restaurar hay exactamente una X y una O y turno humano (O jugó una vez) ....X..O. Tu turno
+16:51:55   [ok] rep2: marcador intacto 
+16:52:10   [ok] rep3: tras restaurar hay exactamente una X y una O y turno humano (O jugó una vez) ....X...O Tu turno
+16:52:10   [ok] rep3: marcador intacto 
+16:52:27   [ok] apertura de O pendiente + muerte de proceso: una sola O y turno humano ........O Tu turno
+16:52:27   note: Si O ya había jugado antes del HOME (ventana de ~0.3 s), la repetición equivale a TC-15; el estado pendiente exacto no es observable desde adb.
+16:52:27 === TC-17 -> pasa
+16:52:27 === TC-18: Detención forzada y lanzamiento nuevo: partida nueva, marcador y dificultad conservados, sonido activo
+16:53:07   [ok] precondición: partida activa, sonido silenciado, marcador > 0 O........ (1, 0, 0)
+16:53:11   [ok] partida nueva: tablero vacío e inicia X ......... La persona hace la primera jugada
+16:53:11   [ok] marcador conservado (1, 0, 0) -> (1, 0, 0)
+16:53:18   [ok] dificultad conservada (Imposible) 
+16:53:22   [ok] sonido vuelve a activo (Habilitado) en sesión nueva ['Sonido', 'Habilitado']
+16:53:27   [ok] sin jugada automática (X inicia) 
+16:53:27 === TC-18 -> pasa
+16:53:27 === TC-19: Cierre de la tarea desde Recientes: partida nueva, marcador y dificultad conservados
+16:54:08   [ok] partida nueva tras cerrar la tarea (tablero vacío, X) ......... La persona hace la primera jugada
+16:54:08   [ok] marcador conservado (1, 0, 0) -> (1, 0, 0)
+16:54:15   [ok] dificultad conservada (Difícil) 
+16:54:15 === TC-19 -> pasa
+16:54:15 === TC-20: Accesibilidad por jerarquía: etiquetas y objetivos táctiles >= 48 dp (vertical y horizontal)
+16:54:23   [ok] vertical: 9 casillas con etiqueta 'Casilla, fila r, columna c, estado' 
+16:54:23   [ok] vertical: casillas ocupadas expuestas como deshabilitadas, vacías habilitadas 
+16:54:23   [ok] vertical: tablero etiquetado 'Tablero de tres en raya' 
+16:54:23   [ok] vertical: botón de menú con etiqueta 'Abrir menú' 
+16:54:23   [ok] vertical: 'Nueva partida' con texto 
+16:54:23   [ok] vertical: objetivos >= 48 dp (menú, Nueva partida, casillas) menu=126x126 newgame_h=126
+16:54:28   [ok] vertical: cinco entradas con etiqueta de texto y alto >= 48 dp [126, 126, 126, 126, 126]
+16:54:28   [ok] vertical: Dificultad deshabilitada expone enabled=false en partida activa 
+16:54:35   [ok] vertical: diálogo Acerca de con botón 'Aceptar' >= 48 dp 126
+16:54:42   [ok] horizontal: 9 casillas con etiqueta 'Casilla, fila r, columna c, estado' 
+16:54:42   [ok] horizontal: casillas ocupadas expuestas como deshabilitadas, vacías habilitadas 
+16:54:42   [ok] horizontal: tablero etiquetado 'Tablero de tres en raya' 
+16:54:42   [ok] horizontal: botón de menú con etiqueta 'Abrir menú' 
+16:54:42   [ok] horizontal: 'Nueva partida' con texto 
+16:54:42   [ok] horizontal: objetivos >= 48 dp (menú, Nueva partida, casillas) menu=126x126 newgame_h=126
+16:54:46   [ok] horizontal: cinco entradas con etiqueta de texto y alto >= 48 dp [126, 126, 126, 126, 126]
+16:54:46   [ok] horizontal: Dificultad deshabilitada expone enabled=false en partida activa 
+16:54:54   [ok] horizontal: diálogo Acerca de con botón 'Aceptar' >= 48 dp 126
+16:54:57   note: El icono de cada entrada del menú es decorativo (contentDescription=null) y la etiqueta es el texto; el recorrido real con TalkBack es manual (TC-30).
+16:54:57 === TC-20 -> pasa
+16:54:57 === TC-21: Arranque limpio en horizontal y juego en horizontal
+16:55:07   [ok] arranque en horizontal: tablero vacío e inicia X 
+16:55:07   [ok] horizontal limpio: tablero, estado, marcador y controles presentes 
+16:55:07   [ok] horizontal limpio: sin título de aplicación 'TicTacToe' 
+16:55:07   [ok] horizontal limpio: ningún texto (barra/título) por encima del tablero []
+16:55:07   [ok] horizontal limpio: tablero cuadrado 709x709px
+16:55:07   [ok] horizontal limpio: botón de menú junto a 'Nueva partida' (misma fila, a la derecha) newgame=[921,2211] menu=[2233,2359] cy 741/742
+16:55:07   [ok] horizontal limpio: horizontal - tablero a la izquierda del panel board.r=879 status.l=921 newgame.l=921
+16:55:07   [ok] horizontal limpio: horizontal - estado, marcador y controles a la derecha del tablero 
+16:55:07   [ok] horizontal limpio: horizontal - tablero <= 270 dp (referencia) 709px = 270 dp
+16:55:07   [ok] horizontal limpio: horizontal - tablero ocupa el lado izquierdo (centro en la mitad izquierda) 
+16:55:07   [ok] horizontal limpio: objetivos del menú y 'Nueva partida' >= 48 dp menu 126x126, newgame h=126
+16:55:07   [ok] horizontal limpio: casillas >= 48 dp min=226px
+16:55:07   [ok] horizontal limpio: contenido dentro de pantalla 
+16:55:14   [ok] menú horizontal: cinco entradas en orden 
+16:55:16   [ok] Atrás cierra el menú en horizontal 
+16:55:21   [ok] vertical tras horizontal: tablero, estado, marcador y controles presentes 
+16:55:21   [ok] vertical tras horizontal: sin título de aplicación 'TicTacToe' 
+16:55:21   [ok] vertical tras horizontal: ningún texto (barra/título) por encima del tablero []
+16:55:21   [ok] vertical tras horizontal: tablero cuadrado 996x996px
+16:55:21   [ok] vertical tras horizontal: botón de menú junto a 'Nueva partida' (misma fila, a la derecha) newgame=[42,891] menu=[913,1039] cy 1662/1663
+16:55:21   [ok] vertical tras horizontal: vertical - orden tablero > estado > marcador > controles 1166/1198/1293/1599
+16:55:21   [ok] vertical tras horizontal: objetivos del menú y 'Nueva partida' >= 48 dp menu 126x126, newgame h=126
+16:55:21   [ok] vertical tras horizontal: casillas >= 48 dp min=322px
+16:55:21   [ok] vertical tras horizontal: contenido dentro de pantalla 
+16:55:21   [ok] tablero conservado al volver a vertical 
+16:55:21 === TC-21 -> pasa
+16:55:21 === TC-22: Estabilidad: sin crash ni ANR durante toda la ejecución
+16:55:22   [ok] buffer de crash sin 'FATAL EXCEPTION' 
+16:55:22   [ok] sin am_anr del paquete 
+16:55:22   note: El logcat se limpió en TC-03 y se revisa al final; contiene solo la parte posterior a TC-03.
+16:55:22 === TC-22 -> pasa
+16:55:22 === TC-30: MANUAL: sonido audible y recorrido TalkBack
+16:55:22   note: No ejecutado: el emulador corre sin audio y TalkBack no se automatiza. Debe hacerlo una persona: (1) oír X/O al jugar, silencio con Sonido deshabilitado, un solo sonido por jugada tras rotar y tras restaurar; (2) recorrido con TalkBack de casillas, menú, diálogos y 'Reiniciar puntajes'.
+16:55:22 === TC-30 -> manual, no ejecutada
+16:55:22 restored: user_rotation=0, accelerometer_rotation restored
+16:55:22 summary: {'pasa': 22, 'manual, no ejecutada': 1}  guard checks: 1421

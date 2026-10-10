@@ -1,0 +1,28 @@
+{
+  "label": "reverse-MainActivityOptionsTest",
+  "expected": 6,
+  "starts": 6,
+  "ended": 6,
+  "passed": 6,
+  "failed": 0,
+  "complete_inventory": true,
+  "actual_ids": [
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#exitDialogBlocksBackAndOutsideThenNoPreservesTheActiveSession",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#impossibleSelectionAndGateSurviveRecreationBackgroundAndMenuBack",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#newSessionAfterExitStartsInExpertWithoutPersistence",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#terminalGameEnablesDifficultyAndKeepsNewGameRulesAndScore",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#exitDialogConfirmYesFinishesTheRealActivity",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#aboutDialogDuringAnActiveGameShowsTheAuthorAndKeepsTheSnapshot"
+  ],
+  "expected_ids": [
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#aboutDialogDuringAnActiveGameShowsTheAuthorAndKeepsTheSnapshot",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#exitDialogBlocksBackAndOutsideThenNoPreservesTheActiveSession",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#exitDialogConfirmYesFinishesTheRealActivity",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#impossibleSelectionAndGateSurviveRecreationBackgroundAndMenuBack",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#newSessionAfterExitStartsInExpertWithoutPersistence",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#terminalGameEnablesDifficultyAndKeepsNewGameRulesAndScore"
+  ],
+  "ok_count": 6,
+  "failure_marker": false,
+  "verified": true
+}

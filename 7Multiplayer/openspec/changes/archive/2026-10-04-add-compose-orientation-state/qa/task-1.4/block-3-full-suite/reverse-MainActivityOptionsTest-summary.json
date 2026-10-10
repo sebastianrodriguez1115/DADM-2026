@@ -1,0 +1,32 @@
+{
+  "label": "reverse-MainActivityOptionsTest",
+  "expected": 8,
+  "starts": 8,
+  "ended": 8,
+  "passed": 8,
+  "failed": 0,
+  "complete_inventory": true,
+  "actual_ids": [
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#menuOffersNoWayToQuitAndNoQuitConfirmationAppears",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#impossibleSelectionAndGateSurviveRecreationBackgroundAndMenuBack",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#resetScoresFromTheRealMenuZeroesCountersKeepsTheFinishedGameAndSurvivesANewSession",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#newSessionAfterFinishLoadsPersistedDifficulty",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#backWithoutOverlayLeavesTheActivityThroughNormalNavigationWithoutDialog",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#terminalGameEnablesDifficultyAndKeepsNewGameRulesAndScore",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#backWithMenuOpenClosesItWithoutChangingTheGame",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#aboutDialogDuringAnActiveGameShowsTheAuthorAndKeepsTheSnapshot"
+  ],
+  "expected_ids": [
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#aboutDialogDuringAnActiveGameShowsTheAuthorAndKeepsTheSnapshot",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#backWithMenuOpenClosesItWithoutChangingTheGame",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#backWithoutOverlayLeavesTheActivityThroughNormalNavigationWithoutDialog",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#impossibleSelectionAndGateSurviveRecreationBackgroundAndMenuBack",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#menuOffersNoWayToQuitAndNoQuitConfirmationAppears",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#newSessionAfterFinishLoadsPersistedDifficulty",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#resetScoresFromTheRealMenuZeroesCountersKeepsTheFinishedGameAndSurvivesANewSession",
+    "com.edu.unal.tictactoe.MainActivityOptionsTest#terminalGameEnablesDifficultyAndKeepsNewGameRulesAndScore"
+  ],
+  "ok_count": 8,
+  "failure_marker": false,
+  "verified": true
+}

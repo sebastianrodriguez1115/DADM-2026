@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="isolated-22-TicTacToeScreenTest" tests="15" failures="0" errors="0" skipped="0">
+  <testcase classname="com.edu.unal.tictactoe.TicTacToeScreenTest" name="rendersBoardStatusScoreAndNewGameInOrder" />
+  <testcase classname="com.edu.unal.tictactoe.TicTacToeScreenTest" name="terminalResultsAndComputerTurnRejectCellTouchesButAllowNewGame" />
+  <testcase classname="com.edu.unal.tictactoe.TicTacToeScreenTest" name="occupiedCellsKeepTheirMarksAndAreDisabled" />
+  <testcase classname="com.edu.unal.tictactoe.TicTacToeScreenTest" name="largeFontKeepsTerminalMarksVisibleAndControlsReachableInBothThemes" />
+  <testcase classname="com.edu.unal.tictactoe.TicTacToeScreenTest" name="cellAndNewGameCallbacksAreOnlyInvokedByActions" />
+  <testcase classname="com.edu.unal.tictactoe.TicTacToeScreenTest" name="rendersComputerResultFromResources" />
+  <testcase classname="com.edu.unal.tictactoe.TicTacToeScreenTest" name="boardAndControlsAdaptToPortraitAndLandscapeConstraints" />
+  <testcase classname="com.edu.unal.tictactoe.TicTacToeScreenTest" name="recompositionDoesNotInvokeCallbacksOrChangeSnapshot" />
+  <testcase classname="com.edu.unal.tictactoe.TicTacToeScreenTest" name="realViewModelUiFlowCoversHumanComputerAndTieResults" />
+  <testcase classname="com.edu.unal.tictactoe.TicTacToeScreenTest" name="rendersTieFromResources" />
+  <testcase classname="com.edu.unal.tictactoe.TicTacToeScreenTest" name="rendersNineCellsAndLocalizedCellDescription" />
+  <testcase classname="com.edu.unal.tictactoe.TicTacToeScreenTest" name="realViewModelUiFlowAlternatesAfterAbandonmentWithoutScoringOrDuplicateOpening" />
+  <testcase classname="com.edu.unal.tictactoe.TicTacToeScreenTest" name="rendersComputerTurnFromResources" />
+  <testcase classname="com.edu.unal.tictactoe.TicTacToeScreenTest" name="cellsArePositiveSquareAndStayInsideTheBoard" />
+  <testcase classname="com.edu.unal.tictactoe.TicTacToeScreenTest" name="rendersActiveTurnStatesFromResources" />
+</testsuite>

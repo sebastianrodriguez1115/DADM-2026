@@ -1,0 +1,28 @@
+{
+  "command": [
+    "./gradlew",
+    "--no-configuration-cache",
+    "--rerun-tasks",
+    "connectedDebugAndroidTest",
+    "-Pandroid.testInstrumentationRunnerArguments.class=com.edu.unal.tictactoe.GameBoardInteractionTest"
+  ],
+  "exit": 0,
+  "elapsed_seconds": 16.42,
+  "expected_tests": 5,
+  "totals": {
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "name": "TEST-redacted-model - 15",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "accepted": true
+}

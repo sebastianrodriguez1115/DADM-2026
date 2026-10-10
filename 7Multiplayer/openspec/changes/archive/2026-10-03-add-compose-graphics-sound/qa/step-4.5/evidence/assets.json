@@ -1,0 +1,30 @@
+[
+  {
+    "mark": "x",
+    "sha256": "5c0a56baea4104a4ecb14af1de61d1c8a6833fb6cb44670c3dbccce71020a2c0",
+    "channels": 1,
+    "width_bytes": 2,
+    "rate": 44100,
+    "frames": 7938,
+    "duration_ms": 180.0,
+    "estimated_hz": 883.5707925200356,
+    "peak": 11468,
+    "rms": 7763.768389111904,
+    "first": 0,
+    "last": 0
+  },
+  {
+    "mark": "o",
+    "sha256": "3330ef2de3a0cdc68f0fc24338884ee09aefece601a62f41f3b28d92f6dddcf5",
+    "channels": 1,
+    "width_bytes": 2,
+    "rate": 44100,
+    "frames": 7938,
+    "duration_ms": 180.0,
+    "estimated_hz": 445.05788067675866,
+    "peak": 11468,
+    "rms": 7763.7660732460035,
+    "first": 0,
+    "last": 0
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "clazz": "com.edu.unal.tictactoe.MainActivitySoundOptionsTest",
+  "expected": 1,
+  "adb_exit": 0,
+  "complete_inventory": true,
+  "starts": 1,
+  "passed": 1,
+  "failed": 0,
+  "other_results": 0,
+  "status_counts": {
+    "1": 1,
+    "0": 1
+  },
+  "ok_summary": true,
+  "final_codes": [
+    "-1"
+  ],
+  "failure_marker": false,
+  "verified_pass": true,
+  "events": [
+    {
+      "class": "com.edu.unal.tictactoe.MainActivitySoundOptionsTest",
+      "numtests": "1",
+      "test": "muteIsAccessibleAndSurvivesNewGameRecreationAndBackgroundButNotNewSession",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.MainActivitySoundOptionsTest",
+      "numtests": "1",
+      "test": "muteIsAccessibleAndSurvivesNewGameRecreationAndBackgroundButNotNewSession",
+      "code": 0
+    }
+  ]
+}

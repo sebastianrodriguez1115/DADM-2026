@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <int name="score_x_wins" value="0" />
+    <int name="score_o_wins" value="0" />
+    <int name="score_ties" value="0" />
+    <int name="difficulty_code" value="0" />
+</map>

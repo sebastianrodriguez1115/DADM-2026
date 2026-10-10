@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="isolated-08-GameBoardRenderingTest" tests="3" failures="0" errors="0" skipped="0">
+  <testcase classname="com.edu.unal.tictactoe.GameBoardRenderingTest" name="rendersFourThirdsGridLinesWithoutBlockingNineCellActions" />
+  <testcase classname="com.edu.unal.tictactoe.GameBoardRenderingTest" name="rendersVectorMarksWithThemeColorsAndNoTextAcrossThemes" />
+  <testcase classname="com.edu.unal.tictactoe.GameBoardRenderingTest" name="cellsRemainSemanticallyClickable" />
+</testsuite>

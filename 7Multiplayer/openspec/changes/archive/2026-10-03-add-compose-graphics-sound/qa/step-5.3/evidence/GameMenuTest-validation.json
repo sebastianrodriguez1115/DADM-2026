@@ -1,0 +1,37 @@
+{
+  "expected": 6,
+  "starts": 6,
+  "passed": 6,
+  "status_codes": [
+    "1",
+    "0",
+    "1",
+    "0",
+    "1",
+    "0",
+    "1",
+    "0",
+    "1",
+    "0",
+    "1",
+    "0"
+  ],
+  "methods": [
+    "menuHasExactlyFiveEntriesInSpecifiedOrder",
+    "menuHasExactlyFiveEntriesInSpecifiedOrder",
+    "disabledDifficultyStaysVisibleAndClickingItDoesNotInvokeOrClose",
+    "disabledDifficultyStaysVisibleAndClickingItDoesNotInvokeOrClose",
+    "eachEnabledEntryShowsItsLabelClosesMenuAndInvokesCallbackOnce",
+    "eachEnabledEntryShowsItsLabelClosesMenuAndInvokesCallbackOnce",
+    "soundShowsEnabledAndDisabledTextAndSemanticStateAndRemainsActionable",
+    "soundShowsEnabledAndDisabledTextAndSemanticStateAndRemainsActionable",
+    "recompositionReflectsCanChangeWithoutInvokingCallbacks",
+    "recompositionReflectsCanChangeWithoutInvokingCallbacks",
+    "backDismissesMenuWithoutLeavingTheContent",
+    "backDismissesMenuWithoutLeavingTheContent"
+  ],
+  "ok_summary": true,
+  "finished": true,
+  "failure_marker": false,
+  "verified_pass": true
+}

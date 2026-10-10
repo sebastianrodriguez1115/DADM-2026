@@ -1,0 +1,14 @@
+[
+  {
+    "package": "com.edu.unal.tictactoe",
+    "apk": "app/build/outputs/apk/debug/app-debug.apk",
+    "exit_code": 0,
+    "output": "Performing Streamed Install\nSuccess\n"
+  },
+  {
+    "package": "com.edu.unal.tictactoe.test",
+    "apk": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+    "exit_code": 0,
+    "output": "Performing Streamed Install\nSuccess\n"
+  }
+]

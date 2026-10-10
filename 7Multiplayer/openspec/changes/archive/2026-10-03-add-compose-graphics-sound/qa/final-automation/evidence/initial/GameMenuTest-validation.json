@@ -1,0 +1,94 @@
+{
+  "clazz": "com.edu.unal.tictactoe.GameMenuTest",
+  "expected": 6,
+  "adb_exit": 0,
+  "complete_inventory": true,
+  "starts": 6,
+  "passed": 6,
+  "failed": 0,
+  "other_results": 0,
+  "status_counts": {
+    "1": 6,
+    "0": 6
+  },
+  "ok_summary": true,
+  "final_codes": [
+    "-1"
+  ],
+  "failure_marker": false,
+  "verified_pass": true,
+  "events": [
+    {
+      "class": "com.edu.unal.tictactoe.GameMenuTest",
+      "numtests": "6",
+      "test": "menuHasExactlyFiveEntriesInSpecifiedOrder",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameMenuTest",
+      "numtests": "6",
+      "test": "menuHasExactlyFiveEntriesInSpecifiedOrder",
+      "code": 0
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameMenuTest",
+      "numtests": "6",
+      "test": "disabledDifficultyStaysVisibleAndClickingItDoesNotInvokeOrClose",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameMenuTest",
+      "numtests": "6",
+      "test": "disabledDifficultyStaysVisibleAndClickingItDoesNotInvokeOrClose",
+      "code": 0
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameMenuTest",
+      "numtests": "6",
+      "test": "eachEnabledEntryShowsItsLabelClosesMenuAndInvokesCallbackOnce",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameMenuTest",
+      "numtests": "6",
+      "test": "eachEnabledEntryShowsItsLabelClosesMenuAndInvokesCallbackOnce",
+      "code": 0
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameMenuTest",
+      "numtests": "6",
+      "test": "soundShowsEnabledAndDisabledTextAndSemanticStateAndRemainsActionable",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameMenuTest",
+      "numtests": "6",
+      "test": "soundShowsEnabledAndDisabledTextAndSemanticStateAndRemainsActionable",
+      "code": 0
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameMenuTest",
+      "numtests": "6",
+      "test": "recompositionReflectsCanChangeWithoutInvokingCallbacks",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameMenuTest",
+      "numtests": "6",
+      "test": "recompositionReflectsCanChangeWithoutInvokingCallbacks",
+      "code": 0
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameMenuTest",
+      "numtests": "6",
+      "test": "backDismissesMenuWithoutLeavingTheContent",
+      "code": 1
+    },
+    {
+      "class": "com.edu.unal.tictactoe.GameMenuTest",
+      "numtests": "6",
+      "test": "backDismissesMenuWithoutLeavingTheContent",
+      "code": 0
+    }
+  ]
+}

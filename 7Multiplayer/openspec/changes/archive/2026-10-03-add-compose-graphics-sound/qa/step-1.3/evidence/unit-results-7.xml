@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-02T02:04:56.613Z" hostname="Mac-Studio-de-Juan.local" time="0.006">
+  <properties/>
+  <testcase name="newGameConservesDifficultyAndScoreAndLocksDifficultyOnlyForTheOOpening" classname="com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest" time="0.004"/>
+  <testcase name="easyDifficultyIsForwardedToTheEngineOnEveryComputerTurn" classname="com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest" time="0.0"/>
+  <testcase name="aStaleRequestCapturedWhileEditableIsRejectedOnceTheGameIsActive" classname="com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest" time="0.0"/>
+  <testcase name="setDifficultyAcceptsTheCurrentLevelWhenEditablePublishingTheSameValues" classname="com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest" time="0.0"/>
+  <testcase name="aNewSessionStartsInExpertWithAnEditableEmptyBoard" classname="com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest" time="0.0"/>
+  <testcase name="setDifficultyBeforeTheFirstMoveAcceptsPublishesAndDoesNotMoveOrScore" classname="com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest" time="0.0"/>
+  <testcase name="difficultyIsPreservedAcrossTurnsAndTheTerminalPublication" classname="com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest" time="0.0"/>
+  <testcase name="openingMoveUsesTheCanonicalDifficultyAndAvoidsTheRandomizerForImpossible" classname="com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest" time="0.002"/>
+  <testcase name="setDifficultyAfterTerminalKeepsBoardResultAndScore" classname="com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest" time="0.0"/>
+  <testcase name="selectingImpossibleDoesNotLeakIntoANewViewModelSession" classname="com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest" time="0.0"/>
+  <testcase name="setDifficultyDuringAnActiveGameIsRejectedWithoutPublishingOrMoving" classname="com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest" time="0.0"/>
+  <testcase name="difficultyGateFollowsTheDerivedStateThroughPlayAndTerminal" classname="com.edu.unal.tictactoe.ui.game.GameViewModelDifficultyTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

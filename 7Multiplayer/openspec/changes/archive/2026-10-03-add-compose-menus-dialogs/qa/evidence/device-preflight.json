@@ -1,0 +1,20 @@
+{
+  "ro.build.version.sdk": "35",
+  "ro.build.version.release": "15",
+  "ro.product.manufacturer": "redacted-manufacturer",
+  "ro.product.model": "redacted-model",
+  "compatible_min_sdk": true,
+  "lock_indicators": [
+    "mInputRestricted=false",
+    "mShowingDream=false mDreamingLockscreen=false",
+    "mInputRestricted=false"
+  ],
+  "packages": {
+    "com.edu.unal.tictactoe": {
+      "installed": false
+    },
+    "com.edu.unal.tictactoe.test": {
+      "installed": false
+    }
+  }
+}

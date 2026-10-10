@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="isolated-02-AboutDialogTest" tests="3" failures="1" errors="0" skipped="0">
+  <testcase classname="com.edu.unal.tictactoe.AboutDialogTest" name="showsTitleImageAndExactAuthor" />
+  <testcase classname="com.edu.unal.tictactoe.AboutDialogTest" name="acceptClosesAndInvokesDismissOnce" />
+  <testcase classname="com.edu.unal.tictactoe.AboutDialogTest" name="backDismissesOnceWithoutOtherSideEffects">
+    <failure message="androidx.test.espresso.base.RootViewPicker$RootViewWithoutFocusException: Waited for the root of the view hierarchy to have window focus and not request layout for 10 seconds. If you specified a non default root matcher, it may be picking a root that never takes focus. Root:">androidx.test.espresso.base.RootViewPicker$RootViewWithoutFocusException: Waited for the root of the view hierarchy to have window focus and not request layout for 10 seconds. If you specified a non default root matcher, it may be picking a root that never takes focus. Root:</failure>
+  </testcase>
+</testsuite>

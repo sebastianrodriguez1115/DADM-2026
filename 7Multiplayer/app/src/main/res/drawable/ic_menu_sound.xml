@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Original simple speaker silhouette and wave strokes, designed for this menu. -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M3,9h4l4,-3v12l-4,-3H3z" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:pathData="M14,9c1.6,1.6 1.6,4.4 0,6" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:pathData="M17,6c3.2,3.2 3.2,8.8 0,12" />
+</vector>
