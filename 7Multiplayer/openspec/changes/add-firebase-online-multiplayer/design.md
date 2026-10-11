@@ -88,10 +88,10 @@ Archivos: `P/ui/navigation/AppScreen.kt`, `P/ui/navigation/NavigationViewModel.k
 - **Unirse:** `runTransaction` sobre el nodo. El manejador aborta si el nodo existe pero no está en `waiting` o ya tiene `guest`; si no, escribe `guest` y `status = playing`. Si el valor entrante es nulo, el manejador devuelve éxito sin modificar el dato (el SDK puede invocarlo con nulo antes de tener el valor del servidor y lo reintenta con el real; abortar en ese caso reportaría "ya no disponible" de forma errónea). El resultado se interpreta con el snapshot confirmado: unido si en él `guest.uid` es mi uid y `status` es `playing`; en cualquier otro caso, `NoLongerAvailable`. Ese éxito sin cambios sobre un nodo inexistente es una escritura de nulo sobre nulo, que las reglas admiten por la cláusula inocua de D8. Cualquier error de la transacción (permiso denegado, red, cancelación) se traduce también a `NoLongerAvailable`. El comportamiento con nulo no está verificado contra el SDK y se comprueba en la verificación de extremo a extremo (Riesgos). El invitado registra también `onDisconnect().removeValue()`.
 - **Jugar:** `runTransaction` con `fireLocalEvents = false`, de modo que el tablero solo muestre jugadas confirmadas (firma `runTransaction(Transaction.Handler handler, boolean fireLocalEvents)` en la [referencia de `DatabaseReference`](https://firebase.google.com/docs/reference/android/com/google/firebase/database/DatabaseReference); con `false`, los eventos locales solo se disparan para el estado final de la transacción y no para estados intermedios). El manejador valida `status = playing`, que `turn` coincida con mi marca y que la casilla esté libre (D9), y escribe `board`, `turn`, `result` y, si terminó, `status = finished`. Un valor nulo se trata como en "Unirse", y tanto un snapshot confirmado sin mi jugada como cualquier error de la transacción se traducen a `Rejected`.
 - **Salir o cancelar:** `removeValue()` del nodo y `onDisconnect().cancel()`.
-- **Abandono:** no hay estado "abandoned" en la base. El cliente muestra abandono si el nodo desaparece mientras el último estado conocido era `playing` o si el primer valor observado tras `openMatch` es nulo (la partida solo se abre cuando ya estaba en `playing`). Un resultado terminal (`finished`) es pegajoso en el cliente: una desaparición posterior no lo cambia. Si a quien espera se le borra su juego, el lobby vuelve a su lista y muestra «Este juego ya no está disponible».
-- **Limpieza automática:** el nodo se borra cuando cualquier participante sale o se desconecta.
-- Alternativa descartada: marcas de presencia por jugador con periodo de gracia (`/presence/{uid}`, tiempo de espera antes de declarar abandono). Resolvería caídas breves de red pero exige un temporizador compartido, un estado intermedio y más reglas; A2 acepta el riesgo a cambio de simplicidad.
-- Riesgos propios de este modelo (ver Riesgos): una caída de red termina la partida (A2); si la jugada final y la salida del ganador llegan fusionadas al otro cliente, este vería abandono en vez del resultado, porque Realtime Database garantiza el estado final y no cada estado intermedio.
+- **Abandono:** no hay estado "abandoned" en la base. El cliente muestra abandono si el nodo desaparece mientras el último estado conocido era `playing` o si el primer valor observado tras `openMatch` es nulo (la partida solo se abre cuando ya estaba en `playing`). Un resultado terminal (`finished`) es pegajoso en el cliente: una desaparición posterior no lo cambia. Si a quien espera se le borra su juego, el lobby vuelve a su lista y muestra «Este juego ya no está disponible». Si el nodo desaparece mientras el dispositivo no tiene conexión, la partida se muestra como conexión perdida («Se perdió la conexión. La partida terminó.») y no como abandono del rival (D16).
+- **Limpieza automática:** el nodo se borra cuando cualquier participante sale o se desconecta. El rival de quien abandona o cierra la aplicación lo detecta de inmediato; si la red de un participante se corta de golpe, quien se queda lo detecta cuando el servicio da por perdida la conexión, del orden de minutos (D16).
+- Alternativa descartada: marcas de presencia por jugador con periodo de gracia (`/presence/{uid}`, tiempo de espera antes de declarar abandono). Resolvería caídas breves de red pero exige un temporizador compartido, un estado intermedio y más reglas; A2 acepta el riesgo a cambio de simplicidad, y D16 lo confirmó tras la verificación de extremo a extremo.
+- Riesgos propios de este modelo (ver Riesgos y D16): una caída de red, o dejar la aplicación en segundo plano más de unos segundos, termina la partida (A2); si la jugada final y la salida del ganador llegan fusionadas al otro cliente, este vería abandono en vez del resultado, porque Realtime Database garantiza el estado final y no cada estado intermedio.
 
 ### D8. Reglas de seguridad versionadas y publicadas a mano
 
@@ -157,20 +157,20 @@ Interfaz pequeña `NicknameStore` (`readNickname(): String?`, `writeNickname(Str
 ### D12. Ciclo de vida y conexión
 
 - La identidad anónima se asegura al entrar al lobby si no hay usuario; el resultado alimenta el estado de carga y el error con «Reintentar».
-- La conexión se observa con `.info/connected`. Hace falta porque, sin conexión, Realtime Database no falla: encola las escrituras y los listeners no entregan datos nuevos (de ahí que la documentación recomiende `.info/connected` para detectarlo; ver [offline-capabilities](https://firebase.google.com/docs/database/android/offline-capabilities)). Mientras no haya conexión, lobby y partida muestran «Sin conexión», deshabilitan sus acciones y se recuperan solos al volver. La documentación advierte que `.info/connected` en falso de un cliente no implica lo mismo para el otro.
-- Rotación: los tres ViewModels de Activity sobreviven; no se reabre ninguna observación. Segundo plano: la partida continúa mientras el proceso conserve la conexión; si se pierde, aplica A2. Muerte del proceso: A5; al regresar solo se restaura la pantalla guardada (D1).
+- La conexión se observa con `.info/connected`. Hace falta porque, sin conexión, Realtime Database no falla: encola las escrituras y los listeners no entregan datos nuevos (de ahí que la documentación recomiende `.info/connected` para detectarlo; ver [offline-capabilities](https://firebase.google.com/docs/database/android/offline-capabilities)). Mientras no haya conexión, el lobby muestra «Sin conexión», deshabilita sus acciones y se recupera solo al volver. En la partida en curso, «Sin conexión» con las casillas deshabilitadas es un estado transitorio sin recuperación: la partida termina para quien perdió la conexión con «Se perdió la conexión. La partida terminó.» y no se reanuda aunque la red vuelva (D16). La documentación advierte que `.info/connected` en falso de un cliente no implica lo mismo para el otro.
+- Rotación: los tres ViewModels de Activity sobreviven; no se reabre ninguna observación. Segundo plano: la partida continúa mientras el proceso conserve la conexión; una ausencia de más de unos segundos hace que el sistema corte la red de la aplicación y la partida termina como pérdida de conexión (A2, D16). Mientras «Esperando rival…» o una partida en línea en curso están visibles, la vista que aloja la composición mantiene la pantalla encendida (marca `keepScreenOn`) y la libera en cualquier otra pantalla o final (D16). Muerte del proceso: A5; al regresar solo se restaura la pantalla guardada (D1).
 
 ### D13. Estrategia de pruebas
 
 - JVM con fakes y el arnés de corrutinas existente (`app/src/test/java/com/edu/unal/tictactoe/ui/game/GameViewModelCoroutineTestHarness.kt`): `NavigationViewModel` (restauración, `Match` → `Lobby`), `OnlineLobbyViewModel`, `OnlineMatchViewModel` (confirmación, abandono, terminal pegajoso, regla de sonido), `NicknameValidator` y `BoardCodec`.
 - Compose instrumentado con fakes: inicio, lobby y partida en línea, en portrait y landscape.
 - Adaptación de las instrumentadas existentes: sus `MainActivity*` asumen que el tablero es la pantalla de arranque. Clases afectadas, verificadas en `app/src/androidTest/java/com/edu/unal/tictactoe/`: `MainActivityTest`, `MainActivityOptionsTest`, `MainActivitySoundOptionsTest`, `MainActivityPendingTurnOptionsTest`, `MainActivityAccessibilityTest`, `MainActivityLifecycleTest` y `GameViewModelSavedStateWiringTest` (lanzan `MainActivity`); además `MainActivityOptionsTest`, `AboutDialogTest` y `DifficultyDialogTest` usan `pressBackAsUser` de `TestUserNavigation.kt`, y `RestoredSessionHost.kt` usa la factory de producción. Se resuelve con un ayudante de prueba que pulsa «Jugar contra la computadora» tras lanzar la Activity, sin puertas traseras en producción; el escenario vigente de Back sin overlay se actualiza al nuevo comportamiento (vuelve al inicio).
-- Verificación de extremo a extremo de la implementación Firebase con dos instancias (dos emuladores, o emulador más dispositivo), tras publicar las reglas y activar la autenticación anónima; incluye la comprobación del manejo de nulo en transacciones (D7) y la fusión de la jugada final con la salida del ganador.
+- Verificación de extremo a extremo de la implementación Firebase con dos instancias (dos emuladores, o emulador más dispositivo), tras publicar las reglas y activar la autenticación anónima; incluye la comprobación del manejo de nulo en transacciones (D7) y la fusión de la jugada final con la salida del ganador. La carrera de dos jugadores y el tercer jugador necesitan tres identidades y solo hay dos dispositivos: se cubren con `FirebaseOnlineGameServiceLiveTest` (D16). Tras las correcciones de D16 se repite la pasada con las dos instancias.
 - Evidencia en `openspec/changes/add-firebase-online-multiplayer/qa/`, sin números de serie ni modelos de dispositivo. Los flujos manuales de sonido y TalkBack siguen siendo manuales.
 
 ### D14. Textos y accesibilidad
 
-Todos los textos van en `app/src/main/res/values/strings.xml` con los literales de `specs/`. Los objetivos táctiles miden al menos 48 dp, cada control expone una etiqueta de recursos y los controles deshabilitados exponen su estado a las tecnologías de asistencia. El tablero en línea conserva la semántica de casillas del tablero local (ubicación, contenido, disponibilidad).
+Todos los textos van en `app/src/main/res/values/strings.xml` con los literales de `specs/`, incluido «Se perdió la conexión. La partida terminó.» (D16). Los objetivos táctiles miden al menos 48 dp, cada control expone una etiqueta de recursos y los controles deshabilitados exponen su estado a las tecnologías de asistencia. El tablero en línea conserva la semántica de casillas del tablero local (ubicación, contenido, disponibilidad).
 
 ### D15. Sonido de las partidas en línea
 
@@ -179,12 +179,64 @@ Todos los textos van en `app/src/main/res/values/strings.xml` con los literales 
 - Regla de emisión: solo cuando el tablero confirmado tiene exactamente una marca más que el último tablero conocido; el jugador emitido es el dueño de esa marca nueva. Nunca se emite con el primer estado tras `openMatch` ni al resincronizar (estados con el mismo número de marcas o más de una marca nueva). Aplica igual a la jugada propia y a la del rival: ambas suenan al ser confirmadas, una sola vez.
 - Alternativa descartada: generalizar `MoveSoundHost` o compartir su controlador; ligaría su ciclo de vida al de la sesión local y chocaría con D2.
 
+### D16. Revisión tras la verificación de extremo a extremo
+
+La primera pasada con dos instancias (`qa/e2e/report.md`, commit `86be80a`) mostró que el juego, al ser un nodo que existe solo mientras sus participantes están conectados (D7), se comporta distinto de lo que decían D7, D12 y el requisito «Sin conexión durante la partida».
+
+**Hallazgos confirmados**
+
+- D-1. Quien pierde la red durante una partida vio «Tu rival salió de la partida» a los 0,49 s (dos reproducciones), no «Sin conexión»; el aviso quedó inalcanzable. Causa verificada en el código: `OnlineMatchViewModel` pasa a abandono al recibir el juego nulo (`onGameVanished`) sin mirar la conexión, y el servicio registra `onDisconnect().removeValue()` sobre el nodo.
+- D-2. Con la aplicación en segundo plano 6,7 s la partida terminó para ambos (con 2 s y 4 s sobrevivió). `dumpsys netpolicy` marcó `blocked=APP_BACKGROUND` para el paquete: el sistema (API 35) le corta la red y se activa `onDisconnect`. También ocurrió una vez al apagarse la pantalla con la partida en curso. El umbral es una medición en API 35, no una garantía.
+- Detección por el rival: 0,34 a 0,78 s cuando el otro abandona o cierra la aplicación; 114 s en la única medición válida cuando su red se corta de golpe (otra prueba dio más de 34 s sin detección). Lo decide el servicio, no la aplicación.
+
+**No confirmado**
+
+- Que el SDK aplique `onDisconnect().removeValue()` en su copia local al detectar la pérdida de conexión es la explicación coherente con lo medido (el servidor conserva el juego mientras B ya ve el nodo nulo), pero no se comprobó en el código del SDK.
+- Orden de llegada. La regla que distingue la pérdida de conexión del abandono supone que el aviso de conexión perdida llega al ViewModel antes que el juego nulo. Las mediciones de QA apuntan a que es así, pero no se ha comprobado en un dispositivo real ni en el código del SDK; las pruebas automáticas fijan ese orden a mano con el servicio falso. Si se invirtiera, quien pierde la conexión volvería a ver «Tu rival salió de la partida».
+- D-3. En el emulador, el segundo corte de red dentro del mismo proceso no mostró «Sin conexión» en el lobby. Puede ser una rareza del emulador (el corte con `svc` no cierra los sockets); queda pendiente de repetir en el dispositivo físico y no se corrige en este cambio.
+
+**Decisión**
+
+Lo que decidió el usuario (2026-10-11):
+
+1. Se mantiene el modelo de D7 y A2, sin periodo de gracia.
+2. La aplicación mantiene la pantalla encendida mientras se muestra «Esperando rival…» y mientras una partida en línea está en curso, desde que se abre hasta que termina; no en el resultado, el abandono, la conexión perdida, el lobby, la pantalla inicial ni el modo local.
+3. Quien pierde la conexión durante una partida en curso ve «Se perdió la conexión. La partida terminó.» con «Volver al lobby», el tablero bloqueado, sin ganador y sin diálogo al volver o pulsar Back. La partida no se reanuda aunque vuelva la conexión.
+4. El rival de quien perdió la conexión sigue viendo «Tu rival salió de la partida» cuando el servicio detecta la desconexión.
+5. Salir de la aplicación más de unos segundos con una partida en curso equivale a perder la conexión: al volver se ve el mensaje del punto 3. Limitación aceptada.
+6. Quien espera rival y pierde la conexión, o deja la aplicación en segundo plano el tiempo suficiente, pierde su juego: al volver ve el lobby con «Este juego ya no está disponible» (comportamiento ya existente).
+7. La carrera al unirse y el tercer jugador se cubren con `FirebaseOnlineGameServiceLiveTest`, con la carrera repetida 5 veces, porque requieren tres identidades.
+8. La tarea 7.11 se cerró con esa misma prueba y no con el simulador de reglas de la consola (`qa/rules-simulator.md`).
+9. El sonido lo comprueba el usuario a mano al probar el multijugador; TalkBack no se ejecuta, igual que en los talleres anteriores, y queda como no verificado.
+
+Detalle de diseño derivado de esa elección (no decisión del usuario):
+
+- La aplicación distingue la pérdida de conexión del abandono del rival por el estado de conexión del propio dispositivo en el momento en que el juego desaparece. La regla depende del orden de llegada de los avisos (ver «No confirmado»). Para ello `OnlineMatchViewModel` observa la conexión antes que el juego.
+- Un final ya mostrado (resultado, abandono o conexión perdida) no vuelve a cambiar.
+- El estado transitorio «Sin conexión» con casillas deshabilitadas, mientras la partida sigue en curso sin conexión, se conserva en el código pero no ofrece recuperación.
+- La pantalla encendida se mantiene mientras la partida está cargando o en curso, y en «Esperando rival…»; se implementa con la marca `keepScreenOn` de la vista que aloja la composición (`KeepScreenOn()`), llamada desde `WaitingForOpponentScreen` y `OnlineMatchScreen`, sin permisos ni bloqueos de energía.
+
+**Alternativas descartadas**
+
+- Periodo de gracia con presencia por jugador (`/presence/{uid}`): obliga a rediseñar el modelo de datos y las reglas, que habría que volver a publicar, con más riesgo antes de la entrega.
+- Servicio en primer plano para conservar la red en segundo plano: permisos y complejidad desproporcionados, y no resuelve el corte de red del dispositivo.
+
+**Limitaciones que quedan**
+
+- Segundo plano: más de unos segundos (6,7 s medidos en API 35, dependiente del sistema) termina la partida; apagar la pantalla a mano puede tener el mismo efecto (ocurrió una vez en el dispositivo físico). La pantalla encendida solo evita el apagado automático.
+- Orden de llegada sin comprobar: si el juego nulo llegara antes que el aviso de conexión, quien pierde la conexión vería «Tu rival salió de la partida»; la segunda pasada de QA (9.5) lo comprueba en las dos instancias.
+- Corte brusco de red: el rival espera del orden de minutos a que el servicio lo detecte, viendo la partida en curso.
+- D-3 sin resolver: la visibilidad de «Sin conexión» en el lobby tras cortes sucesivos queda pendiente de comprobar en el dispositivo físico (tarea 8.8).
+- Sonido y TalkBack sin verificar por la aplicación; TalkBack no se ejecuta por decisión del usuario.
+
+Efectos en las tareas: el grupo 9 de `tasks.md` implementa los puntos 2 y 3 y la cobertura del punto 7, y repite la pasada de QA; las tareas 8.2, 8.4, 8.5, 8.6, 8.8 y 8.9 se ajustan a lo anterior.
+
 ## Risks / Trade-offs
 
 - [El plugin `google-services` podía no funcionar con AGP 9.4.1, Gradle 9.6.0 y la caché de configuración] → verificado con el plugin 4.5.0 (tarea 1.4); el plan alternativo con `FirebaseOptions` por código (D6) solo se usa si falla la inicialización en el dispositivo (tarea 1.5).
 - [El compilador de Kotlin cambió de 2.2.10 a 2.4.21 para todo el código existente y las pruebas instrumentadas aún no se han vuelto a ejecutar con él] → las pruebas JVM (221) y el build pasan; las instrumentadas se cubren al adaptar y ejecutar las clases en el grupo 3 y en la suite completa de 8.2.
 - [La autenticación anónima podría no estar activada en la consola de Firebase (sin verificar)] → precondición del Migration Plan; la aplicación muestra el error con «Reintentar» en vez de colgarse.
-- [Una caída de red termina la partida porque el abandono es inmediato (A2)] → riesgo aceptado por el usuario (A2, confirmado el 2026-10-09), revisable si las pruebas lo aconsejan; la alternativa con periodo de gracia está descrita y descartada en D7.
+- [Una caída de red, o dejar la aplicación en segundo plano más de unos segundos, termina la partida porque el juego existe solo mientras sus participantes están conectados (A2)] → riesgo aceptado por el usuario (A2, el 2026-10-09; confirmado el 2026-10-11 tras la verificación de extremo a extremo). Quien pierde la conexión ve «Se perdió la conexión. La partida terminó.»; su rival ve «Tu rival salió de la partida» cuando el servicio lo detecta, del orden de minutos si la red se corta de golpe. Las alternativas con periodo de gracia y con servicio en primer plano están descritas y descartadas en D7 y D16.
 - [La jugada final y la salida del ganador pueden llegar fusionadas al otro cliente, que vería abandono en vez del resultado] → el terminal es pegajoso una vez visto y salir requiere una acción manual tras ver el resultado; la fusión es improbable pero posible y se acepta, y se prueba en la verificación de extremo a extremo.
 - [Un participante puede falsear `status`, `turn` o `result` de su propia partida; cualquier usuario autenticado lee todos los juegos] → aceptado para un contexto de clase sin servidor; el cliente valida (D9) y las reglas limitan lo esencial (D8).
 - [El manejo del valor nulo en `runTransaction` no está verificado contra el SDK] → el manejador lo trata como "valor aún no conocido" y el resultado se interpreta con el snapshot confirmado; se comprueba con dos instancias antes de dar la tarea por cerrada (D7, D13).
@@ -192,6 +244,7 @@ Todos los textos van en `app/src/main/res/values/strings.xml` con los literales 
 - [Un juego huérfano podría quedar en la lista si el servidor nunca registró el `onDisconnect`] → se registra antes de escribir el nodo, lo que las reglas admiten por la cláusula inocua (D7, D8); si el registro falla, no se crea el juego; un residuo se borra a mano desde la consola.
 - [Las reglas publicadas a mano pueden divergir del archivo versionado] → el archivo es la fuente y la verificación de extremo a extremo se hace con ellas publicadas.
 - [El plan gratuito admite 100 conexiones simultáneas] → suficiente para una clase; si se supera, nuevas conexiones fallan y aparece «Sin conexión».
+- [La carrera al unirse y el tercer jugador no se pueden reproducir con dos dispositivos, y «Sin conexión» tras cortes sucesivos en el lobby (D-3) no está confirmado] → la carrera y el tercer jugador se cubren con `FirebaseOnlineGameServiceLiveTest`; D-3 queda pendiente de comprobar en el dispositivo físico (D16).
 - [Las instrumentadas `MainActivity*` fallan al cambiar la pantalla de arranque] → ayudante de prueba y adaptación explícita (D13).
 
 ## Migration Plan

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Define la partida en línea entre dos jugadores: asignación de marcas y turno inicial, jugadas confirmadas por el servicio y sincronizadas en ambos dispositivos, resultado, abandono del rival, salida, sonido y comportamiento ante rotación, segundo plano y falta de conexión.
+Define la partida en línea entre dos jugadores: asignación de marcas y turno inicial, jugadas confirmadas por el servicio y sincronizadas en ambos dispositivos, resultado, abandono del rival, salida, sonido y comportamiento ante rotación, segundo plano, pérdida de conexión y pantalla encendida.
 
 ## ADDED Requirements
 
@@ -140,7 +140,7 @@ Al terminar, la partida SHALL ofrecer a cada jugador la acción «Volver al lobb
 
 ### Requirement: Abandono del rival
 
-Si el rival sale de una partida en curso, o deja la aplicación o pierde la conexión y el servicio lo detecta, la partida SHALL quedar abandonada sin ganador, el jugador que permanece SHALL ver el texto «Tu rival salió de la partida» con la acción «Volver al lobby», el tablero MUST quedar bloqueado y la partida MUST NOT puntuar. La detección por desconexión SHALL ser inmediata, sin periodo de gracia.
+Si el rival sale de una partida en curso, o deja la aplicación o pierde la conexión y el servicio lo detecta, la partida SHALL quedar abandonada sin ganador, el jugador que permanece SHALL ver el texto «Tu rival salió de la partida» con la acción «Volver al lobby», el tablero MUST quedar bloqueado y la partida MUST NOT puntuar. La detección SHALL ser inmediata cuando el rival abandona la partida o cierra la aplicación; cuando la red del rival se corta de golpe, la detección depende del servicio y puede tardar del orden de minutos. La aplicación MUST NOT añadir ningún periodo de gracia ni espera propia a esa detección.
 
 #### Scenario: El rival sale con confirmación
 
@@ -148,11 +148,17 @@ Si el rival sale de una partida en curso, o deja la aplicación o pierde la cone
 - **WHEN** un jugador confirma «Abandonar»
 - **THEN** el otro jugador ve «Tu rival salió de la partida» y «Volver al lobby», sin ganador
 
-#### Scenario: El rival se desconecta
+#### Scenario: El rival cierra la aplicación
 
 - **GIVEN** que la partida está en curso
-- **WHEN** el dispositivo del rival cierra la aplicación o pierde la red y el servicio lo detecta
-- **THEN** el otro jugador ve «Tu rival salió de la partida» y «Volver al lobby», sin ganador
+- **WHEN** el rival cierra la aplicación
+- **THEN** el otro jugador ve «Tu rival salió de la partida» y «Volver al lobby», sin ganador, en cuanto el servicio detecta el cierre, que es inmediato
+
+#### Scenario: La red del rival se corta de golpe
+
+- **GIVEN** que la partida está en curso
+- **WHEN** la red del dispositivo del rival se corta sin que la aplicación se cierre
+- **THEN** el otro jugador sigue viendo la partida en curso hasta que el servicio detecta la desconexión, lo que puede tardar del orden de minutos, y entonces ve «Tu rival salió de la partida» y «Volver al lobby», sin ganador; la aplicación no añade ninguna espera propia
 
 #### Scenario: Volver tras el abandono
 
@@ -240,7 +246,7 @@ La partida en línea SHALL reproducir los mismos efectos de X y de O que el modo
 
 ### Requirement: Rotación y segundo plano
 
-La partida en línea SHALL conservarse al rotar el dispositivo, con tablero, turno, resultado y apodos, sin repetir jugadas ni sonidos. Al pasar la aplicación a segundo plano, la partida SHALL continuar mientras se conserve la conexión; al volver, el jugador SHALL ver el estado vigente. Si la conexión se perdió y el servicio dio por terminada la partida, al volver la persona SHALL ver el estado de abandono, con el mismo texto «Tu rival salió de la partida» y la acción «Volver al lobby», en lugar de la partida en curso.
+La partida en línea SHALL conservarse al rotar el dispositivo, con tablero, turno, resultado y apodos, sin repetir jugadas ni sonidos. Una ausencia breve de la aplicación en segundo plano SHALL conservar la partida: al volver, el jugador SHALL ver el estado vigente. Una ausencia más larga puede hacer que el sistema corte la red de la aplicación; en ese caso la partida SHALL darse por terminada como pérdida de conexión y, al volver, la persona SHALL ver «Se perdió la conexión. La partida terminó.» con la acción «Volver al lobby», no «Tu rival salió de la partida». La duración de la ausencia que la partida tolera depende del sistema y no está garantizada; esta limitación es aceptada.
 
 #### Scenario: Rotación en curso
 
@@ -248,33 +254,73 @@ La partida en línea SHALL conservarse al rotar el dispositivo, con tablero, tur
 - **WHEN** el dispositivo rota
 - **THEN** se muestran el mismo tablero, turno y apodos, sin sonidos nuevos
 
-#### Scenario: Volver de segundo plano con conexión
+#### Scenario: Volver de una ausencia breve en segundo plano
 
-- **GIVEN** que la aplicación pasó a segundo plano y se conservó la conexión
+- **GIVEN** que la aplicación pasó a segundo plano durante unos segundos y se conservó la conexión
 - **WHEN** el rival jugó durante ese tiempo y la persona vuelve
 - **THEN** ve el tablero con la jugada del rival y el turno vigente
 
-#### Scenario: Volver de segundo plano tras perder la conexión
+#### Scenario: Volver de una ausencia larga en segundo plano
 
-- **GIVEN** que la aplicación pasó a segundo plano y el servicio dio por abandonada la partida por la desconexión
+- **GIVEN** que la aplicación estuvo en segundo plano el tiempo suficiente para que el sistema cortara su red y la partida en curso se diera por perdida
 - **WHEN** la persona vuelve
-- **THEN** ve el abandono con «Volver al lobby» en lugar de la partida en curso
+- **THEN** ve «Se perdió la conexión. La partida terminó.» con «Volver al lobby», el tablero bloqueado y sin ganador, y no ve «Tu rival salió de la partida» ni la partida en curso
 
-### Requirement: Sin conexión durante la partida
+### Requirement: Pérdida de conexión durante la partida
 
-Mientras no haya conexión con el servicio durante una partida en línea en curso, la pantalla SHALL mostrar «Sin conexión», las casillas MUST permanecer deshabilitadas y ninguna jugada MUST aceptarse. Al volver la conexión mientras la partida sigue existiendo, el aviso SHALL desaparecer solo y la entrada SHALL habilitarse de nuevo si es el turno del jugador.
+Si el dispositivo pierde la conexión con el servicio durante una partida en línea en curso, la partida SHALL terminar para ese jugador: la pantalla SHALL mostrar «Se perdió la conexión. La partida terminó.» con la acción «Volver al lobby», el tablero MUST quedar bloqueado, sin ganador, y la partida MUST NOT puntuar. La partida MUST NOT reanudarse aunque la conexión vuelva. Un final ya mostrado (resultado, abandono o conexión perdida) MUST NOT cambiar después. «Volver al lobby» y Back SHALL mostrar el lobby sin diálogo de confirmación. El rival de quien perdió la conexión SHALL seguir viendo «Tu rival salió de la partida» cuando el servicio detecta la desconexión (ver «Abandono del rival»). Si el juego desaparece mientras el dispositivo no tiene conexión, la aplicación SHALL mostrar la pérdida de conexión y no el abandono del rival. En el intervalo, si lo hay, en que la partida sigue en curso en el dispositivo pero ya no hay conexión, la pantalla SHALL mostrar «Sin conexión», las casillas MUST permanecer deshabilitadas y ninguna jugada MUST enviarse; ese estado es transitorio y no ofrece recuperación de la partida.
 
-#### Scenario: Pérdida breve de conexión
+#### Scenario: Pérdida de conexión con la partida en curso
 
-- **GIVEN** que es el turno de la persona en una partida en curso
-- **WHEN** se pierde la conexión
-- **THEN** aparece «Sin conexión», las casillas quedan deshabilitadas y expuestas como deshabilitadas
+- **GIVEN** que hay una partida en curso
+- **WHEN** el dispositivo de un jugador pierde la conexión con el servicio
+- **THEN** ese jugador ve «Se perdió la conexión. La partida terminó.» con «Volver al lobby», el tablero bloqueado y sin ganador, y no ve «Tu rival salió de la partida»
 
-#### Scenario: Recuperación con la partida vigente
+#### Scenario: El rival de quien perdió la conexión
 
-- **GIVEN** que se muestra «Sin conexión» y la partida sigue existiendo en el servicio
+- **GIVEN** que un jugador perdió la conexión durante la partida en curso
+- **WHEN** el servicio detecta la desconexión
+- **THEN** el otro jugador ve «Tu rival salió de la partida» y «Volver al lobby», sin ganador
+
+#### Scenario: La conexión vuelve después
+
+- **GIVEN** que se muestra «Se perdió la conexión. La partida terminó.»
 - **WHEN** vuelve la conexión
-- **THEN** desaparece «Sin conexión» y, si es su turno, la persona puede marcar sin acción adicional
+- **THEN** la pantalla sigue mostrando el mismo final, el tablero sigue bloqueado y la partida no se reanuda
+
+#### Scenario: Volver al lobby tras perder la conexión
+
+- **GIVEN** que se muestra «Se perdió la conexión. La partida terminó.»
+- **WHEN** la persona pulsa «Volver al lobby» o Back
+- **THEN** se muestra el lobby sin diálogo de confirmación
+
+#### Scenario: Pérdida de conexión con la partida ya terminada
+
+- **GIVEN** que se muestra el resultado de la partida, o el abandono del rival
+- **WHEN** el dispositivo pierde la conexión o el juego desaparece
+- **THEN** la pantalla conserva el mismo resultado o abandono, sin «Se perdió la conexión. La partida terminó.»
+
+#### Scenario: Partida en curso sin conexión, estado transitorio
+
+- **GIVEN** que la partida sigue en curso en el dispositivo y este no tiene conexión
+- **WHEN** se muestra la pantalla y la persona toca una casilla
+- **THEN** aparece «Sin conexión», las casillas están deshabilitadas y expuestas como deshabilitadas y no se envía ninguna jugada; este estado no promete durar ni recuperarse
+
+### Requirement: Pantalla encendida durante la partida
+
+Mientras una partida en línea esté en curso, desde que se abre hasta que termina, la aplicación SHALL mantener la pantalla encendida sin que la persona la toque. Cuando la partida termina por resultado, por abandono del rival o por pérdida de conexión, y en cualquier pantalla distinta de la partida en curso, la aplicación MUST NOT mantener la pantalla encendida; la única excepción es «Esperando rival…», cuyo comportamiento define `online-lobby` (requisito «Crear un juego y esperar rival»).
+
+#### Scenario: Partida en curso sin tocar la pantalla
+
+- **GIVEN** que hay una partida en curso en primer plano
+- **WHEN** la persona no toca la pantalla durante más tiempo que el de apagado automático del dispositivo
+- **THEN** la pantalla permanece encendida y la partida sigue visible
+
+#### Scenario: Partida terminada
+
+- **GIVEN** que la partida terminó con resultado, por abandono del rival o por pérdida de conexión
+- **WHEN** se muestra el final
+- **THEN** la aplicación deja de mantener la pantalla encendida y rige el apagado automático del dispositivo
 
 ### Requirement: Orientación y accesibilidad de la partida en línea
 

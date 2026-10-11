@@ -136,7 +136,7 @@ El lobby SHALL mostrar el encabezado «Juegos disponibles» y, debajo, un elemen
 
 ### Requirement: Crear un juego y esperar rival
 
-Al elegir «Crear juego», la aplicación SHALL crear un juego a nombre del apodo vigente, que aparece en la lista de los demás como «Juego de <apodo>», y SHALL mostrar a quien lo creó la pantalla de espera con el texto «Esperando rival…» y la acción «Cancelar». Mientras espera, la persona MUST NOT ver un tablero accionable. Cuando un rival se une, la aplicación SHALL mostrar la partida en línea. Si el servicio no completa la creación del juego, la aplicación MUST permanecer en el lobby, SHALL mostrar el texto «No se pudo crear el juego», MUST NOT mostrar «Esperando rival…» y MUST NOT dejar ningún juego en la lista de los demás; la persona SHALL poder intentarlo de nuevo con «Crear juego», sin una acción de reintento propia.
+Al elegir «Crear juego», la aplicación SHALL crear un juego a nombre del apodo vigente, que aparece en la lista de los demás como «Juego de <apodo>», y SHALL mostrar a quien lo creó la pantalla de espera con el texto «Esperando rival…» y la acción «Cancelar». Mientras espera, la persona MUST NOT ver un tablero accionable, y la aplicación SHALL mantener la pantalla encendida mientras se muestra «Esperando rival…», sin mantenerla encendida en el lobby ni en la pantalla inicial. Cuando un rival se une, la aplicación SHALL mostrar la partida en línea. Si el servicio no completa la creación del juego, la aplicación MUST permanecer en el lobby, SHALL mostrar el texto «No se pudo crear el juego», MUST NOT mostrar «Esperando rival…» y MUST NOT dejar ningún juego en la lista de los demás; la persona SHALL poder intentarlo de nuevo con «Crear juego», sin una acción de reintento propia.
 
 #### Scenario: Crear un juego
 
@@ -149,6 +149,12 @@ Al elegir «Crear juego», la aplicación SHALL crear un juego a nombre del apod
 - **GIVEN** que el lobby se muestra con conexión
 - **WHEN** la persona pulsa «Crear juego» y el servicio no completa la creación
 - **THEN** se sigue mostrando el lobby con «No se pudo crear el juego», no aparece «Esperando rival…» y el juego no figura en la lista de otros dispositivos
+
+#### Scenario: Pantalla encendida mientras se espera
+
+- **GIVEN** que se muestra «Esperando rival…»
+- **WHEN** la persona no toca la pantalla durante más tiempo que el de apagado automático del dispositivo
+- **THEN** la pantalla permanece encendida; al cancelar y volver al lobby, la aplicación deja de mantenerla encendida
 
 #### Scenario: Un rival se une
 
@@ -174,7 +180,7 @@ Quien espera rival SHALL poder cancelar su juego con «Cancelar» o con Back, si
 
 ### Requirement: Un juego desaparece si su creador se va
 
-Si quien creó un juego deja la aplicación o pierde la conexión mientras espera rival y el servicio lo detecta, el juego MUST desaparecer de la lista de los demás sin que estos recarguen. Si el juego propio de quien espera desaparece por una causa ajena a su acción, la aplicación SHALL volver al lobby y mostrar «Este juego ya no está disponible».
+Si quien creó un juego deja la aplicación o pierde la conexión mientras espera rival y el servicio lo detecta, el juego MUST desaparecer de la lista de los demás sin que estos recarguen. Si el juego propio de quien espera desaparece por una causa ajena a su acción, la aplicación SHALL volver al lobby y mostrar «Este juego ya no está disponible». Esto incluye el caso en que el propio dispositivo pierde la conexión, o deja la aplicación en segundo plano el tiempo suficiente para que el sistema corte su red, mientras la persona espera rival: su juego desaparece y, al volver, ve el lobby con ese mensaje.
 
 #### Scenario: El creador sale de la aplicación
 
@@ -187,6 +193,12 @@ Si quien creó un juego deja la aplicación o pierde la conexión mientras esper
 - **GIVEN** que la persona espera rival con su juego
 - **WHEN** el juego se elimina del servicio por una causa ajena a ella
 - **THEN** se muestra el lobby con el mensaje «Este juego ya no está disponible»
+
+#### Scenario: El propio dispositivo pierde la conexión mientras espera
+
+- **GIVEN** que la persona espera rival con su juego
+- **WHEN** su dispositivo pierde la conexión, o la aplicación pasa a segundo plano el tiempo suficiente para que el sistema corte su red, y luego la persona vuelve
+- **THEN** se muestra el lobby con el mensaje «Este juego ya no está disponible» y el juego no figura en la lista de los demás dispositivos
 
 ### Requirement: Unirse a un juego disponible
 

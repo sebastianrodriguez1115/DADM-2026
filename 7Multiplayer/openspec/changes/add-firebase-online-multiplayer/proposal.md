@@ -12,7 +12,7 @@ El reto 7 pide que dos jugadores jueguen al triqui a través de un servicio en l
 - Pedir un apodo una sola vez al entrar a «Jugar en línea» y recordarlo entre aperturas de la aplicación. La lista muestra cada juego como «Juego de <apodo>».
 - Quien crea el juego lleva X y empieza; quien se une lleva O. Solo se puede marcar después de que un rival se una. Una jugada se muestra solo cuando el servicio la confirma.
 - Sin revancha: al terminar la partida se ve el resultado y cada jugador vuelve al lobby por su cuenta.
-- Si el rival se va (sale o se desconecta), la partida queda abandonada, sin ganador; quien permanece ve un aviso y vuelve al lobby.
+- Si el rival se va (sale o se desconecta), la partida queda abandonada, sin ganador; quien permanece ve un aviso y vuelve al lobby. Quien pierde la conexión durante la partida ve «Se perdió la conexión. La partida terminó.» y no puede reanudarla; la aplicación mantiene la pantalla encendida mientras espera rival y durante la partida en curso (ver D16 en `design.md`).
 - Lo jugado en línea no modifica el marcador local ni se muestra en la pantalla en línea.
 - Las partidas en línea reproducen los mismos efectos de sonido de X y O del modo local, una vez por jugada aceptada (propia o del rival), nunca al resincronizar, gobernadas por la opción «Sonido» de sesión ya existente, sin control nuevo en las pantallas en línea.
 - Navegación entre pantallas sin librería de navegación. Back desde la partida local o desde el lobby vuelve a la pantalla inicial; desde la pantalla inicial aplica la navegación normal. La pantalla actual se conserva al rotar y tras muerte del proceso; una partida en línea guardada se restaura como lobby.
@@ -26,7 +26,7 @@ El reto 7 pide que dos jugadores jueguen al triqui a través de un servicio en l
 
 - `game-mode-selection`: pantalla inicial con las dos entradas, navegación Back entre pantallas, conservación de la pantalla actual (rotación y muerte del proceso), conservación de la partida local al salir y volver, pausa del modo local mientras no es visible, orientación y accesibilidad.
 - `online-lobby`: apodo (primera vez, validación, recordado, cambio), conexión e identidad anónima, lista de juegos disponibles en tiempo real, crear y cancelar un juego, desaparición del juego si su creador se va, unirse, carrera al unirse, regla de que solo se juega tras unirse, orientación y accesibilidad.
-- `online-match`: dos jugadores y marcas, turno y jugadas válidas, jugadas confirmadas por el servicio y sincronizadas, resultado, fin sin revancha, abandono del rival, salida con confirmación, marcador local intacto, sonido, rotación y segundo plano, falta de conexión, orientación y accesibilidad.
+- `online-match`: dos jugadores y marcas, turno y jugadas válidas, jugadas confirmadas por el servicio y sincronizadas, resultado, fin sin revancha, abandono del rival, salida con confirmación, marcador local intacto, sonido, rotación y segundo plano, pérdida de conexión, pantalla encendida, orientación y accesibilidad.
 
 ### Modified Capabilities
 
@@ -51,7 +51,7 @@ El reto 7 pide que dos jugadores jueguen al triqui a través de un servicio en l
 
 Decisiones del planificador que el usuario confirmó el 2026-10-09; pueden revisarse si las pruebas lo aconsejan. Figuran como decisiones con alternativa descartada en `design.md`:
 
-- **A2**: el abandono también se detecta por desconexión y es inmediato, sin periodo de gracia. Riesgo aceptado: una caída de red termina la partida. Alternativa descartada: presencia por jugador con periodo de gracia.
+- **A2**: el abandono también se detecta por desconexión, sin periodo de gracia añadido por la aplicación (inmediato si el rival abandona o cierra la aplicación; si su red se corta de golpe, lo decide el servicio y puede tardar del orden de minutos; ver D16). Riesgo aceptado: una caída de red, o más de unos segundos en segundo plano, termina la partida. Alternativa descartada: presencia por jugador con periodo de gracia.
 - **A3**: salir de una partida en línea en curso (Back o «Salir») pide confirmación, porque abandona la partida. Cancelar un juego en espera de rival no la pide.
 - **A4**: el apodo se puede cambiar desde el lobby reabriendo el mismo diálogo, con validación de recorte de espacios y de 1 a 20 caracteres.
 - **A5**: tras muerte del proceso no se restaura una partida en línea: se llega al lobby. La rotación sí la conserva.
