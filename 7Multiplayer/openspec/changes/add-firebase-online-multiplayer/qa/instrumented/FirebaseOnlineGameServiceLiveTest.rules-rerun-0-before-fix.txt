@@ -1,0 +1,43 @@
+
+com.edu.unal.tictactoe.FirebaseOnlineGameServiceLiveTest:..
+Error in rulesLetAThirdIdentityReadButNotWriteOrDeleteAGameInProgress(com.edu.unal.tictactoe.FirebaseOnlineGameServiceLiveTest):
+java.util.NoSuchElementException: Expected at least one element matching the predicate
+	at kotlinx.coroutines.flow.FlowKt__ReduceKt.first(Reduce.kt:110)
+	at kotlinx.coroutines.flow.FlowKt.first(Unknown Source:1)
+	at kotlinx.coroutines.flow.FlowKt__ReduceKt$first$3.invokeSuspend(Unknown Source:13)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.edu.unal.tictactoe.FirebaseOnlineGameServiceLiveTest.awaitFlow(FirebaseOnlineGameServiceLiveTest.kt:113)
+	at com.edu.unal.tictactoe.FirebaseOnlineGameServiceLiveTest.awaitGame(FirebaseOnlineGameServiceLiveTest.kt:123)
+	at com.edu.unal.tictactoe.FirebaseOnlineGameServiceLiveTest.rulesLetAThirdIdentityReadButNotWriteOrDeleteAGameInProgress(FirebaseOnlineGameServiceLiveTest.kt:299)
+..............
+
+Time: 39.353
+There was 1 failure:
+1) rulesLetAThirdIdentityReadButNotWriteOrDeleteAGameInProgress(com.edu.unal.tictactoe.FirebaseOnlineGameServiceLiveTest)
+java.util.NoSuchElementException: Expected at least one element matching the predicate
+	at kotlinx.coroutines.flow.FlowKt__ReduceKt.first(Reduce.kt:110)
+	at kotlinx.coroutines.flow.FlowKt.first(Unknown Source:1)
+	at kotlinx.coroutines.flow.FlowKt__ReduceKt$first$3.invokeSuspend(Unknown Source:13)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.edu.unal.tictactoe.FirebaseOnlineGameServiceLiveTest.awaitFlow(FirebaseOnlineGameServiceLiveTest.kt:113)
+	at com.edu.unal.tictactoe.FirebaseOnlineGameServiceLiveTest.awaitGame(FirebaseOnlineGameServiceLiveTest.kt:123)
+	at com.edu.unal.tictactoe.FirebaseOnlineGameServiceLiveTest.rulesLetAThirdIdentityReadButNotWriteOrDeleteAGameInProgress(FirebaseOnlineGameServiceLiveTest.kt:299)
+
+FAILURES!!!
+Tests run: 17,  Failures: 1
+
+

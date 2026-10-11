@@ -64,6 +64,10 @@ class FirebaseOnlineGameServiceLiveTest {
         host = Identity(FirebaseApp.getInstance())
         identities += host
         guest = secondaryIdentity("live-guest")
+        // Every identity signs in up front: the service only observes games after a sign-in made by
+        // someone else, so a test must never depend on a session stored by an earlier run.
+        host.uid
+        guest.uid
     }
 
     @After
@@ -100,7 +104,10 @@ class FirebaseOnlineGameServiceLiveTest {
             name,
         )
         secondaryApps += app
-        return Identity(app).also { identities += it }
+        return Identity(app).also {
+            identities += it
+            it.uid
+        }
     }
 
     private fun newGame(owner: Identity, nickname: String): String =
@@ -175,6 +182,26 @@ class FirebaseOnlineGameServiceLiveTest {
                 who.database.getReference("games/$id").setValue(node).awaitTask()
                 Unit
             } ?: throw AssertionError("Timed out waiting for the server to answer a direct write")
+        }.exceptionOrNull()
+    }
+
+    private fun writeAtDirectly(who: Identity, path: String, value: Any?): Throwable? = runBlocking {
+        who.uid
+        runCatching {
+            withTimeoutOrNull(TIMEOUT_MILLIS) {
+                who.database.getReference(path).setValue(value).awaitTask()
+                Unit
+            } ?: throw AssertionError("Timed out waiting for the server to answer a direct write")
+        }.exceptionOrNull()
+    }
+
+    private fun removeNodeDirectly(who: Identity, id: String): Throwable? = runBlocking {
+        who.uid
+        runCatching {
+            withTimeoutOrNull(TIMEOUT_MILLIS) {
+                who.database.getReference("games/$id").removeValue().awaitTask()
+                Unit
+            } ?: throw AssertionError("Timed out waiting for the server to answer a direct delete")
         }.exceptionOrNull()
     }
 
@@ -300,13 +327,7 @@ class FirebaseOnlineGameServiceLiveTest {
         assertEquals(OnlineStatus.Playing, seen?.status)
 
         assertPermissionDenied(writeBoardDirectly(third, id, "X--------"), "A board write by a third identity")
-        val removal = runBlocking {
-            runCatching {
-                withTimeoutOrNull(TIMEOUT_MILLIS) { third.database.getReference("games/$id").removeValue().awaitTask()
-                Unit }
-                    ?: throw AssertionError("Timed out waiting for the server to answer a direct delete")
-            }.exceptionOrNull()
-        }
+        val removal = removeNodeDirectly(third, id)
         assertPermissionDenied(removal, "A delete by a third identity")
 
         val after = awaitGame("the game in progress", host.service, id) { it != null }
@@ -337,11 +358,39 @@ class FirebaseOnlineGameServiceLiveTest {
     }
 
     @Test
-    fun rulesRejectCreatingAGameDirectlyInPlayingWithAGuest() {
+    fun rulesRejectCreatingAGameDirectlyInPlayingWithoutAGuest() {
         val id = newNodeId()
-        val failure = writeNodeDirectly(host, id, gameNode(host.uid, HOST_NAME, "playing", guest.uid))
-        assertPermissionDenied(failure, "Creating a game already playing with a guest")
+        val failure = writeNodeDirectly(host, id, gameNode(host.uid, HOST_NAME, "playing"))
+        assertPermissionDenied(failure, "Creating a game already playing without a guest")
         assertNodeAbsent(id)
+    }
+
+    @Test
+    fun rulesRejectCreatingAWaitingGameThatAlreadyHasAGuest() {
+        val id = newNodeId()
+        val failure = writeNodeDirectly(host, id, gameNode(host.uid, HOST_NAME, "waiting", guest.uid))
+        assertPermissionDenied(failure, "Creating a waiting game that already has a guest")
+        assertNodeAbsent(id)
+    }
+
+    @Test
+    fun rulesAcceptDeletingAGameNodeThatDoesNotExist() {
+        val id = newNodeId()
+        assertNodeAbsent(id)
+        assertNull("Deleting a missing game node was rejected", removeNodeDirectly(host, id))
+        assertNodeAbsent(id)
+    }
+
+    @Test
+    fun rulesRejectAThirdIdentityWritingItselfAsGuestOfAGameInProgress() {
+        val third = secondaryIdentity("live-third")
+        val id = joined(host, guest)
+        val failure = writeAtDirectly(third, "games/$id/guest", mapOf("uid" to third.uid, "name" to THIRD_NAME))
+        assertPermissionDenied(failure, "A third identity writing itself as the guest of a game in progress")
+        val game = awaitGame("the game in progress", host.service, id) { it != null }
+        assertEquals(guest.uid, game?.guest?.uid)
+        assertEquals(GUEST_NAME, game?.guest?.name)
+        assertEquals(OnlineStatus.Playing, game?.status)
     }
 
     @Test
