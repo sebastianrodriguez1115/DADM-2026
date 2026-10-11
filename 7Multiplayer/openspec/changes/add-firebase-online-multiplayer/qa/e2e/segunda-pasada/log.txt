@@ -1,0 +1,150 @@
+15:49:57.881 Nota: tras install -r del commit 8977186, la instancia B pidio apodo de nuevo (datos de la app de B habian sido borrados con pm clear en la primera pasada y se reintrodujo Luis); la instancia A conserva su apodo: lobby directo
+15:50:32.668 CUT1: partida en curso, A creador, 1 jugada; B proceso nuevo; corte de red en B a t=0 (red B cortada 150 s como maximo)
+15:53:04.546 CUT1 B secuencia de textos (s desde el corte): [(0.1, ('Juegas con O', 'Rival: Ana', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby'))]
+15:53:04.549 CUT1 A secuencia de textos (s desde el corte): [(0.1, ('Juegas con X', 'Rival: Luis', 'Turno de Luis', 'Salir')), (115.7, ('Juegas con X', 'Rival: Luis', 'Tu rival salió de la partida', 'Volver al lobby'))]
+15:53:04.549 CUT1 B cuadros distintos de captura: [(0.24, '5617a0'), (0.38, '3817df'), (7.21, '6bd20e'), (27.66, '382239'), (37.17, '5a33cb'), (87.65, '8e7add'), (137.22, 'adbc0c'), (147.62, '064ba7')]
+15:53:18.979 CUT1 red restablecida a los 152 s; 8 s despues: B=['Juegas con O', 'Rival: Ana', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby'] ; A=['Juegas con X', 'Rival: Luis', 'Tu rival salió de la partida', 'Volver al lobby'] ; enabled B=000000000
+15:53:24.833 CUT1 B sale con Volver al lobby: ['Juegos disponibles', 'No hay juegos disponibles', 'Crear juego']
+15:53:45.842 CUT1 resultado: B (proceso nuevo) muestra exactamente 'Se perdió la conexión. La partida terminó.' con 'Volver al lobby' a ~0.38 s del corte (cuadros de captura a 0.24 s: 'Tu turno' aun; 0.38 s: mensaje); no aparecieron 'Tu rival salió de la partida' ni 'Sin conexión' en ningun volcado ni cuadro distinto; tablero bloqueado (casillas deshabilitadas); tras restablecer la red B sigue igual (sin reanudar); A vio 'Tu rival salió de la partida' a los 115.7 s del corte (B sin red todo ese tiempo); 'Volver al lobby' en B lleva al lobby sin dialogo. Capturas: CUT1_*
+15:54:22.997 CUT2: partida en curso, A creador, 1 jugada; B proceso nuevo; corte de red en B a t=0 (red B cortada 40 s como maximo)
+15:55:04.071 CUT2 B secuencia de textos (s desde el corte): [(0.1, ('Juegas con O', 'Rival: Ana', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby'))]
+15:55:04.074 CUT2 A secuencia de textos (s desde el corte): [(0.1, ('Juegas con X', 'Rival: Luis', 'Turno de Luis', 'Salir'))]
+15:55:04.074 CUT2 B cuadros distintos de captura: [(0.24, '95d358'), (0.45, '54359b'), (37.01, 'b9470b'), (37.29, 'f86d28')]
+15:55:18.465 CUT2 red restablecida a los 41 s; 8 s despues: B=['Juegas con O', 'Rival: Ana', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby'] ; A=['Juegas con X', 'Rival: Luis', 'Tu rival salió de la partida', 'Volver al lobby'] ; enabled B=000000000
+15:55:20.824 CUT2 A ve 'Tu rival salió de la partida' a ~58 s del corte (red de B restablecida a los 41 s)
+15:55:23.383 CUT2 B antes de salir: ['Juegas con O', 'Rival: Ana', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby']
+15:55:26.950 CUT2 B sale con Back: ['Juegos disponibles', 'No hay juegos disponibles', 'Crear juego']
+15:56:09.817 CUT3: partida en curso, A creador, 1 jugada; B proceso nuevo; corte de red en B a t=0 (red B cortada 40 s como maximo)
+15:56:50.817 CUT3 B secuencia de textos (s desde el corte): [(0.1, ('Juegas con O', 'Rival: Ana', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby'))]
+15:56:50.818 CUT3 A secuencia de textos (s desde el corte): [(0.1, ('Juegas con X', 'Rival: Luis', 'Turno de Luis', 'Salir'))]
+15:56:50.818 CUT3 B cuadros distintos de captura: [(0.24, '59577a'), (0.44, '0577fa')]
+15:57:05.203 CUT3 red restablecida a los 41 s; 8 s despues: B=['Juegas con O', 'Rival: Ana', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby'] ; A=['Juegas con X', 'Rival: Luis', 'Tu rival salió de la partida', 'Volver al lobby'] ; enabled B=000000000
+15:57:07.650 CUT3 A ve 'Tu rival salió de la partida' a ~58 s del corte (red de B restablecida a los 41 s)
+15:57:10.183 CUT3 B antes de salir: ['Juegas con O', 'Rival: Ana', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby']
+15:57:15.990 CUT3 B sale con Volver al lobby: ['Juegos disponibles', 'No hay juegos disponibles', 'Crear juego']
+15:57:47.533 CUT4: partida en curso, A creador, 1 jugada; B proceso con corte previo; corte de red en B a t=0 (red B cortada 40 s como maximo)
+15:58:28.588 CUT4 B secuencia de textos (s desde el corte): [(0.1, ('Juegas con O', 'Rival: Ana', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby'))]
+15:58:28.588 CUT4 A secuencia de textos (s desde el corte): [(0.1, ('Juegas con X', 'Rival: Luis', 'Turno de Luis', 'Salir'))]
+15:58:28.589 CUT4 B cuadros distintos de captura: [(0.24, '91d735'), (0.37, 'fda206'), (12.78, 'c5c631')]
+15:58:43.009 CUT4 red restablecida a los 41 s; 8 s despues: B=['Juegas con O', 'Rival: Ana', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby'] ; A=['Juegas con X', 'Rival: Luis', 'Tu rival salió de la partida', 'Volver al lobby'] ; enabled B=000000000
+15:58:45.418 CUT4 A ve 'Tu rival salió de la partida' a ~58 s del corte (red de B restablecida a los 41 s)
+15:58:48.033 CUT4 B antes de salir: ['Juegas con O', 'Rival: Ana', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby']
+15:58:53.780 CUT4 B sale con Volver al lobby: ['Juegos disponibles', 'No hay juegos disponibles', 'Crear juego']
+16:00:01.237 BG_B_3s: partida en curso con 1 jugada; instancia B pasa a segundo plano (HOME) 3 s
+16:00:05.868 BG_B_3s: el rival (instancia A) durante la ausencia: [(2.3, ('Juegas con X', 'Rival: Luis', 'Turno de Luis', 'Salir'))]
+16:00:19.169 BG_B_3s: al volver, instancia B ve ['Juegas con O', 'Rival: Ana', 'Tu turno', 'Salir'] (habilitadas 011111111); el rival ve ['Juegas con X', 'Rival: Luis', 'Turno de Luis', 'Salir']
+16:01:30.391 BG_B_20s: partida en curso con 1 jugada; instancia B pasa a segundo plano (HOME) 20 s
+16:01:51.006 BG_B_20s: el rival (instancia A) durante la ausencia: [(2.3, ('Juegas con X', 'Rival: Luis', 'Tu rival salió de la partida', 'Volver al lobby'))]
+16:02:04.288 BG_B_20s: al volver, instancia B ve ['Juegos disponibles', 'No hay juegos disponibles', 'Crear juego', 'Cambiar apodo'] (habilitadas ?????????); el rival ve ['Juegas con X', 'Rival: Luis', 'Tu rival salió de la partida', 'Volver al lobby']
+16:02:10.554 NOTA: el intento BG_B_20s de las 16:01 no es valido (la partida anterior seguia en curso al reiniciar B); se repite
+16:03:02.434 BG_B_20s: partida en curso con 1 jugada; instancia B pasa a segundo plano (HOME) 20 s
+16:03:22.967 BG_B_20s: el rival (instancia A) durante la ausencia: [(2.3, ('Juegas con X', 'Rival: Luis', 'Turno de Luis', 'Salir')), (7.0, ('Juegas con X', 'Rival: Luis', 'Tu rival salió de la partida', 'Volver al lobby'))]
+16:03:36.340 BG_B_20s: al volver, instancia B ve ['Juegas con O', 'Rival: Ana', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby'] (habilitadas 000000000); el rival ve ['Juegas con X', 'Rival: Luis', 'Tu rival salió de la partida', 'Volver al lobby']
+16:04:29.144 BG_A_3s: partida en curso con 1 jugada; instancia A pasa a segundo plano (HOME) 3 s
+16:04:33.213 BG_A_3s: el rival (instancia B) durante la ausencia: [(2.1, ('Juegas con O', 'Rival: Ana', 'Tu turno', 'Salir'))]
+16:04:47.388 BG_A_3s: al volver, instancia A ve ['Juegas con X', 'Rival: Luis', 'Turno de Luis', 'Salir'] (habilitadas 000000000); el rival ve ['Juegas con O', 'Rival: Ana', 'Tu turno', 'Salir']
+16:05:37.923 BG_A_20s: partida en curso con 1 jugada; instancia A pasa a segundo plano (HOME) 20 s
+16:05:59.762 BG_A_20s: el rival (instancia B) durante la ausencia: [(2.1, ('Juegas con O', 'Rival: Ana', 'Tu turno', 'Salir')), (8.0, ('Juegas con O', 'Rival: Ana', 'Tu rival salió de la partida', 'Volver al lobby'))]
+16:06:13.688 BG_A_20s: al volver, instancia A ve ['Juegas con X', 'Rival: Luis', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby'] (habilitadas 000000000); el rival ve ['Juegas con O', 'Rival: Ana', 'Tu rival salió de la partida', 'Volver al lobby']
+16:07:27.875 PANTALLA pantalla inicial -> instancia A: RETIENE (wake locks=4) ; instancia B: RETIENE (wake locks=1)
+16:07:34.781 PANTALLA modo local -> instancia A: RETIENE (wake locks=4) ; instancia B: RETIENE (wake locks=2)
+16:07:43.296 PANTALLA lobby -> instancia A: RETIENE (wake locks=4) ; instancia B: RETIENE (wake locks=2)
+16:07:49.872 PANTALLA A esperando rival, B en el lobby -> instancia A: RETIENE (wake locks=4) ; instancia B: RETIENE (wake locks=1)
+16:07:56.445 PANTALLA partida en curso -> instancia A: RETIENE (wake locks=4) ; instancia B: RETIENE (wake locks=1)
+16:07:56.509 Ejemplo de dumpsys window (atributos de ventana) en B en partida: fl=KEEP_SCREEN_ON LAYOUT_IN_SCREEN LAYOUT_INSET_DECOR SPLIT_TOUCH HARDWARE_ACCELERATED DRAWS_SYSTEM_BAR_BACKGROUNDS
+16:10:49.998 PANTALLA resultado (victoria) -> instancia A: RETIENE (wake locks=1) ; instancia B: RETIENE (wake locks=1)
+16:11:06.273 PANTALLA lobby tras resultado -> instancia A: RETIENE (wake locks=1) ; instancia B: RETIENE (wake locks=1)
+16:12:12.466 PANTALLA abandono (A) y lobby (B) -> instancia A: RETIENE (wake locks=1) ; instancia B: RETIENE (wake locks=2)
+16:12:35.901 --- Indicador estricto: linea 'SCREEN_BRIGHT_WAKE_LOCK ... WindowManager/displayId:0 ... ws=WorkSource{uid com.edu.unal.tictactoe}' en 'dumpsys power' (seccion Wake Locks). Las mediciones anteriores de las 16:07 (indicador laxo) se descartan: contaban cualquier lock con el nombre del paquete en la seccion ---
+16:12:57.464 PANTALLA pantalla inicial -> instancia A: RETIENE (WindowManager SCREEN_BRIGHT atribuido a la app) ; instancia B: RETIENE (WindowManager SCREEN_BRIGHT atribuido a la app)
+16:13:04.341 PANTALLA modo local -> instancia A: RETIENE (WindowManager SCREEN_BRIGHT atribuido a la app) ; instancia B: RETIENE (WindowManager SCREEN_BRIGHT atribuido a la app)
+16:13:13.423 PANTALLA lobby -> instancia A: RETIENE (WindowManager SCREEN_BRIGHT atribuido a la app) ; instancia B: RETIENE (WindowManager SCREEN_BRIGHT atribuido a la app)
+16:13:19.996 PANTALLA A esperando rival (B en el lobby) -> instancia A: RETIENE (WindowManager SCREEN_BRIGHT atribuido a la app) ; instancia B: RETIENE (WindowManager SCREEN_BRIGHT atribuido a la app)
+16:13:25.968 PANTALLA partida en curso -> instancia A: RETIENE (WindowManager SCREEN_BRIGHT atribuido a la app) ; instancia B: RETIENE (WindowManager SCREEN_BRIGHT atribuido a la app)
+16:14:01.030 PANTALLA resultado (victoria A) -> instancia A: RETIENE (WindowManager SCREEN_BRIGHT atribuido a la app) ; instancia B: RETIENE (WindowManager SCREEN_BRIGHT atribuido a la app)
+16:14:08.156 PANTALLA lobby tras resultado -> instancia A: RETIENE (WindowManager SCREEN_BRIGHT atribuido a la app) ; instancia B: RETIENE (WindowManager SCREEN_BRIGHT atribuido a la app)
+16:14:35.952 --- Prueba paso a paso en B (proceso nuevo): ACQ = hace cuanto adquirio WindowManager su lock; ws = app a la que se atribuye ---
+16:14:36.088 KEEP B lobby: sin lock WindowManager | ninguna ventana de la app con KEEP_SCREEN_ON
+16:14:41.906 KEEP B esperando rival: ACQ=-3s373ms ws=com.edu.unal.tictactoe | com.edu.unal.tictactoe/com.edu.unal.tictactoe.MainActivity}:
+16:14:46.323 KEEP B lobby tras cancelar: sin lock WindowManager | ninguna ventana de la app con KEEP_SCREEN_ON
+16:14:53.715 KEEP B lobby tras Back en espera: sin lock WindowManager | ninguna ventana de la app con KEEP_SCREEN_ON
+16:14:55.928 KEEP B pantalla inicial: sin lock WindowManager | ninguna ventana de la app con KEEP_SCREEN_ON
+16:15:04.175 --- Transiciones con A (creador) y B (invitado), ambos en proceso con historial; se anota el lock de WindowManager atribuido a la app (ACQ = hace cuanto) ---
+16:15:13.278 KEEP estado inicial (lobby/inicio): A=ACQ=-9m12s872ms ws=com.edu.unal.tictactoe ; B=SIN lock
+16:15:19.820 KEEP A esperando, B lobby: A=ACQ=-9m19s634ms ws=com.edu.unal.tictactoe ; B=SIN lock
+16:15:29.893 KEEP partida en curso (ambos): A=ACQ=-9m29s740ms ws=com.edu.unal.tictactoe ; B=SIN lock
+16:16:00.639 --- Experimento de pantalla encendida con A y B reiniciados (force-stop) ---
+16:16:12.027 KEEP inicio tras reinicio de ambas: A=SIN lock ; B=SIN lock
+16:16:19.829 KEEP lobby ambos: A=SIN lock ; B=SIN lock
+16:16:26.425 KEEP A esperando rival, B lobby: A=ACQ=-3s628ms ws=com.edu.unal.tictactoe ; B=SIN lock
+16:16:31.953 KEEP partida en curso ambos: A=ACQ=-2s959ms ws=com.edu.unal.tictactoe ; B=ACQ=-3s93ms ws=com.edu.unal.tictactoe
+16:17:07.494 KEEP resultado ambos: A=SIN lock ; B=SIN lock
+16:17:11.847 KEEP B en lobby, A en resultado: A=SIN lock ; B=SIN lock
+16:17:16.629 KEEP A en lobby: A=SIN lock ; B=SIN lock
+16:18:12.313 KEEP (a) partida en curso: A=ACQ=-38s370ms ws=com.edu.unal.tictactoe ; B=ACQ=-38s441ms ws=com.edu.unal.tictactoe
+16:18:20.511 KEEP (a) abandono en A, lobby en B: A=SIN lock ; B=SIN lock
+16:18:25.756 KEEP (a) A en lobby: A=SIN lock ; B=SIN lock
+16:18:45.839 KEEP (b) partida en curso: A=ACQ=-10s694ms ws=com.edu.unal.tictactoe ; B=ACQ=-10s781ms ws=com.edu.unal.tictactoe
+16:18:51.326 KEEP (b) B conexion perdida (red cortada), A en curso: A=ACQ=-16s145ms ws=com.edu.unal.tictactoe ; B=SIN lock
+16:19:01.875 KEEP (b) red restablecida; A ya con abandono?: A=SIN lock ; B=SIN lock
+16:19:06.259 KEEP (b) B volvio al lobby: A=SIN lock ; B=SIN lock
+16:19:11.069 KEEP (b) A volvio al lobby: A=SIN lock ; B=SIN lock
+16:19:41.231 KEEP (c) partida en curso: A=ACQ=-10s718ms ws=com.edu.unal.tictactoe ; B=ACQ=-10s853ms ws=com.edu.unal.tictactoe
+16:20:04.455 KEEP (c) A volvio de 20 s en segundo plano (conexion perdida en A): A=ACQ=-2s600ms ws=com.edu.unal.tictactoe ; B=SIN lock
+16:20:20.099 KEEP (c) A en lobby: A=ACQ=-18s301ms ws=com.edu.unal.tictactoe ; B=SIN lock
+16:20:44.487 KEEP (d) A esperando rival: A=SIN lock ; B=SIN lock
+16:21:14.569 (d) A espera rival, HOME 20 s: B ve desaparecer 'Juego de Ana' a ~1.960334062576294 s; A al volver ve ['Tablero de tres en raya', 'Casilla, fila 1, columna 1, X', 'Casilla, fila 1, columna 2, vacía', 'Casilla, fila 1, columna 3, vacía', 'Casilla, fila 2, columna 1, vacía', 'Casilla, fila 2, columna 2, vacía', 'Casilla, fila 2, columna 3, vacía', 'Casilla, fila 3, columna 1, vacía', 'Casilla, fila 3, columna 2, vacía', 'Casilla, fila 3, columna 3, vacía', 'Juegas con X', 'Rival: Luis', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby'] ; cuadros distintos tras volver [0.46, 0.8, 1.29]
+16:21:14.894 KEEP (d) A tras volver (lobby): A=ACQ=-8s148ms ws=com.edu.unal.tictactoe ; B=SIN lock
+16:21:57.522 --- Rastreo de la fuga de KEEP_SCREEN_ON en A tras volver de segundo plano con conexion perdida ---
+16:22:00.176 LEAK A lobby (fuga?): ACQ=-51s90ms ws=com.edu.unal.tictactoe | texts=['Juegos disponibles', 'No hay juegos disponibles', 'Crear juego']
+16:22:08.990 LEAK A esperando rival: ACQ=-1m0s61ms ws=com.edu.unal.tictactoe | texts=['Esperando rival…', 'Cancelar']
+16:22:15.993 LEAK A lobby tras cancelar: ACQ=-1m7s138ms ws=com.edu.unal.tictactoe | texts=['Juegos disponibles', 'No hay juegos disponibles', 'Crear juego']
+16:22:20.645 LEAK A pantalla inicial: ACQ=-1m11s746ms ws=com.edu.unal.tictactoe | texts=['Jugar contra la computadora', 'Jugar en línea']
+16:22:27.633 LEAK A modo local: ACQ=-1m18s739ms ws=com.edu.unal.tictactoe | texts=['Tablero de tres en raya', 'La persona hace la primera jugada', 'Marcador']
+16:22:31.832 LEAK A inicio otra vez: ACQ=-1m22s901ms ws=com.edu.unal.tictactoe | texts=['Jugar contra la computadora', 'Jugar en línea']
+16:22:40.626 --- B: segundo plano largo con partida en curso y comprobacion del lock ---
+16:23:19.412 LEAK B partida en curso: ACQ=-10s702ms ws=com.edu.unal.tictactoe | texts=['Rival: Ana', 'Tu turno', 'Salir']
+16:23:44.643 LEAK B al volver (conexion perdida): ACQ=-3s39ms ws=com.edu.unal.tictactoe | texts=['Rival: Ana', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby']
+16:23:51.477 LEAK B lobby tras Volver: ACQ=-9s867ms ws=com.edu.unal.tictactoe | texts=['No hay juegos disponibles', 'Crear juego', 'Cambiar apodo']
+16:23:55.606 LEAK B inicio: ACQ=-14s14ms ws=com.edu.unal.tictactoe | texts=['Jugar contra la computadora', 'Jugar en línea']
+16:24:56.400 ESPERA LARGA en A: inicio 16:24:56; A en 'Esperando rival…' tras app reiniciada (force-stop); lock=ACQ=-6s709ms ws=com.edu.unal.tictactoe; ultimo evento de entrada enviado a A: toque en 'Crear juego' (envio periodico de KEYCODE_WAKEUP suspendido)
+16:25:47.553 --- B con la fuga activa (tras segundo plano con conexion perdida): ¿se limpia al pasar por la espera y cancelar? (mientras A hace la espera larga) ---
+16:25:47.627 LEAK-B B lobby con fuga: ACQ=-2m7s979ms ws=com.edu.unal.tictactoe
+16:25:53.348 LEAK-B B esperando rival: ACQ=-2m13s701ms ws=com.edu.unal.tictactoe
+16:25:58.033 LEAK-B B lobby tras cancelar: ACQ=-2m18s381ms ws=com.edu.unal.tictactoe
+16:35:50.983 ESPERA LARGA intento 1 NO VALIDO: la app de A salio de primer plano a los ~2 min (el telefono quedo en la pantalla de inicio: uso del usuario), el lock de pantalla desaparecio y el juego se perdio; el telefono se apago a los ~6 min por inactividad. Lecturas por minuto: 0 s Awake con lock de la app; 60 s Awake con lock; 122 a 303 s Awake sin lock (app en segundo plano); 364 a 545 s Dozing; 606 s Awake sin lock.
+16:36:09.838 ESPERA LARGA intento 2: inicio 16:36:09; A en 'Esperando rival…' (app reiniciada); lock=ACQ=-6s354ms ws=com.edu.unal.tictactoe; sin eventos de entrada hasta el final
+16:36:28.505 --- Punto 4 (parte B): B crea un juego y pierde la red (proceso nuevo); A esta en espera larga y no participa ---
+16:37:10.072 WAIT-CUT B (espera rival) corte de red a t=0: secuencia de textos en B [(0.1, ('Sin conexión', 'Juegos disponibles', 'Juego de Ana', 'Crear juego', 'Este juego ya no está disponible')), (4.0, ('Sin conexión', 'Juegos disponibles', 'Juego de Ana', 'Crear juego', 'Cambiar apodo'))] ; cuadros distintos [0.23, 0.46, 0.55, 4.49, 4.57, 15.66]
+16:37:22.477 WAIT-CUT B tras restablecer red: ['Juegos disponibles', 'Juego de Ana', 'Crear juego', 'Cambiar apodo'] ; lock sin lock WindowManager
+16:37:45.468 WAIT-BG B crea juego y pasa a segundo plano 20 s (proceso nuevo)
+16:38:13.904 WAIT-BG B al volver de 20 s: texto visible en el primer volcado (~2 s) ['Juegos disponibles', 'Juego de Ana', 'Crear juego', 'Cambiar apodo'] ; cuadros distintos de captura a [0.53, 0.62, 2.43, 4.22, 4.31] s ; lock ACQ=-8s187ms ws=com.edu.unal.tictactoe
+16:38:26.310 WAIT-BG B: cuadros: a 0.62 s del regreso se ve 'Sin conexión' y el aviso 'Este juego ya no está disponible' sobre el lobby; a 2.43 s el lobby ya conectado con el aviso aun visible (capturas WAITBG_B_*). El juego propio desaparecio; la app muestra el lobby. Observacion: tras este regreso el lock de pantalla queda retenido en el lobby (ver D-4).
+16:48:34.896 ESPERA LARGA intento 2 (valido): A en 'Esperando rival…' sin eventos de entrada durante 735 s (12 min 15 s, mayor que el apagado automatico de 10 min); lecturas cada 60 s: 6 s: mWakefulness=Awake isKeyguardShowing=false | foco=app | lock ACQ=-11s990ms ws=com.edu.unal.tictactoe || 66 s: mWakefulness=Awake isKeyguardShowing=false | foco=app | lock ACQ=-1m12s531ms ws=com.edu.unal.tictactoe || 127 s: mWakefulness=Awake isKeyguardShowing=false | foco=app | lock ACQ=-2m13s102ms ws=com.edu.unal.tictactoe || 188 s: mWakefulness=Awake isKeyguardShowing=false | foco=app | lock ACQ=-3m13s942ms ws=com.edu.unal.tictactoe || 248 s: mWakefulness=Awake isKeyguardShowing=false | foco=app | lock ACQ=-4m14s669ms ws=com.edu.unal.tictactoe || 309 s: mWakefulness=Awake isKeyguardShowing=false | foco=app | lock ACQ=-5m15s190ms ws=com.edu.unal.tictactoe || 369 s: mWakefulness=Awake isKeyguardShowing=false | foco=app | lock ACQ=-6m15s770ms ws=com.edu.unal.tictactoe || 430 s: mWakefulness=Awake isKeyguardShowing=false | foco=app | lock ACQ=-7m16s339ms ws=com.edu.unal.tictactoe || 491 s: mWakefulness=Awake isKeyguardShowing=false | foco=app | lock ACQ=-8m16s896ms ws=com.edu.unal.tictactoe || 552 s: mWakefulness=Awake isKeyguardShowing=false | foco=app | lock ACQ=-9m17s532ms ws=com.edu.unal.tictactoe || 612 s: mWakefulness=Awake isKeyguardShowing=false | foco=app | lock ACQ=-10m18s478ms ws=com.edu.unal.tictactoe || 673 s: mWakefulness=Awake isKeyguardShowing=false | foco=app | lock ACQ=-11m19s121ms ws=com.edu.unal.tictactoe || FIN 735 s: B lista=['Juegos disponibles', 'Juego de Ana', 'Crear juego', 'Cambiar apodo'] || FIN A mWakefulness=Awake focus=com.edu.unal.tictactoe/com.edu.unal.tictactoe.MainActivity}
+16:48:37.798 ESPERA LARGA fin: A sigue despierto, sin keyguard, en 'Esperando rival…' y el juego sigue en la lista de B ('Juego de Ana')
+16:50:15.453 WAIT-red B crea 'Juego de Luis' y se corta su red: desaparece de la lista de A a None s
+16:50:50.205 WAIT-segundo plano B crea 'Juego de Luis' y pasa a segundo plano (HOME): desaparece de la lista de A a 6.4 s
+16:51:18.365 NOTA: la ronda 'red' de las 16:5x (watch 60 s) y la de segundo plano que siguio no son validas (quedo un 'Juego de Luis' residual de la primera ronda en la lista); se repiten con la lista de A vacia antes de empezar
+16:53:49.478 WAIT-red (valido) B crea 'Juego de Luis' (A en el lobby) y pierde la red (corte total): desaparece de la lista de A a 114.8 s del corte; B (aviso) ve ['Sin conexión', 'Juegos disponibles', 'No hay juegos disponibles', 'Crear juego', 'Cambiar apodo']; red de B cortada todo ese tiempo
+16:54:29.733 WAIT-bg (valido) B crea 'Juego de Luis' (A en el lobby) y pasa a segundo plano (HOME): desaparece de la lista de A a 6.4 s
+16:55:45.593 WAIT-bg-A A crea 'Juego de Ana' y pasa a segundo plano (HOME) 20 s: desaparece de la lista de B a 6.0 s; al volver A ve ['Juegos disponibles', 'No hay juegos disponibles', 'Crear juego', 'Cambiar apodo'] (primer volcado ~2 s tras volver) ; cuadros distintos [0.54, 0.89, 2.9, 4.61, 6.32] ; lock ACQ=-8s938ms ws=com.edu.unal.tictactoe
+16:55:58.286 NOTA: los cuadros de captura de A tomados justo despues de 'am start' en la prueba WAIT-bg-A de las 17:0x se descartaron sin conservarse (podian incluir la pantalla de inicio); se repite esperando a que la app tenga el foco antes de capturar
+16:56:38.840 WAIT-bg-A (repeticion): foco de la app a 0.15 s del am start; cuadros distintos a [0.57, 0.92, 1.39, 4.62] s
+16:56:47.493 WAIT-bg-A: tras 20 s en segundo plano con 'Esperando rival…', A vuelve a la app: a 0.57 s se ve 'Sin conexion' y, sobre el lobby, el aviso 'Este juego ya no está disponible'; a 1.39 s el lobby conectado con el aviso aun visible (capturas WAITBG_A_*). El aviso llego a verse. El juego desaparecio de la lista de B a ~6 s de la salida a segundo plano
+16:58:06.994 --- Regresion rapida ---
+16:58:58.941 REG1 victoria de A: A=['Juegas con X', 'Rival: Luis', 'Ganaste', 'Volver al lobby'] B=['Juegas con O', 'Rival: Ana', 'Ganó Ana', 'Volver al lobby']
+16:59:05.182 REG1 B Back en resultado -> ['Juegos disponibles', 'No hay juegos disponibles', 'Crear juego'] (sin dialogo)
+16:59:44.057 REG2 A pulsa Salir -> dialogo ['¿Abandonar la partida?', 'Cancelar', 'Abandonar'] ; confirma Abandonar: A=['Juegos disponibles', 'No hay juegos disponibles'] ; B ve ['Juegas con O', 'Rival: Ana', 'Tu rival salió de la partida', 'Volver al lobby'] a 0.29 s
+16:59:49.811 REG2 B Back en abandono -> ['Juegos disponibles', 'No hay juegos disponibles', 'Crear juego'] (sin dialogo)
+17:00:15.001 REG3 force-stop de B: A ve ['Juegas con X', 'Rival: Luis', 'Tu rival salió de la partida', 'Volver al lobby'] a 0.82 s
+17:00:21.895 REG3 A Back en abandono -> ['Juegos disponibles', 'No hay juegos disponibles', 'Crear juego'] (sin dialogo)
+17:00:42.201 KEEP B (proceso nuevo) pantalla inicial: sin lock WindowManager
+17:00:42.201 KEEP B modo local: sin lock WindowManager
+17:00:42.202 KEEP B lobby: sin lock WindowManager
+17:01:09.002 --- Alcance de D-4: segundo plano CORTO (3 s) con la partida en curso y luego terminar la partida ---
+17:01:09.403 LEAK2 lobby (procesos nuevos): A=SIN lock ; B=SIN lock
+17:01:35.506 LEAK2 B volvio de 3 s (partida en curso): A=ACQ=-16s695ms ws=com.edu.unal.tictactoe ; B=ACQ=-2s820ms ws=com.edu.unal.tictactoe
+17:02:04.311 LEAK2 resultado (B tras segundo plano corto): A=SIN lock ; B=ACQ=-31s625ms ws=com.edu.unal.tictactoe
+17:02:11.395 LEAK2 lobby tras la partida: A=SIN lock ; B=ACQ=-38s707ms ws=com.edu.unal.tictactoe
+17:02:55.529 ESTADO FINAL: ambas apps reiniciadas en la pantalla inicial; lista de juegos vacia; red de B restablecida (ping correcto)
+17:04:52.918 CUT-TERMINADA: partida ya terminada con resultado ('Ganó Ana' en B); se corta la red de B 12 s: secuencia en B [(0.2, ('Juegas con O', 'Rival: Ana', 'Ganó Ana', 'Volver al lobby'))] ; tras restablecer ['Ganó Ana', 'Volver al lobby'] (el resultado se conserva; no aparece 'Se perdió la conexión' ni 'Tu rival salió')
