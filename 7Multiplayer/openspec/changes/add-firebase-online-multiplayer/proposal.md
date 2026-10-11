@@ -38,7 +38,7 @@ El reto 7 pide que dos jugadores jueguen al triqui a través de un servicio en l
 ## Impact
 
 - Código: nueva navegación entre pantallas y pantalla inicial; lobby y partida en línea con sus ViewModels; un límite con el servicio en la nube con implementación Firebase; almacén del apodo; adaptación mínima del tablero y de `MainActivity` (ver `design.md` para nombres y rutas).
-- Dependencias: Firebase (BoM, autenticación y Realtime Database) y el plugin `google-services`; permiso `INTERNET` en el manifest.
+- Dependencias: Firebase (BoM, autenticación y Realtime Database) y el plugin `google-services`; permiso `INTERNET` en el manifest; subida de Kotlin a 2.4.x (2.4.21), porque los artefactos del BoM 35.0.0 traen metadatos de Kotlin 2.4.
 - Configuración externa: archivo de reglas versionado, que el usuario publica a mano; proveedor de inicio de sesión anónimo, que debe estar activado en la consola de Firebase y no está verificado.
 - Pruebas: nuevas pruebas JVM y de Compose con fakes; adaptación de las pruebas instrumentadas existentes que asumen el tablero como pantalla de arranque; verificación de extremo a extremo con dos instancias.
 - Especificaciones vigentes: `game-options` y `game-session` (solo Back).
