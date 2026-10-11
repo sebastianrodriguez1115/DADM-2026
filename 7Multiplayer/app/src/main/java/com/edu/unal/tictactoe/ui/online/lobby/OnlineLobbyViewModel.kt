@@ -124,12 +124,15 @@ class OnlineLobbyViewModel(
         }
     }
 
-    /** Dismisses the dialog; the first-time one also signals [LobbySignal.BackToStart]. */
+    /** Dismisses the dialog; the first-time one also signals [LobbySignal.BackToStart] and clears its rejection mark. */
     fun onNicknameDialogDismissed() {
         val dialog = _uiState.value.nicknameDialog ?: return
         _uiState.update {
             if (dialog.isFirstTime) {
-                it.copy(signals = it.signals + LobbySignal.BackToStart)
+                it.copy(
+                    nicknameDialog = dialog.copy(isRejected = false),
+                    signals = it.signals + LobbySignal.BackToStart,
+                )
             } else {
                 it.copy(nicknameDialog = null)
             }

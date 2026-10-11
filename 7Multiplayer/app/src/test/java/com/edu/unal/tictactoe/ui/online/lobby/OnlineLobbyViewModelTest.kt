@@ -707,4 +707,19 @@ class OnlineLobbyViewModelTest {
         assertEquals(1, service.signInCalls)
         assertEquals("Ana", backend.gameById("game-1")?.host?.name)
     }
+
+    @Test
+    fun dismissingTheFirstTimeDialogClearsTheRejectionMarkForTheNextEntry() {
+        val store = FakeNicknameStore()
+        val vm = viewModel(store)
+        enter(vm)
+        vm.onNicknameSubmitted("   ")
+        vm.onNicknameDialogDismissed()
+        vm.consumeSignal(LobbySignal.BackToStart)
+
+        enter(vm)
+
+        assertEquals(NicknameDialogState(isFirstTime = true), vm.uiState.value.nicknameDialog)
+        assertNull(store.readNickname())
+    }
 }
