@@ -44,10 +44,11 @@ import com.edu.unal.tictactoe.ui.start.StartScreen
  * never opens the match again, and the Activity-scoped [matchViewModel] keeps its state meanwhile.
  *
  * In [AppScreen.Match] Back opens the "leave the match" confirmation while the game is in
- * progress and, in any other phase, leaves without asking. "Abandonar" and "Volver al lobby" leave
- * the match and return to [AppScreen.Lobby]. Whether the confirmation is open lives here, saved
- * across rotation. The match's accepted moves are played on [onlineMoveSound], collected only
- * while the lifecycle is RESUMED. A [AppScreen.Match] without an open match goes back to [AppScreen.Lobby].
+ * progress and, in any other phase (finished, abandoned or connection lost), leaves without
+ * asking. "Abandonar" and "Volver al lobby" leave the match and return to [AppScreen.Lobby].
+ * Whether the confirmation is open lives here, saved across rotation. The match's accepted moves
+ * are played on [onlineMoveSound], collected only while the lifecycle is RESUMED. A
+ * [AppScreen.Match] without an open match goes back to [AppScreen.Lobby].
  *
  * Every screen's state holder is a parameter, so a test can mount this with fakes and without the
  * real Activity.

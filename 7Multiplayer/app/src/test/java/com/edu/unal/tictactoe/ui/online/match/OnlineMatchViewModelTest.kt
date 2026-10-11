@@ -457,6 +457,159 @@ class OnlineMatchViewModelTest {
     }
 
     @Test
+    fun aVanishedGameWithoutConnectionWhilePlayingIsALostConnection() {
+        val (vm, service, game) = scripted()
+        service.send(game)
+        backend.disconnect("ana")
+        idle()
+
+        service.send(null)
+
+        val state = vm.state()
+        assertEquals(MatchPhase.ConnectionLost, state.phase)
+        assertNull(state.result)
+        assertFalse(state.isInputEnabled)
+        assertFalse(state.isMyTurn)
+        assertFalse(state.isMovePending)
+        assertFalse(state.isOfflineNoticeVisible)
+        assertEquals(game.board, state.board)
+    }
+
+    @Test
+    fun aVanishedGameWithoutConnectionWhileLoadingIsALostConnection() {
+        val (vm, service, _) = scripted()
+        assertEquals(MatchPhase.Loading, vm.state().phase)
+        backend.disconnect("ana")
+        idle()
+
+        service.send(null)
+
+        assertEquals(MatchPhase.ConnectionLost, vm.state().phase)
+    }
+
+    @Test
+    fun aVanishedGameWithConnectionIsStillTheRivalLeaving() {
+        val (vm, service, game) = scripted()
+        service.send(game)
+
+        service.send(null)
+
+        assertEquals(MatchPhase.Abandoned, vm.state().phase)
+    }
+
+    @Test
+    fun aLostConnectionIsNotUndoneByALaterGameValueOrByTheConnectionReturning() {
+        val (vm, service, game) = scripted()
+        service.send(game)
+        backend.disconnect("ana")
+        idle()
+        service.send(null)
+        val ended = vm.state()
+
+        service.send(game)
+        assertEquals(ended, vm.state())
+
+        backend.reconnect("ana")
+        idle()
+        assertEquals(MatchPhase.ConnectionLost, vm.state().phase)
+        assertEquals(ended.board, vm.state().board)
+        assertEquals(ended.result, vm.state().result)
+        assertFalse(vm.state().isInputEnabled)
+        assertFalse(vm.state().isOfflineNoticeVisible)
+
+        service.send(null)
+        assertEquals(MatchPhase.ConnectionLost, vm.state().phase)
+    }
+
+    @Test
+    fun anAbandonmentIsNotUndoneByALaterGameValue() {
+        val (vm, service, game) = scripted()
+        service.send(game)
+        service.send(null)
+        val ended = vm.state()
+
+        service.send(game.copy(board = board(4 to Mark.X), turn = Player.O))
+
+        assertEquals(MatchPhase.Abandoned, vm.state().phase)
+        assertEquals(ended, vm.state())
+    }
+
+    @Test
+    fun aFinishedResultSurvivesTheGameVanishingWithoutConnection() {
+        val players = twoPlayers()
+        players.playAll(0, 3, 1, 4, 2)
+        val before = players.luis.state()
+
+        backend.disconnect("luis")
+        idle()
+        players.ana.leave()
+        idle()
+
+        assertEquals(MatchPhase.Finished, players.luis.state().phase)
+        assertEquals(MatchResult.Lost, players.luis.state().result)
+        assertEquals(before.copy(isConnected = false), players.luis.state())
+    }
+
+    @Test
+    fun noMoveIsEmittedAfterAnEnding() {
+        val (vm, service, game) = scripted()
+        service.send(game)
+        val sounds = vm.collectSounds()
+        backend.disconnect("ana")
+        idle()
+        service.send(null)
+
+        service.send(game.copy(board = board(4 to Mark.X), turn = Player.O))
+
+        assertEquals(MatchPhase.ConnectionLost, vm.state().phase)
+        assertTrue(sounds.isEmpty())
+    }
+
+    @Test
+    fun openingAMatchClearsALostConnection() {
+        val (vm, service, game) = scripted()
+        service.send(game)
+        backend.disconnect("ana")
+        idle()
+        service.send(null)
+
+        backend.reconnect("ana")
+        idle()
+        vm.openMatch(game.id, Player.X)
+        idle()
+
+        assertEquals(MatchPhase.Loading, vm.state().phase)
+        assertTrue(vm.state().isConnected)
+        service.send(game)
+        assertEquals(MatchPhase.Playing, vm.state().phase)
+    }
+
+    @Test
+    fun leavingClearsALostConnection() {
+        val (vm, service, game) = scripted()
+        service.send(game)
+        backend.disconnect("ana")
+        idle()
+        service.send(null)
+
+        vm.leave()
+        idle()
+
+        assertEquals(OnlineMatchUiState(), vm.state())
+    }
+
+    @Test
+    fun aFirstNullValueWithoutConnectionIsALostConnection() {
+        backend.disconnect("ana")
+        val vm = viewModel(anaRecorder)
+
+        vm.openMatch("missing", Player.X)
+        idle()
+
+        assertEquals(MatchPhase.ConnectionLost, vm.state().phase)
+    }
+
+    @Test
     fun aFinishedResultIsStickyWhenTheGameVanishesLater() {
         val players = twoPlayers()
         players.playAll(0, 3, 1, 4, 2)

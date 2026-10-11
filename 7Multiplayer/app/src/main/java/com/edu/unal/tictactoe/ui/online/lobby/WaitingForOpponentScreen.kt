@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.edu.unal.tictactoe.R
+import com.edu.unal.tictactoe.ui.KeepScreenOn
 
 internal object WaitingForOpponentTags {
     const val MESSAGE = "waiting_message"
@@ -32,15 +33,16 @@ private val MinActionHeight = 48.dp
  * Screen shown to whoever created a game and waits for a rival: the waiting text and the cancel
  * action, never a board. It is stateless: cancelling only calls [onCancel].
  *
- * The content sits centered in a vertically scrollable column, so in landscape or with a large
- * font scale both elements stay reachable. It respects the system window insets and has no top
- * bar, like the start screen.
+ * The screen is kept on while it is shown. The content sits centered in a vertically scrollable
+ * column, so in landscape or with a large font scale both elements stay reachable. It respects the
+ * system window insets and has no top bar, like the start screen.
  */
 @Composable
 fun WaitingForOpponentScreen(
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    KeepScreenOn()
     Scaffold(
         modifier = modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.safeDrawing,

@@ -22,6 +22,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.edu.unal.tictactoe.game.models.Mark
 import com.edu.unal.tictactoe.game.models.Player
+import com.edu.unal.tictactoe.ui.online.match.LeaveMatchDialogTags
 import com.edu.unal.tictactoe.ui.online.match.MatchPhase
 import com.edu.unal.tictactoe.ui.online.match.MatchResult
 import com.edu.unal.tictactoe.ui.online.match.OnlineMatchScreen
@@ -82,6 +83,13 @@ class OnlineMatchScreenTest {
         opponentName = "Luis",
         board = FINAL_BOARD,
         phase = MatchPhase.Abandoned,
+    )
+
+    private val connectionLost = OnlineMatchUiState(
+        myMark = Player.X,
+        opponentName = "Luis",
+        board = FINAL_BOARD,
+        phase = MatchPhase.ConnectionLost,
     )
 
     private fun show(
@@ -232,6 +240,38 @@ class OnlineMatchScreenTest {
         composeTestRule.onNodeWithContentDescription(text(R.string.cell_x, 1, 1)).assertExists()
         composeTestRule.onNodeWithTag(OnlineMatchTags.BACK_TO_LOBBY).performClick()
         assertEquals(1, backToLobby)
+    }
+
+    @Test
+    fun connectionLostShowsItsTextTheLockedBoardAndBackToLobbyOnly() {
+        show(connectionLost.copy(isConnected = false))
+
+        assertEquals("Se perdió la conexión. La partida terminó.", text(R.string.match_connection_lost))
+        composeTestRule.onNodeWithText("Se perdió la conexión. La partida terminó.").assertIsDisplayed()
+        composeTestRule.onAllNodesWithText(text(R.string.match_opponent_left)).assertCountEquals(0)
+        composeTestRule.onAllNodesWithText(text(R.string.lobby_offline)).assertCountEquals(0)
+        assertCount(OnlineMatchTags.OFFLINE, 0)
+        assertCount(OnlineMatchTags.LEAVE, 0)
+        composeTestRule.onAllNodesWithText("Tu turno").assertCountEquals(0)
+        assertAllCellsDisabled()
+        (0 until 9).forEach { composeTestRule.onNodeWithTag(cellTag(it)).performClick() }
+        assertTrue(clicked.isEmpty())
+        composeTestRule.onNodeWithContentDescription(text(R.string.cell_x, 1, 1)).assertExists()
+        composeTestRule.onNodeWithText(text(R.string.match_back_to_lobby)).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(OnlineMatchTags.BACK_TO_LOBBY).performClick()
+        assertEquals(1, backToLobby)
+        assertEquals(0, leaves)
+    }
+
+    @Test
+    fun anOpenLeaveDialogIsNotShownOnceTheConnectionIsLost() {
+        leaveDialogOpen = true
+        show(playing())
+        composeTestRule.onNodeWithTag(LeaveMatchDialogTags.DIALOG).assertIsDisplayed()
+
+        show(connectionLost)
+
+        assertCount(LeaveMatchDialogTags.DIALOG, 0)
     }
 
     @Test

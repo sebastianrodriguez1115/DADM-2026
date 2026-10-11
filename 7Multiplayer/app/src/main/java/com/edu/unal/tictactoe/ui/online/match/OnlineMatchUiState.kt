@@ -5,13 +5,16 @@ import com.edu.unal.tictactoe.game.models.Player
 
 /**
  * Where the observed game stands; [Loading] lasts until the first game value arrives. [Abandoned]
- * means the game vanished before it finished: there is no winner and no result.
+ * means the game vanished before it finished while this device was connected, so the rival left;
+ * [ConnectionLost] means it vanished while this device had no connection. Neither has a winner or
+ * a result, and neither is ever left except by opening or leaving the match.
  */
 enum class MatchPhase {
     Loading,
     Playing,
     Finished,
     Abandoned,
+    ConnectionLost,
 }
 
 /** Outcome of a finished game from the point of view of the person holding the device. */

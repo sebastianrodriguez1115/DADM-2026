@@ -66,6 +66,7 @@
     <string name="match_result_win">Ganaste</string>
     <string name="match_result_opponent_wins">Ganó %1$s</string>
     <string name="match_opponent_left">Tu rival salió de la partida</string>
+    <string name="match_connection_lost">Se perdió la conexión. La partida terminó.</string>
     <string name="match_back_to_lobby">Volver al lobby</string>
     <string name="match_leave">Salir</string>
     <string name="leave_match_title">¿Abandonar la partida?</string>

@@ -153,6 +153,58 @@ class OnlineMatchFlowTest {
     }
 
     @Test
+    fun losingTheConnectionShowsItsNoticeAndBackToLobbyLeadsToTheLobby() {
+        val gameId = startAsHost()
+        composeRule.playMoves(context, listOf(0, 4), rival, gameId)
+
+        dropConnection(gameId)
+
+        awaitShown(context.getString(R.string.match_connection_lost))
+        assertShown(context.getString(R.string.match_back_to_lobby))
+        assertNever(context.getString(R.string.match_opponent_left))
+        assertNever(context.getString(R.string.lobby_offline))
+        assertEquals(0, composeRule.onAllNodesWithTag(OnlineMatchTags.OFFLINE).fetchSemanticsNodes().size)
+        assertEquals(0, composeRule.onAllNodesWithTag(OnlineMatchTags.LEAVE).fetchSemanticsNodes().size)
+        assertEquals(AppScreen.Match, navigation.currentScreen.value)
+
+        backend.reconnect("me")
+        composeRule.waitForIdle()
+        assertShown(context.getString(R.string.match_connection_lost))
+
+        composeRule.onNodeWithTag(OnlineMatchTags.BACK_TO_LOBBY).performClick()
+        awaitShown(context.getString(R.string.lobby_games_header))
+        assertEquals(AppScreen.Lobby, navigation.currentScreen.value)
+    }
+
+    @Test
+    fun backAfterLosingTheConnectionReturnsToTheLobbyWithoutADialog() {
+        val gameId = startAsHost()
+        dropConnection(gameId)
+        awaitShown(context.getString(R.string.match_connection_lost))
+
+        pressBackAsUser()
+        awaitShown(context.getString(R.string.lobby_games_header))
+
+        assertEquals(AppScreen.Lobby, navigation.currentScreen.value)
+        assertEquals(0, composeRule.onAllNodesWithTag(LeaveMatchDialogTags.DIALOG).fetchSemanticsNodes().size)
+    }
+
+    @Test
+    fun theLeaveDialogDisappearsWhenTheConnectionIsLost() {
+        val gameId = startAsHost()
+        composeRule.onNodeWithTag(OnlineMatchTags.LEAVE).performClick()
+        composeRule.onNodeWithTag(LeaveMatchDialogTags.DIALOG).assertIsDisplayed()
+
+        dropConnection(gameId)
+
+        awaitShown(context.getString(R.string.match_connection_lost))
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithTag(LeaveMatchDialogTags.DIALOG).fetchSemanticsNodes().isEmpty()
+        }
+        assertEquals(AppScreen.Match, navigation.currentScreen.value)
+    }
+
+    @Test
     fun leavingWithConfirmationReturnsToTheLobbyAndDeletesTheGame() {
         val gameId = startAsHost()
 
@@ -293,6 +345,16 @@ class OnlineMatchFlowTest {
         awaitShown(context.getString(R.string.match_mark_o))
         return gameId
     }
+
+    /** The device notices the lost connection first, and then its local copy of the game vanishes. */
+    private fun dropConnection(gameId: String) {
+        backend.disconnect("me")
+        backend.deleteGame(gameId)
+        composeRule.waitForIdle()
+    }
+
+    private fun assertNever(text: String) =
+        assertEquals(0, composeRule.onAllNodesWithText(text).fetchSemanticsNodes().size)
 
     private fun awaitShown(text: String) = composeRule.awaitTextShown(text)
 

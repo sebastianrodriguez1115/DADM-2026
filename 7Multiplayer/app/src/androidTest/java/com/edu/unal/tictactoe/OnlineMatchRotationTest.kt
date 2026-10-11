@@ -142,6 +142,25 @@ class OnlineMatchRotationTest {
     }
 
     @Test
+    fun rotatingAfterLosingTheConnectionKeepsTheLostConnectionState() {
+        val gameId = startMatch()
+        composeRule.playMoves(context, listOf(0, 4), rival, gameId)
+        backend.disconnect("me")
+        backend.deleteGame(gameId)
+        awaitShown(context.getString(R.string.match_connection_lost))
+
+        rotate(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE, Configuration.ORIENTATION_LANDSCAPE) {
+            assertConnectionLostShown()
+        }
+        rotate(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, Configuration.ORIENTATION_PORTRAIT) {
+            assertConnectionLostShown()
+        }
+
+        assertEquals(AppScreen.Match, navigation.currentScreen.value)
+        assertEquals(1, matchService.observeGameCalls)
+    }
+
+    @Test
     fun aRivalMoveMadeInTheBackgroundIsShownOnReturning() {
         val gameId = startMatch()
         composeRule.playMoves(context, listOf(0), rival, gameId)
@@ -187,6 +206,18 @@ class OnlineMatchRotationTest {
             assertEquals(1, composeRule.onAllNodesWithContentDescription(cellDescription(context, location, mark)).fetchSemanticsNodes().size)
         }
         assertEquals(0, composeRule.onAllNodesWithTag(LeaveMatchDialogTags.DIALOG).fetchSemanticsNodes().size)
+    }
+
+    private fun assertConnectionLostShown() {
+        awaitShown(context.getString(R.string.match_connection_lost))
+        composeRule.onNodeWithText(context.getString(R.string.match_back_to_lobby)).assertIsDisplayed()
+        listOf(R.string.match_opponent_left, R.string.lobby_offline).forEach { id ->
+            assertEquals(0, composeRule.onAllNodesWithText(context.getString(id)).fetchSemanticsNodes().size)
+        }
+        assertEquals(0, composeRule.onAllNodesWithTag(LeaveMatchDialogTags.DIALOG).fetchSemanticsNodes().size)
+        listOf(0 to Mark.X, 4 to Mark.O).forEach { (location, mark) ->
+            assertEquals(1, composeRule.onAllNodesWithContentDescription(cellDescription(context, location, mark)).fetchSemanticsNodes().size)
+        }
     }
 
     private fun assertResultShown() {

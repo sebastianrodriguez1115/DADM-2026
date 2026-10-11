@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.edu.unal.tictactoe.R
 import com.edu.unal.tictactoe.game.models.Player
+import com.edu.unal.tictactoe.ui.KeepScreenOn
 import com.edu.unal.tictactoe.ui.game.InputGameBoard
 import com.edu.unal.tictactoe.ui.game.minimumGameBoardSizePx
 import kotlin.math.roundToInt
@@ -65,7 +66,9 @@ private val WidePanelMinWidth = 200.dp
  *   and the match is still playing. The flag lives in the caller, so that "Salir" and any other
  *   source (Back, handled by navigation) open the same dialog and the caller can keep it across
  *   rotation. "Cancelar" reports false; "Abandonar" reports false and then calls [onLeaveConfirmed].
- * - Finished or abandoned: the outcome, the locked board and "Volver al lobby" ([onBackToLobby]).
+ * - Finished, abandoned or connection lost: the outcome, the locked board and "Volver al lobby"
+ *   ([onBackToLobby]).
+ * - The screen is kept on while the match is loading or playing, and no longer afterwards.
  * - Loading: no board, turn, result or action.
  *
  * Layout, from the constraints left after the system insets: in a landscape with room the square
@@ -83,6 +86,7 @@ fun OnlineMatchScreen(
     onBackToLobby: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    if (uiState.phase == MatchPhase.Loading || uiState.phase == MatchPhase.Playing) KeepScreenOn()
     Scaffold(
         modifier = modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.safeDrawing,
@@ -261,7 +265,7 @@ private fun MatchInfo(
                 Text(text = stringResource(R.string.match_leave))
             }
 
-            MatchPhase.Finished, MatchPhase.Abandoned -> Button(
+            MatchPhase.Finished, MatchPhase.Abandoned, MatchPhase.ConnectionLost -> Button(
                 onClick = onBackToLobby,
                 modifier = Modifier
                     .heightIn(min = MinActionHeight)
@@ -275,7 +279,10 @@ private fun MatchInfo(
     }
 }
 
-/** The turn, the result or the abandonment text; null while loading or when a name is missing. */
+/**
+ * The turn, the result, the abandonment or the lost connection text; null while loading or when a
+ * name is missing.
+ */
 @Composable
 private fun statusText(uiState: OnlineMatchUiState): String? {
     val name = uiState.opponentName
@@ -295,5 +302,6 @@ private fun statusText(uiState: OnlineMatchUiState): String? {
         }
 
         MatchPhase.Abandoned -> stringResource(R.string.match_opponent_left)
+        MatchPhase.ConnectionLost -> stringResource(R.string.match_connection_lost)
     }
 }

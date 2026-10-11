@@ -39,10 +39,13 @@ import kotlinx.coroutines.launch
  * lets the person try again.
  *
  * A null game value means the game no longer exists: unless it was already seen finished (a final
- * result is sticky) the match becomes [MatchPhase.Abandoned], including when the very first value
- * is null. [leave] works in any phase and clears everything; the confirmation dialog belongs to
- * the screen. The connection only gates the input and the "Sin conexión" notice, and recovers by
- * itself.
+ * result is sticky) the match ends, including when the very first value is null. It becomes
+ * [MatchPhase.ConnectionLost] when this device has no connection at that moment (the service
+ * reports the lost connection before the game disappears from the local copy) and
+ * [MatchPhase.Abandoned] otherwise. Both endings are sticky: no later game value or connection
+ * change alters them, and no move is emitted afterwards. [leave] works in any phase and clears
+ * everything; the confirmation dialog belongs to the screen. While the game goes on, the
+ * connection only gates the input and the "Sin conexión" notice, and recovers by itself.
  *
  * [acceptedMoves] emits the owner of a mark each time the observed board gains exactly one mark
  * over the previously known one, never for the first game value after [openMatch]. It is built so
@@ -88,8 +91,8 @@ class OnlineMatchViewModel(
         knownBoard = null
         _uiState.value = OnlineMatchUiState(myMark = myMark)
         observationJob = viewModelScope.launch(dispatcher) {
-            launch { service.observeGame(gameId).collect { game -> if (game == null) onGameVanished() else onGameObserved(game, myMark) } }
             launch { service.observeConnection().collect { online -> _uiState.update { it.copy(isConnected = online) } } }
+            launch { service.observeGame(gameId).collect { game -> if (game == null) onGameVanished() else onGameObserved(game, myMark) } }
         }
     }
 
@@ -135,13 +138,18 @@ class OnlineMatchViewModel(
     }
 
     private fun onGameVanished() {
-        if (_uiState.value.phase == MatchPhase.Finished) return
+        val current = _uiState.value
+        if (current.phase == MatchPhase.Finished || current.phase.isEnding()) return
         requestedCell = null
         unconfirmedCell = null
-        _uiState.update { it.copy(phase = MatchPhase.Abandoned, isMyTurn = false, result = null, isMovePending = false) }
+        val ending = if (current.isConnected) MatchPhase.Abandoned else MatchPhase.ConnectionLost
+        _uiState.update { it.copy(phase = ending, isMyTurn = false, result = null, isMovePending = false) }
     }
 
+    private fun MatchPhase.isEnding() = this == MatchPhase.Abandoned || this == MatchPhase.ConnectionLost
+
     private fun onGameObserved(game: OnlineGame, myMark: Player) {
+        if (_uiState.value.phase.isEnding()) return
         emitAcceptedMove(knownBoard, game.board)
         knownBoard = game.board
         val opponent = if (myMark == Player.X) game.guest else game.host
