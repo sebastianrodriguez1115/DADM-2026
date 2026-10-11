@@ -15,6 +15,7 @@ import com.edu.unal.tictactoe.game.models.Player
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ServerValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
@@ -146,8 +147,39 @@ class FirebaseOnlineGameServiceLiveTest {
         runCatching {
             withTimeoutOrNull(TIMEOUT_MILLIS) {
                 who.database.getReference("games/$id/board").setValue(board).awaitTask()
+                Unit
             } ?: throw AssertionError("Timed out waiting for the server to answer a direct write")
         }.exceptionOrNull()
+    }
+
+    private fun newNodeId(): String = runBlocking { host.database.getReference("games").push().key }
+        .also { id -> created += checkNotNull(id) }!!
+
+    private fun gameNode(hostUid: String, hostName: String, status: String, guestUid: String? = null): Map<String, Any> {
+        val node = mutableMapOf<String, Any>(
+            "host" to mapOf("uid" to hostUid, "name" to hostName),
+            "status" to status,
+            "board" to "---------",
+            "turn" to "X",
+            "result" to "none",
+            "createdAt" to ServerValue.TIMESTAMP,
+        )
+        if (guestUid != null) node["guest"] = mapOf("uid" to guestUid, "name" to GUEST_NAME)
+        return node
+    }
+
+    private fun writeNodeDirectly(who: Identity, id: String, node: Map<String, Any>): Throwable? = runBlocking {
+        who.uid
+        runCatching {
+            withTimeoutOrNull(TIMEOUT_MILLIS) {
+                who.database.getReference("games/$id").setValue(node).awaitTask()
+                Unit
+            } ?: throw AssertionError("Timed out waiting for the server to answer a direct write")
+        }.exceptionOrNull()
+    }
+
+    private fun assertNodeAbsent(id: String) {
+        assertNull(awaitGame("the rejected node to be absent", host.service, id) { it == null })
     }
 
     private fun assertPermissionDenied(failure: Throwable?, what: String) {
@@ -270,7 +302,8 @@ class FirebaseOnlineGameServiceLiveTest {
         assertPermissionDenied(writeBoardDirectly(third, id, "X--------"), "A board write by a third identity")
         val removal = runBlocking {
             runCatching {
-                withTimeoutOrNull(TIMEOUT_MILLIS) { third.database.getReference("games/$id").removeValue().awaitTask() }
+                withTimeoutOrNull(TIMEOUT_MILLIS) { third.database.getReference("games/$id").removeValue().awaitTask()
+                Unit }
                     ?: throw AssertionError("Timed out waiting for the server to answer a direct delete")
             }.exceptionOrNull()
         }
@@ -301,6 +334,30 @@ class FirebaseOnlineGameServiceLiveTest {
         val id = joined(host, guest)
         runBlocking { guest.service.leaveGame(id) }
         assertNull(awaitGame("the game to disappear for the host", host.service, id) { it == null })
+    }
+
+    @Test
+    fun rulesRejectCreatingAGameDirectlyInPlayingWithAGuest() {
+        val id = newNodeId()
+        val failure = writeNodeDirectly(host, id, gameNode(host.uid, HOST_NAME, "playing", guest.uid))
+        assertPermissionDenied(failure, "Creating a game already playing with a guest")
+        assertNodeAbsent(id)
+    }
+
+    @Test
+    fun rulesRejectANicknameOf21Characters() {
+        val tooLong = newNodeId()
+        val rejection = writeNodeDirectly(host, tooLong, gameNode(host.uid, "N".repeat(21), "waiting"))
+        assertPermissionDenied(rejection, "Creating a game with a 21-character nickname")
+        assertNodeAbsent(tooLong)
+    }
+
+    @Test
+    fun rulesAcceptANicknameOf20Characters() {
+        val valid = newNodeId()
+        assertNull("A valid game with a 20-character nickname was rejected", writeNodeDirectly(host, valid, gameNode(host.uid, "N".repeat(20), "waiting")))
+        val stored = awaitGame("the valid game", host.service, valid) { it != null }
+        assertEquals(20, stored?.host?.name?.length)
     }
 
     private companion object {
