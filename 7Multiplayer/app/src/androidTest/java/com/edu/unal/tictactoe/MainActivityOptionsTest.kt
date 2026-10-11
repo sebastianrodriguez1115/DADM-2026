@@ -47,6 +47,7 @@ import org.junit.runner.RunWith
 
 private const val NEW_GAME_SHORTCUT_TAG = "tic_tac_toe_new_game"
 private const val CELL_TAG_PREFIX = "tic_tac_toe_cell_"
+private const val BOARD_TAG = "tic_tac_toe_board"
 
 @RunWith(AndroidJUnit4::class)
 class MainActivityOptionsTest {
@@ -66,6 +67,7 @@ class MainActivityOptionsTest {
         scenario = ActivityScenario.launch(MainActivity::class.java)
         activityViewModel = viewModelFromCurrentActivity()
         composeTestRule.waitForIdle()
+        composeTestRule.startLocalGame()
     }
 
     @After
@@ -119,15 +121,35 @@ class MainActivityOptionsTest {
     }
 
     @Test
-    fun backWithoutOverlayLeavesTheActivityThroughNormalNavigationWithoutDialog() {
+    fun backWithoutOverlayShowsStartKeepsTheLocalGameAndDoesNotFinishTheTask() {
+        clickCell(0)
+        val before = snapshot()
         assertEquals(0, composeTestRule.onAllNodesWithTag(GameMenuTags.MENU).fetchSemanticsNodes().size)
         assertEquals(0, composeTestRule.onAllNodesWithTag(DifficultyDialogTags.DIALOG).fetchSemanticsNodes().size)
         assertEquals(0, composeTestRule.onAllNodesWithTag(AboutDialogTags.DIALOG).fetchSemanticsNodes().size)
 
         pressBackAsUser()
-        awaitActivityNoLongerResumed()
+        val startEntry = context.getString(R.string.start_play_local)
+        composeTestRule.waitUntil(timeoutMillis = 5_000) {
+            composeTestRule.onAllNodesWithText(startEntry).fetchSemanticsNodes().isNotEmpty()
+        }
+        composeTestRule.waitForIdle()
 
-        assertTrue(scenario.state != Lifecycle.State.RESUMED)
+        composeTestRule.onNodeWithText(startEntry).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.start_play_online)).assertIsDisplayed()
+        assertEquals(0, composeTestRule.onAllNodesWithTag(BOARD_TAG).fetchSemanticsNodes().size)
+        assertEquals(Lifecycle.State.RESUMED, scenario.state)
+        var finishing = true
+        scenario.onActivity { finishing = it.isFinishing }
+        assertFalse("Back on the local game must not finish the task", finishing)
+        assertSame(activityViewModel, viewModelFromCurrentActivity())
+        assertSameSnapshot(before, snapshot())
+
+        composeTestRule.startLocalGame()
+
+        assertSameSnapshot(before, snapshot())
+        composeTestRule.onNodeWithContentDescription(context.getString(R.string.cell_x, 1, 1))
+            .assertExists()
     }
 
     @Test
@@ -157,6 +179,7 @@ class MainActivityOptionsTest {
         scenario = ActivityScenario.launch(MainActivity::class.java)
         val fresh = viewModelFromCurrentActivity().uiState.value
         composeTestRule.waitForIdle()
+        composeTestRule.startLocalGame()
 
         assertEquals(0, scoreTotal(fresh))
         assertTrue(fresh.board.all { it == Mark.Empty })
@@ -252,6 +275,7 @@ class MainActivityOptionsTest {
         scenario = ActivityScenario.launch(MainActivity::class.java)
         val newViewModel = viewModelFromCurrentActivity()
         composeTestRule.waitForIdle()
+        composeTestRule.startLocalGame()
 
         assertNotSame(oldViewModel, newViewModel)
         val fresh = newViewModel.uiState.value
@@ -356,15 +380,6 @@ class MainActivityOptionsTest {
             composeTestRule.onAllNodesWithTag(tag).fetchSemanticsNodes().run {
                 if (present) isNotEmpty() else isEmpty()
             }
-        }
-    }
-
-    private fun awaitActivityNoLongerResumed() {
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        val deadline = SystemClock.uptimeMillis() + 5_000
-        while (scenario.state == Lifecycle.State.RESUMED && SystemClock.uptimeMillis() < deadline) {
-            instrumentation.waitForIdleSync()
-            SystemClock.sleep(25)
         }
     }
 

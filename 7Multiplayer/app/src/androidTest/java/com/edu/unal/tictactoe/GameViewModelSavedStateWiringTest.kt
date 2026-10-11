@@ -305,6 +305,7 @@ class GameViewModelSavedStateWiringTest {
         scenario = launched
         launched.onActivity { activityViewModel = ViewModelProvider(it)[GameViewModel::class.java] }
         composeTestRule.waitForIdle()
+        composeTestRule.startLocalGame()
     }
 
     private fun onActivity(block: () -> Unit) {

@@ -47,6 +47,7 @@ class MainActivityLifecycleTest {
         scenario = ActivityScenario.launch(MainActivity::class.java)
         scenario.onActivity { viewModel = ViewModelProvider(it)[GameViewModel::class.java] }
         composeTestRule.waitForIdle()
+        composeTestRule.startLocalGame()
     }
 
     @After

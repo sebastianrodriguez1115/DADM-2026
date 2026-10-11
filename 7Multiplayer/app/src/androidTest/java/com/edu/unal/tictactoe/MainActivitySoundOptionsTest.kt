@@ -50,6 +50,7 @@ class MainActivitySoundOptionsTest {
         scenario = ActivityScenario.launch(MainActivity::class.java)
         viewModel = currentViewModel()
         composeRule.waitForIdle()
+        composeRule.startLocalGame()
     }
 
     @After
@@ -107,6 +108,7 @@ class MainActivitySoundOptionsTest {
         scenario = ActivityScenario.launch(MainActivity::class.java)
         viewModel = currentViewModel()
         composeRule.waitForIdle()
+        composeRule.startLocalGame()
         assertNotSame("a finished session must not restore its ViewModel", oldViewModel, viewModel)
         assertTrue("new ViewModel session does not restore mute", snapshot().soundEnabled)
         openMenu()

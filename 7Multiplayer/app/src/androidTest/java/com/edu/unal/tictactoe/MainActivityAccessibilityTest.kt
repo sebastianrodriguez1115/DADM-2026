@@ -73,6 +73,7 @@ class MainActivityAccessibilityTest {
             activityViewModel = ViewModelProvider(activity)[GameViewModel::class.java]
         }
         composeTestRule.waitForIdle()
+        composeTestRule.startLocalGame()
     }
 
     @After

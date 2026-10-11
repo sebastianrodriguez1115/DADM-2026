@@ -37,4 +37,26 @@
     <string name="about_image_description">Imagen del tres en raya</string>
     <string name="about_author">Juan Sebastian Rodriguez</string>
     <string name="about_accept">Aceptar</string>
+
+    <string name="start_play_local">Jugar contra la computadora</string>
+    <string name="start_play_online">Jugar en línea</string>
+    <string name="online_provisional_placeholder">Modo en línea próximamente</string>
+
+    <string name="nickname_dialog_title">Tu apodo</string>
+    <string name="nickname_field_label">Apodo</string>
+    <string name="nickname_error">Escribe un apodo de 1 a 20 caracteres</string>
+    <string name="nickname_change">Cambiar apodo</string>
+
+    <string name="lobby_connecting">Conectando…</string>
+    <string name="lobby_connection_failed">No se pudo conectar con el servicio</string>
+    <string name="lobby_retry">Reintentar</string>
+    <string name="lobby_offline">Sin conexión</string>
+    <string name="lobby_cancel">Cancelar</string>
+    <string name="lobby_games_header">Juegos disponibles</string>
+    <string name="lobby_game_item">Juego de %1$s</string>
+    <string name="lobby_no_games">No hay juegos disponibles</string>
+    <string name="lobby_create_game">Crear juego</string>
+    <string name="lobby_waiting_for_opponent">Esperando rival…</string>
+    <string name="lobby_game_unavailable">Este juego ya no está disponible</string>
+    <string name="lobby_create_failed">No se pudo crear el juego</string>
 </resources>

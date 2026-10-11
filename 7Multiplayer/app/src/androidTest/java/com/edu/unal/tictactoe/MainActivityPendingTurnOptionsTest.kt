@@ -138,6 +138,7 @@ class MainActivityPendingTurnOptionsTest {
             viewModel = ViewModelProvider(activity)[GameViewModel::class.java]
         }
         composeRule.waitForIdle()
+        composeRule.startLocalGame()
     }
 
     private fun openDifficultyDialog() {

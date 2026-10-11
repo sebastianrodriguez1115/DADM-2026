@@ -50,6 +50,7 @@ class MainActivityTest {
             activityViewModel = ViewModelProvider(activity)[GameViewModel::class.java]
         }
         composeTestRule.waitForIdle()
+        composeTestRule.startLocalGame()
     }
 
     @After
@@ -232,6 +233,7 @@ class MainActivityTest {
             newViewModel = ViewModelProvider(activity)[GameViewModel::class.java]
         }
         composeTestRule.waitForIdle()
+        composeTestRule.startLocalGame()
 
         val newSessionViewModel = checkNotNull(newViewModel)
         val newSession = snapshot(newSessionViewModel)
