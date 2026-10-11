@@ -1,11 +1,10 @@
 package com.edu.unal.tictactoe
 
-import android.view.View
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -35,8 +34,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * The screen stays on (the hosting view's `keepScreenOn`) only while the waiting screen or a
- * loading or playing match is shown. The flag is read from the view that hosts the composition.
+ * The screen stays on only while the waiting screen or a loading or playing match is shown. It is
+ * requested through `FLAG_KEEP_SCREEN_ON` on the Activity's window, which is what these tests
+ * read; what the system itself holds after the app goes to the background is covered by
+ * [KeepScreenOnBackgroundTest].
  */
 @RunWith(AndroidJUnit4::class)
 class KeepScreenOnTest {
@@ -44,13 +45,13 @@ class KeepScreenOnTest {
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 
     private val context get() = InstrumentationRegistry.getInstrumentation().targetContext
-    private var host: View? = null
     private var matchState by mutableStateOf(OnlineMatchUiState())
 
     private val keepsScreenOn: Boolean
         get() {
             composeRule.waitForIdle()
-            return checkNotNull(host).keepScreenOn
+            return composeRule.activity.window.attributes.flags and
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON != 0
         }
 
     private fun matchIn(phase: MatchPhase) = OnlineMatchUiState(
@@ -65,7 +66,6 @@ class KeepScreenOnTest {
     fun theWaitingScreenKeepsTheScreenOnAndLeavingItReleasesIt() {
         var waiting by mutableStateOf(true)
         composeRule.setContent {
-            host = LocalView.current
             TicTacToeTheme(dynamicColor = false) {
                 if (waiting) WaitingForOpponentScreen(onCancel = {})
             }
@@ -80,7 +80,6 @@ class KeepScreenOnTest {
     @Test
     fun theMatchKeepsTheScreenOnOnlyWhileLoadingOrPlaying() {
         composeRule.setContent {
-            host = LocalView.current
             TicTacToeTheme(dynamicColor = false) {
                 OnlineMatchScreen(
                     uiState = matchState,
@@ -126,7 +125,6 @@ class KeepScreenOnTest {
         val match = OnlineMatchViewModel(me)
         val game = GameViewModel(InMemoryGamePreferences(), SavedStateHandle())
         composeRule.setContent {
-            host = LocalView.current
             TicTacToeTheme(dynamicColor = false) {
                 AppNavigation(
                     navigationViewModel = navigation,
@@ -185,7 +183,6 @@ class KeepScreenOnTest {
         val match = OnlineMatchViewModel(me)
         val game = GameViewModel(InMemoryGamePreferences(), SavedStateHandle())
         composeRule.setContent {
-            host = LocalView.current
             TicTacToeTheme(dynamicColor = false) {
                 AppNavigation(
                     navigationViewModel = navigation,
