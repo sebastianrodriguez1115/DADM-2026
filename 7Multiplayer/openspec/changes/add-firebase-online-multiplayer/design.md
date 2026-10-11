@@ -213,7 +213,13 @@ Lo que decidió el usuario (2026-10-11):
 6. Quien espera rival y pierde la conexión, o deja la aplicación en segundo plano el tiempo suficiente, pierde su juego: al volver ve el lobby con «Este juego ya no está disponible» (comportamiento ya existente).
 7. La carrera al unirse y el tercer jugador se cubren con `FirebaseOnlineGameServiceLiveTest`, con la carrera repetida 5 veces, porque requieren tres identidades.
 8. La tarea 7.11 se cerró con esa misma prueba y no con el simulador de reglas de la consola (`qa/rules-simulator.md`).
-9. El sonido lo comprueba el usuario a mano al probar el multijugador; TalkBack no se ejecuta, igual que en los talleres anteriores, y queda como no verificado.
+9. El sonido lo comprueba el usuario a mano al probar el multijugador.
+
+Propuesto por el orquestador y no objetado por el usuario (no es una decisión expresa suya):
+
+- TalkBack no se ejecuta, igual que en los talleres anteriores, y queda como no verificado: el orquestador propuso mantener ese criterio y avisó de que así lo entendía; el usuario no respondió a ese punto.
+- Los escenarios que dos instancias no pueden producir («Conectando…», la lista con dos juegos, «Un juego tomado sale de la lista» y el fallo al crear) se registran con pruebas automáticas, y el borrado desde la consola pasa a la sesión manual (8.8): el orquestador lo comunicó al usuario como un desvío y le pidió que dijera si prefería otra cosa; no hubo objeción.
+- Cerrar las tareas 8.4 a 8.6 y 9.5 con las reservas anotadas: decisión del orquestador al revisar la evidencia.
 
 Detalle de diseño derivado de esa elección (no decisión del usuario):
 
@@ -234,7 +240,7 @@ Detalle de diseño derivado de esa elección (no decisión del usuario):
 - Corte brusco de red: el rival espera del orden de minutos a que el servicio lo detecte, viendo la partida en curso.
 - D-4 corregido: confirmado en dos emuladores (34 de 34 lecturas) y, en el dispositivo físico, solo según el indicador de energía en tres de los cuatro casos (10 de 10 lecturas); el segundo plano largo no se ejecutó en el dispositivo físico, el indicador de ventana de ese dispositivo discrepa sin explicación y no hubo espera real en la partida en curso, solo en la espera.
 - D-3 sin resolver: la visibilidad de «Sin conexión» en el lobby tras cortes sucesivos queda pendiente de comprobar en el dispositivo físico (tarea 8.8).
-- Sonido y TalkBack sin verificar por la aplicación; TalkBack no se ejecuta por decisión del usuario.
+- Sonido y TalkBack sin verificar por la aplicación; TalkBack no se ejecuta (propuesto por el orquestador y no objetado por el usuario).
 
 Efectos en las tareas: el grupo 9 de `tasks.md` implementa los puntos 2 y 3 y la cobertura del punto 7, y repite la pasada de QA; las tareas 8.2, 8.4, 8.5, 8.6, 8.8 y 8.9 se ajustan a lo anterior.
 
