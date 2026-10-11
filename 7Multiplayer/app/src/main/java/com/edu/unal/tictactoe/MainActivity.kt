@@ -17,6 +17,8 @@ import com.edu.unal.tictactoe.ui.navigation.NavigationViewModel
 import com.edu.unal.tictactoe.ui.navigation.navigationViewModelFactory
 import com.edu.unal.tictactoe.ui.online.lobby.OnlineLobbyViewModel
 import com.edu.unal.tictactoe.ui.online.lobby.onlineLobbyViewModelFactory
+import com.edu.unal.tictactoe.ui.online.match.OnlineMatchViewModel
+import com.edu.unal.tictactoe.ui.online.match.onlineMatchViewModelFactory
 import com.edu.unal.tictactoe.ui.theme.TicTacToeTheme
 import kotlinx.coroutines.launch
 
@@ -24,6 +26,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var gameViewModel: GameViewModel
     private lateinit var navigationViewModel: NavigationViewModel
     private lateinit var lobbyViewModel: OnlineLobbyViewModel
+    private lateinit var matchViewModel: OnlineMatchViewModel
     private lateinit var moveSoundHost: MoveSoundHost
 
     // The local mode runs only while both hold; see syncLocalModeHost.
@@ -43,6 +46,10 @@ class MainActivity : ComponentActivity() {
                 nicknameStore = OnlineServices.nicknameStore(applicationContext),
             ),
         )[OnlineLobbyViewModel::class.java]
+        matchViewModel = ViewModelProvider(
+            this,
+            onlineMatchViewModelFactory(OnlineServices.gameService),
+        )[OnlineMatchViewModel::class.java]
         moveSoundHost = MoveSoundHost(
             gameViewModel,
             AndroidMoveSoundPlayerFactory(applicationContext),
@@ -59,6 +66,7 @@ class MainActivity : ComponentActivity() {
                     navigationViewModel = navigationViewModel,
                     gameViewModel = gameViewModel,
                     lobbyViewModel = lobbyViewModel,
+                    matchViewModel = matchViewModel,
                 )
             }
         }

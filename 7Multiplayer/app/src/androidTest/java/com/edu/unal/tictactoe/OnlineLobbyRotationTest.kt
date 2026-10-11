@@ -20,6 +20,7 @@ import com.edu.unal.tictactoe.ui.navigation.AppNavigation
 import com.edu.unal.tictactoe.ui.navigation.AppScreen
 import com.edu.unal.tictactoe.ui.navigation.NavigationViewModel
 import com.edu.unal.tictactoe.ui.online.lobby.OnlineLobbyViewModel
+import com.edu.unal.tictactoe.ui.online.match.OnlineMatchViewModel
 import com.edu.unal.tictactoe.ui.theme.TicTacToeTheme
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -53,6 +54,7 @@ class OnlineLobbyRotationTest {
     private lateinit var navigation: NavigationViewModel
     private lateinit var lobby: OnlineLobbyViewModel
     private lateinit var game: GameViewModel
+    private lateinit var match: OnlineMatchViewModel
     private var originalOrientation: Int? = null
 
     @Before
@@ -60,6 +62,7 @@ class OnlineLobbyRotationTest {
         navigation = NavigationViewModel(SavedStateHandle())
         lobby = OnlineLobbyViewModel(service, FakeNicknameStore("Ana"))
         game = GameViewModel(InMemoryGamePreferences(), SavedStateHandle())
+        match = OnlineMatchViewModel(service)
         scenario = ActivityScenario.launch(ComponentActivity::class.java)
         scenario.onActivity { originalOrientation = it.requestedOrientation }
         mountContent()
@@ -121,7 +124,7 @@ class OnlineLobbyRotationTest {
         scenario.onActivity { activity ->
             activity.setContent {
                 TicTacToeTheme(dynamicColor = false) {
-                    AppNavigation(navigationViewModel = navigation, gameViewModel = game, lobbyViewModel = lobby)
+                    AppNavigation(navigationViewModel = navigation, gameViewModel = game, lobbyViewModel = lobby, matchViewModel = match)
                 }
             }
         }

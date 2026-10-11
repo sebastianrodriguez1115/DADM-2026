@@ -40,7 +40,6 @@
 
     <string name="start_play_local">Jugar contra la computadora</string>
     <string name="start_play_online">Jugar en línea</string>
-    <string name="online_provisional_placeholder">Modo en línea próximamente</string>
 
     <string name="nickname_dialog_title">Tu apodo</string>
     <string name="nickname_field_label">Apodo</string>

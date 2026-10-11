@@ -19,6 +19,7 @@ import com.edu.unal.tictactoe.ui.navigation.AppNavigation
 import com.edu.unal.tictactoe.ui.navigation.AppScreen
 import com.edu.unal.tictactoe.ui.navigation.NavigationViewModel
 import com.edu.unal.tictactoe.ui.online.lobby.OnlineLobbyViewModel
+import com.edu.unal.tictactoe.ui.online.match.OnlineMatchViewModel
 import com.edu.unal.tictactoe.ui.theme.TicTacToeTheme
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -48,6 +49,7 @@ class AppNavigationBackTest {
         // Registered before the content, so any handler AppNavigation declares takes priority over
         // it. It only counts the Back presses the app did not intercept, and consumes them so the
         // test Activity is not finished.
+        val match = OnlineMatchViewModel(FakeOnlineBackend().serviceFor("me"))
         composeRule.runOnUiThread {
             composeRule.activity.onBackPressedDispatcher.addCallback(
                 object : OnBackPressedCallback(true) {
@@ -59,7 +61,7 @@ class AppNavigationBackTest {
         }
         composeRule.setContent {
             TicTacToeTheme(dynamicColor = false) {
-                AppNavigation(navigationViewModel = navigation, gameViewModel = game, lobbyViewModel = lobby)
+                AppNavigation(navigationViewModel = navigation, gameViewModel = game, lobbyViewModel = lobby, matchViewModel = match)
             }
         }
     }

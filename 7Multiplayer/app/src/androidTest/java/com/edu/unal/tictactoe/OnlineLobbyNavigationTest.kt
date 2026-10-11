@@ -20,6 +20,7 @@ import com.edu.unal.tictactoe.ui.navigation.AppScreen
 import com.edu.unal.tictactoe.ui.navigation.NavigationViewModel
 import com.edu.unal.tictactoe.ui.online.lobby.NicknameDialogTags
 import com.edu.unal.tictactoe.ui.online.lobby.OnlineLobbyViewModel
+import com.edu.unal.tictactoe.ui.online.match.OnlineMatchViewModel
 import com.edu.unal.tictactoe.ui.theme.TicTacToeTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -39,7 +40,7 @@ private const val WAIT_MILLIS = 5_000L
 /**
  * Mounts [AppNavigation] with ViewModels built on the fakes, without the real `MainActivity`:
  * the lobby, its nickname dialog, the waiting view, the Back handlers and the hand-over to the
- * match. The match itself is not covered here; `Match` still shows the provisional marker.
+ * match. The match itself is not covered here; the arrival is recognized by the player's mark.
  */
 @RunWith(AndroidJUnit4::class)
 class OnlineLobbyNavigationTest {
@@ -76,9 +77,10 @@ class OnlineLobbyNavigationTest {
         navigation = NavigationViewModel(SavedStateHandle())
         lobby = OnlineLobbyViewModel(lobbyService, store)
         val game = GameViewModel(InMemoryGamePreferences(), SavedStateHandle())
+        val match = OnlineMatchViewModel(lobbyService)
         composeRule.setContent {
             TicTacToeTheme(dynamicColor = false) {
-                AppNavigation(navigationViewModel = navigation, gameViewModel = game, lobbyViewModel = lobby)
+                AppNavigation(navigationViewModel = navigation, gameViewModel = game, lobbyViewModel = lobby, matchViewModel = match)
             }
         }
     }
@@ -228,7 +230,7 @@ class OnlineLobbyNavigationTest {
         val gameId = availableIds().single()
 
         runBlocking { rival.joinGame(gameId, "Luis") }
-        awaitMatchShown()
+        awaitMatchShown(R.string.match_mark_x)
 
         assertEquals(AppScreen.Match, navigation.currentScreen.value)
         assertTrue("the signal must be consumed", lobby.uiState.value.signals.isEmpty())
@@ -250,7 +252,7 @@ class OnlineLobbyNavigationTest {
         awaitLobbyShown()
 
         composeRule.onNodeWithText(context.getString(R.string.lobby_game_item, "Luis")).performClick()
-        awaitMatchShown()
+        awaitMatchShown(R.string.match_mark_o)
 
         assertEquals(AppScreen.Match, navigation.currentScreen.value)
         assertEquals("me", backend.gameById(gameId)?.guest?.uid)
@@ -334,7 +336,7 @@ class OnlineLobbyNavigationTest {
         composeRule.onNodeWithText(context.getString(resId)).assertIsDisplayed()
     }
 
-    private fun awaitMatchShown() = awaitText(R.string.online_provisional_placeholder)
+    private fun awaitMatchShown(markRes: Int) = awaitText(markRes)
 
     private fun assertLobbyContentNotShown() {
         assertTextCount(R.string.lobby_games_header, 0)

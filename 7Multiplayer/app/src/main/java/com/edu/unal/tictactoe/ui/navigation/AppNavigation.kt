@@ -2,25 +2,17 @@ package com.edu.unal.tictactoe.ui.navigation
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.edu.unal.tictactoe.R
 import com.edu.unal.tictactoe.ui.game.DifficultyLabels
 import com.edu.unal.tictactoe.ui.game.GameScreen
-import com.edu.unal.tictactoe.game.models.Player
 import com.edu.unal.tictactoe.ui.game.GameViewModel
 import com.edu.unal.tictactoe.ui.online.lobby.LobbyMessage
 import com.edu.unal.tictactoe.ui.online.lobby.LobbySignal
@@ -29,6 +21,9 @@ import com.edu.unal.tictactoe.ui.online.lobby.NicknameDialog
 import com.edu.unal.tictactoe.ui.online.lobby.OnlineLobbyScreen
 import com.edu.unal.tictactoe.ui.online.lobby.OnlineLobbyViewModel
 import com.edu.unal.tictactoe.ui.online.lobby.WaitingForOpponentScreen
+import com.edu.unal.tictactoe.ui.online.match.MatchPhase
+import com.edu.unal.tictactoe.ui.online.match.OnlineMatchScreen
+import com.edu.unal.tictactoe.ui.online.match.OnlineMatchViewModel
 import com.edu.unal.tictactoe.ui.start.StartScreen
 
 /**
@@ -40,7 +35,14 @@ import com.edu.unal.tictactoe.ui.start.StartScreen
  * consumes Back before these handlers; the nickname dialog's Back is the lobby ViewModel's call.
  *
  * The lobby is driven by [lobbyViewModel]. Its one-shot signals are consumed here, one at a time:
- * a game that became [LobbySignal.MatchReady] stores its ticket and opens [AppScreen.Match].
+ * a game that became [LobbySignal.MatchReady] opens the match in [matchViewModel], once, and then
+ * [AppScreen.Match]. The signal is consumed before it is handled, so a recomposition or a rotation
+ * never opens the match again, and the Activity-scoped [matchViewModel] keeps its state meanwhile.
+ *
+ * In [AppScreen.Match] Back opens the "leave the match" confirmation while the game is in
+ * progress and, in any other phase, leaves without asking. "Abandonar" and "Volver al lobby" leave
+ * the match and return to [AppScreen.Lobby]. Whether the confirmation is open lives here, saved
+ * across rotation. A [AppScreen.Match] without an open match goes back to [AppScreen.Lobby].
  *
  * Every screen's state holder is a parameter, so a test can mount this with fakes and without the
  * real Activity.
@@ -50,11 +52,11 @@ fun AppNavigation(
     navigationViewModel: NavigationViewModel,
     gameViewModel: GameViewModel,
     lobbyViewModel: OnlineLobbyViewModel,
+    matchViewModel: OnlineMatchViewModel,
     modifier: Modifier = Modifier,
 ) {
     val currentScreen by navigationViewModel.currentScreen.collectAsStateWithLifecycle()
-    // Survives rotation. Provisional: the match screen (task 5.9) reads it to open the match.
-    var matchTicket by rememberSaveable(stateSaver = MatchTicketSaver) { mutableStateOf<MatchTicket?>(null) }
+    var isLeaveDialogOpen by rememberSaveable { mutableStateOf(false) }
 
     when (currentScreen) {
         AppScreen.Start -> StartScreen(
@@ -89,13 +91,24 @@ fun AppNavigation(
             lobbyViewModel = lobbyViewModel,
             onBackToStart = { navigationViewModel.navigateTo(AppScreen.Start) },
             onMatchReady = { ticket ->
-                matchTicket = ticket
+                isLeaveDialogOpen = false
+                matchViewModel.openMatch(ticket.gameId, ticket.myMark)
                 navigationViewModel.navigateTo(AppScreen.Match)
             },
             modifier = modifier,
         )
 
-        AppScreen.Match -> ProvisionalOnlineScreen(modifier)
+        AppScreen.Match -> MatchDestination(
+            matchViewModel = matchViewModel,
+            isLeaveDialogOpen = isLeaveDialogOpen,
+            onLeaveDialogOpenChange = { isLeaveDialogOpen = it },
+            onLeave = {
+                isLeaveDialogOpen = false
+                matchViewModel.leave()
+                navigationViewModel.navigateTo(AppScreen.Lobby)
+            },
+            modifier = modifier,
+        )
     }
 }
 
@@ -158,15 +171,33 @@ private fun LobbyDestination(
     }
 }
 
-private val MatchTicketSaver = Saver<MatchTicket?, List<String>>(
-    save = { ticket -> ticket?.let { listOf(it.gameId, it.myMark.name) } },
-    restore = { saved -> MatchTicket(saved[0], Player.valueOf(saved[1])) },
-)
-
-/** Provisional stand-in for the online screens; the lobby and match tasks replace and remove it. */
+/** The online match: its screen, Back and the way out; without an open match it returns to the lobby. */
 @Composable
-private fun ProvisionalOnlineScreen(modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(stringResource(R.string.online_provisional_placeholder))
+private fun MatchDestination(
+    matchViewModel: OnlineMatchViewModel,
+    isLeaveDialogOpen: Boolean,
+    onLeaveDialogOpenChange: (Boolean) -> Unit,
+    onLeave: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val uiState by matchViewModel.uiState.collectAsStateWithLifecycle()
+    // Nothing is open when the process was recreated or the match was already left.
+    if (uiState.myMark == null) {
+        LaunchedEffect(Unit) { onLeave() }
+        return
     }
+
+    BackHandler {
+        if (uiState.phase == MatchPhase.Playing) onLeaveDialogOpenChange(true) else onLeave()
+    }
+
+    OnlineMatchScreen(
+        uiState = uiState,
+        isLeaveDialogOpen = isLeaveDialogOpen,
+        onLeaveDialogOpenChange = onLeaveDialogOpenChange,
+        onLeaveConfirmed = onLeave,
+        onCellClick = matchViewModel::play,
+        onBackToLobby = onLeave,
+        modifier = modifier,
+    )
 }
