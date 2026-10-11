@@ -13,6 +13,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.edu.unal.tictactoe.data.online.OnlineGameService
 import com.edu.unal.tictactoe.data.online.SharedPreferencesNicknameStore
 import com.edu.unal.tictactoe.game.models.Mark
+import com.edu.unal.tictactoe.game.models.Player
+import com.edu.unal.tictactoe.ui.game.audio.MoveSoundSink
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -122,3 +124,10 @@ internal fun ComposeTestRule.playMoves(context: Context, moves: List<Int>, rival
 /** Id of the only game in the waiting list, as [service] sees it. */
 internal fun singleAvailableGameId(service: OnlineGameService): String =
     runBlocking { service.observeAvailableGames().first().single().id }
+
+/** A match sound destination for tests that do not look at the sound. */
+internal object NoMoveSound : MoveSoundSink {
+    override fun play(player: Player) = Unit
+
+    override fun stop() = Unit
+}

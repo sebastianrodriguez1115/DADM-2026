@@ -64,6 +64,7 @@ class OnlineMatchFlowTest {
                     gameViewModel = game,
                     lobbyViewModel = lobby,
                     matchViewModel = match,
+                    onlineMoveSound = NoMoveSound,
                 )
             }
         }

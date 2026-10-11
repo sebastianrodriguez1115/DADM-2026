@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.edu.unal.tictactoe.data.online.OnlineServices
 import com.edu.unal.tictactoe.ui.game.GameViewModel
 import com.edu.unal.tictactoe.ui.game.audio.AndroidMoveSoundPlayerFactory
+import com.edu.unal.tictactoe.ui.game.audio.MoveSoundController
 import com.edu.unal.tictactoe.ui.game.audio.MoveSoundHost
 import com.edu.unal.tictactoe.ui.game.gameViewModelFactory
 import com.edu.unal.tictactoe.ui.navigation.AppNavigation
@@ -28,10 +29,13 @@ class MainActivity : ComponentActivity() {
     private lateinit var lobbyViewModel: OnlineLobbyViewModel
     private lateinit var matchViewModel: OnlineMatchViewModel
     private lateinit var moveSoundHost: MoveSoundHost
+    private lateinit var onlineMoveSound: MoveSoundController
 
-    // The local mode runs only while both hold; see syncLocalModeHost.
+    // The local mode runs only while the first and second hold, the online sound while the first
+    // and third do; see syncSoundControllers.
     private var activityResumed = false
     private var localScreenShown = false
+    private var matchScreenShown = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,10 +58,15 @@ class MainActivity : ComponentActivity() {
             gameViewModel,
             AndroidMoveSoundPlayerFactory(applicationContext),
         )
+        onlineMoveSound = MoveSoundController(
+            playerFactory = AndroidMoveSoundPlayerFactory(applicationContext),
+            soundEnabled = { gameViewModel.uiState.value.soundEnabled },
+        )
         lifecycleScope.launch {
             navigationViewModel.currentScreen.collect { screen ->
                 localScreenShown = screen == AppScreen.Local
-                syncLocalModeHost()
+                matchScreenShown = screen == AppScreen.Match
+                syncSoundControllers()
             }
         }
         setContent {
@@ -67,6 +76,7 @@ class MainActivity : ComponentActivity() {
                     gameViewModel = gameViewModel,
                     lobbyViewModel = lobbyViewModel,
                     matchViewModel = matchViewModel,
+                    onlineMoveSound = onlineMoveSound,
                 )
             }
         }
@@ -75,18 +85,39 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         activityResumed = true
-        syncLocalModeHost()
+        syncSoundControllers()
     }
 
     override fun onPause() {
         activityResumed = false
-        syncLocalModeHost()
+        syncSoundControllers()
         super.onPause()
     }
 
     override fun onDestroy() {
         moveSoundHost.onDestroy()
+        onlineMoveSound.release()
         super.onDestroy()
+    }
+
+    /**
+     * Keeps at most one of the two sound controllers prepared. The screens are exclusive, so at
+     * most one of the local and match conditions holds, and whichever controller is not current is
+     * paused first, so they are never both prepared, not even within one call.
+     */
+    private fun syncSoundControllers() {
+        if (activityResumed && matchScreenShown) {
+            syncLocalModeHost()
+            syncOnlineSound()
+        } else {
+            syncOnlineSound()
+            syncLocalModeHost()
+        }
+    }
+
+    /** Prepares the online match sound only while the Activity is RESUMED and the match is current. */
+    private fun syncOnlineSound() {
+        if (activityResumed && matchScreenShown) onlineMoveSound.prepare() else onlineMoveSound.pause()
     }
 
     /**

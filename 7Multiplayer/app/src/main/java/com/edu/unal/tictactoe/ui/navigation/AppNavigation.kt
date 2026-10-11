@@ -10,10 +10,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.edu.unal.tictactoe.ui.game.DifficultyLabels
 import com.edu.unal.tictactoe.ui.game.GameScreen
 import com.edu.unal.tictactoe.ui.game.GameViewModel
+import com.edu.unal.tictactoe.ui.game.audio.MoveSoundSink
 import com.edu.unal.tictactoe.ui.online.lobby.LobbyMessage
 import com.edu.unal.tictactoe.ui.online.lobby.LobbySignal
 import com.edu.unal.tictactoe.ui.online.lobby.MatchTicket
@@ -42,7 +46,8 @@ import com.edu.unal.tictactoe.ui.start.StartScreen
  * In [AppScreen.Match] Back opens the "leave the match" confirmation while the game is in
  * progress and, in any other phase, leaves without asking. "Abandonar" and "Volver al lobby" leave
  * the match and return to [AppScreen.Lobby]. Whether the confirmation is open lives here, saved
- * across rotation. A [AppScreen.Match] without an open match goes back to [AppScreen.Lobby].
+ * across rotation. The match's accepted moves are played on [onlineMoveSound], collected only
+ * while the lifecycle is RESUMED. A [AppScreen.Match] without an open match goes back to [AppScreen.Lobby].
  *
  * Every screen's state holder is a parameter, so a test can mount this with fakes and without the
  * real Activity.
@@ -53,6 +58,7 @@ fun AppNavigation(
     gameViewModel: GameViewModel,
     lobbyViewModel: OnlineLobbyViewModel,
     matchViewModel: OnlineMatchViewModel,
+    onlineMoveSound: MoveSoundSink,
     modifier: Modifier = Modifier,
 ) {
     val currentScreen by navigationViewModel.currentScreen.collectAsStateWithLifecycle()
@@ -100,6 +106,7 @@ fun AppNavigation(
 
         AppScreen.Match -> MatchDestination(
             matchViewModel = matchViewModel,
+            moveSound = onlineMoveSound,
             isLeaveDialogOpen = isLeaveDialogOpen,
             onLeaveDialogOpenChange = { isLeaveDialogOpen = it },
             onLeave = {
@@ -175,12 +182,21 @@ private fun LobbyDestination(
 @Composable
 private fun MatchDestination(
     matchViewModel: OnlineMatchViewModel,
+    moveSound: MoveSoundSink,
     isLeaveDialogOpen: Boolean,
     onLeaveDialogOpenChange: (Boolean) -> Unit,
     onLeave: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val uiState by matchViewModel.uiState.collectAsStateWithLifecycle()
+    // Only while RESUMED: what the match emits meanwhile is dropped, so nothing sounds in the
+    // background or on returning.
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(matchViewModel, moveSound, lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            matchViewModel.acceptedMoves.collect { moveSound.play(it) }
+        }
+    }
     // Nothing is open when the process was recreated or the match was already left.
     if (uiState.myMark == null) {
         LaunchedEffect(Unit) { onLeave() }

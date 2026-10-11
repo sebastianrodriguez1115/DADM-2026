@@ -61,7 +61,7 @@ class AppNavigationBackTest {
         }
         composeRule.setContent {
             TicTacToeTheme(dynamicColor = false) {
-                AppNavigation(navigationViewModel = navigation, gameViewModel = game, lobbyViewModel = lobby, matchViewModel = match)
+                AppNavigation(navigationViewModel = navigation, gameViewModel = game, lobbyViewModel = lobby, matchViewModel = match, onlineMoveSound = NoMoveSound)
             }
         }
     }
