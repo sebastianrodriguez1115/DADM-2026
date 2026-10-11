@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.AndroidMoveSoundPlayerLoadingTest:.
+
+Time: 0.033
+
+OK (1 test)
+
+

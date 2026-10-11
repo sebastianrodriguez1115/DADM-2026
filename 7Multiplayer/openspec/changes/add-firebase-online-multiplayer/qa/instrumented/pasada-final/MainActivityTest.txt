@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.MainActivityTest:.......
+
+Time: 23.44
+
+OK (7 tests)
+
+

@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.GameScreenTest:...........
+
+Time: 36.982
+
+OK (11 tests)
+
+

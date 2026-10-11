@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.ImpossibleOpeningTimingTest:.
+
+Time: 0.096
+
+OK (1 test)
+
+

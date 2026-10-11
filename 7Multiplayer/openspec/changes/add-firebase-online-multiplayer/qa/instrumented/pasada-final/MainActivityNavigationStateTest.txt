@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.MainActivityNavigationStateTest:.........
+
+Time: 146.976
+
+OK (9 tests)
+
+

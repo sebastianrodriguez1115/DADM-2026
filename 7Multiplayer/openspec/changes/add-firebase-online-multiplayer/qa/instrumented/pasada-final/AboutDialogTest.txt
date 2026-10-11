@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.AboutDialogTest:...
+
+Time: 3.333
+
+OK (3 tests)
+
+

@@ -1,3 +1,5 @@
+> Nota: la pasada válida es la de `pasada-final/`; esta carpeta se conserva como registro del fallo (ya corregido) de `FirebaseOnlineGameServiceLiveTest`.
+
 # Batería instrumentada completa (tarea 8.2)
 
 - Fecha: 2026-10-11 (pasada completa iniciada a las 10:31, hora local).
