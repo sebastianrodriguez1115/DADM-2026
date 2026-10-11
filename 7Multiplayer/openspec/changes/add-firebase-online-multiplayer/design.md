@@ -158,7 +158,7 @@ Interfaz pequeña `NicknameStore` (`readNickname(): String?`, `writeNickname(Str
 
 - La identidad anónima se asegura al entrar al lobby si no hay usuario; el resultado alimenta el estado de carga y el error con «Reintentar».
 - La conexión se observa con `.info/connected`. Hace falta porque, sin conexión, Realtime Database no falla: encola las escrituras y los listeners no entregan datos nuevos (de ahí que la documentación recomiende `.info/connected` para detectarlo; ver [offline-capabilities](https://firebase.google.com/docs/database/android/offline-capabilities)). Mientras no haya conexión, el lobby muestra «Sin conexión», deshabilita sus acciones y se recupera solo al volver. En la partida en curso, «Sin conexión» con las casillas deshabilitadas es un estado transitorio sin recuperación: la partida termina para quien perdió la conexión con «Se perdió la conexión. La partida terminó.» y no se reanuda aunque la red vuelva (D16). La documentación advierte que `.info/connected` en falso de un cliente no implica lo mismo para el otro.
-- Rotación: los tres ViewModels de Activity sobreviven; no se reabre ninguna observación. Segundo plano: la partida continúa mientras el proceso conserve la conexión; una ausencia de más de unos segundos hace que el sistema corte la red de la aplicación y la partida termina como pérdida de conexión (A2, D16). Mientras «Esperando rival…» o una partida en línea en curso están visibles, la vista que aloja la composición mantiene la pantalla encendida (marca `keepScreenOn`) y la libera en cualquier otra pantalla o final (D16). Muerte del proceso: A5; al regresar solo se restaura la pantalla guardada (D1).
+- Rotación: los tres ViewModels de Activity sobreviven; no se reabre ninguna observación. Segundo plano: la partida continúa mientras el proceso conserve la conexión; una ausencia de más de unos segundos hace que el sistema corte la red de la aplicación y la partida termina como pérdida de conexión (A2, D16). Mientras «Esperando rival…» o una partida en línea en curso están visibles, la ventana de la Activity mantiene la pantalla encendida (`FLAG_KEEP_SCREEN_ON`) y la libera en cualquier otra pantalla o final (D16). Muerte del proceso: A5; al regresar solo se restaura la pantalla guardada (D1).
 
 ### D13. Estrategia de pruebas
 
@@ -187,12 +187,17 @@ La primera pasada con dos instancias (`qa/e2e/report.md`, commit `86be80a`) most
 
 - D-1. Quien pierde la red durante una partida vio «Tu rival salió de la partida» a los 0,49 s (dos reproducciones), no «Sin conexión»; el aviso quedó inalcanzable. Causa verificada en el código: `OnlineMatchViewModel` pasa a abandono al recibir el juego nulo (`onGameVanished`) sin mirar la conexión, y el servicio registra `onDisconnect().removeValue()` sobre el nodo.
 - D-2. Con la aplicación en segundo plano 6,7 s la partida terminó para ambos (con 2 s y 4 s sobrevivió). `dumpsys netpolicy` marcó `blocked=APP_BACKGROUND` para el paquete: el sistema (API 35) le corta la red y se activa `onDisconnect`. También ocurrió una vez al apagarse la pantalla con la partida en curso. El umbral es una medición en API 35, no una garantía.
+- D-4 (segunda pasada, en las dos instancias). Tras pasar la aplicación por segundo plano (bastan 3 s), la pantalla quedaba retenida encendida también en el resultado, el lobby y la pantalla inicial, hasta cerrar el proceso; sin segundo plano no ocurría. Causa confirmada a nivel observable: la marca `keepScreenOn` de la vista sí se quitaba, pero la ventana de la Activity conservaba `FLAG_KEEP_SCREEN_ON` en sus atributos (visto en `dumpsys window` y en el bloqueo de `dumpsys power`). El mecanismo interno de la plataforma que lo provoca no se leyó en su código y sigue siendo hipótesis (que tras volver del segundo plano la plataforma incorpora la marca de la vista a los atributos de la ventana). Las pruebas no lo vieron porque `KeepScreenOnTest` leía la marca de la vista, y detener la Activity desde el arnés de pruebas no lo reproduce: hace falta Inicio real y volver.
 - Detección por el rival: 0,34 a 0,78 s cuando el otro abandona o cierra la aplicación; 114 s en la única medición válida cuando su red se corta de golpe (otra prueba dio más de 34 s sin detección). Lo decide el servicio, no la aplicación.
+
+**Comprobado en la segunda pasada, sin leer el código del SDK**
+
+- Orden de llegada. La regla que distingue la pérdida de conexión del abandono supone que el aviso de conexión perdida llega al ViewModel antes que el juego nulo. La segunda pasada de QA (commit `8977186`, teléfono y emulador contra Firebase real) lo comprobó empíricamente en los dos dispositivos: en 4 cortes de red en el emulador y en las salidas largas a segundo plano de ambas instancias, el dispositivo afectado vio siempre «Se perdió la conexión. La partida terminó.» y nunca «Tu rival salió de la partida». Sigue sin comprobarse en el código del SDK, y las pruebas automáticas fijan ese orden a mano con el servicio falso; si se invirtiera, quien pierde la conexión volvería a ver «Tu rival salió de la partida».
+- Resultados que cierran D-1 y D-2: con 3 s en segundo plano la partida se conserva; con 20 s termina con el mensaje de conexión perdida y el rival ve el abandono a los 7 u 8 s; tras un corte brusco de red, el rival lo detectó a los 115,7 s. Espera real en el dispositivo físico: 735 s en «Esperando rival…» sin tocarlo, con el apagado automático en 10 minutos; siguió despierto y con el juego en la lista del otro. D-4 se corrigió (commit `f337002`) y su confirmación en el dispositivo físico corresponde a la tercera pasada (9.5).
 
 **No confirmado**
 
 - Que el SDK aplique `onDisconnect().removeValue()` en su copia local al detectar la pérdida de conexión es la explicación coherente con lo medido (el servidor conserva el juego mientras B ya ve el nodo nulo), pero no se comprobó en el código del SDK.
-- Orden de llegada. La regla que distingue la pérdida de conexión del abandono supone que el aviso de conexión perdida llega al ViewModel antes que el juego nulo. Las mediciones de QA apuntan a que es así, pero no se ha comprobado en un dispositivo real ni en el código del SDK; las pruebas automáticas fijan ese orden a mano con el servicio falso. Si se invirtiera, quien pierde la conexión volvería a ver «Tu rival salió de la partida».
 - D-3. En el emulador, el segundo corte de red dentro del mismo proceso no mostró «Sin conexión» en el lobby. Puede ser una rareza del emulador (el corte con `svc` no cierra los sockets); queda pendiente de repetir en el dispositivo físico y no se corrige en este cambio.
 
 **Decisión**
@@ -211,10 +216,10 @@ Lo que decidió el usuario (2026-10-11):
 
 Detalle de diseño derivado de esa elección (no decisión del usuario):
 
-- La aplicación distingue la pérdida de conexión del abandono del rival por el estado de conexión del propio dispositivo en el momento en que el juego desaparece. La regla depende del orden de llegada de los avisos (ver «No confirmado»). Para ello `OnlineMatchViewModel` observa la conexión antes que el juego.
+- La aplicación distingue la pérdida de conexión del abandono del rival por el estado de conexión del propio dispositivo en el momento en que el juego desaparece. La regla depende del orden de llegada de los avisos (ver «Comprobado en la segunda pasada»). Para ello `OnlineMatchViewModel` observa la conexión antes que el juego.
 - Un final ya mostrado (resultado, abandono o conexión perdida) no vuelve a cambiar.
 - El estado transitorio «Sin conexión» con casillas deshabilitadas, mientras la partida sigue en curso sin conexión, se conserva en el código pero no ofrece recuperación.
-- La pantalla encendida se mantiene mientras la partida está cargando o en curso, y en «Esperando rival…»; se implementa con la marca `keepScreenOn` de la vista que aloja la composición (`KeepScreenOn()`), llamada desde `WaitingForOpponentScreen` y `OnlineMatchScreen`, sin permisos ni bloqueos de energía.
+- La pantalla encendida se mantiene mientras la partida está cargando o en curso, y en «Esperando rival…»; se implementa pidiendo `FLAG_KEEP_SCREEN_ON` a la ventana de la Activity (`KeepScreenOn()`), llamada desde `WaitingForOpponentScreen` y `OnlineMatchScreen`, sin permisos ni bloqueos de energía propios. Un contador de peticiones por ventana evita que el paso de «Esperando rival…» a la partida, en la misma recomposición, suelte la bandera. Se descartó la marca `keepScreenOn` de la vista (primera versión) por D-4: tras pasar por segundo plano, quitarla ya no liberaba la pantalla, mientras que una bandera pedida directamente a la ventana se retira de forma fiable.
 
 **Alternativas descartadas**
 
@@ -224,8 +229,9 @@ Detalle de diseño derivado de esa elección (no decisión del usuario):
 **Limitaciones que quedan**
 
 - Segundo plano: más de unos segundos (6,7 s medidos en API 35, dependiente del sistema) termina la partida; apagar la pantalla a mano puede tener el mismo efecto (ocurrió una vez en el dispositivo físico). La pantalla encendida solo evita el apagado automático.
-- Orden de llegada sin comprobar: si el juego nulo llegara antes que el aviso de conexión, quien pierde la conexión vería «Tu rival salió de la partida»; la segunda pasada de QA (9.5) lo comprueba en las dos instancias.
+- Orden de llegada sin leer en el código del SDK: la segunda pasada lo comprobó empíricamente en los dos dispositivos, pero si el juego nulo llegara antes que el aviso de conexión, quien pierde la conexión vería «Tu rival salió de la partida».
 - Corte brusco de red: el rival espera del orden de minutos a que el servicio lo detecte, viendo la partida en curso.
+- D-4 corregido y verificado en el emulador de referencia; su confirmación en el dispositivo físico queda para la tercera pasada (9.5).
 - D-3 sin resolver: la visibilidad de «Sin conexión» en el lobby tras cortes sucesivos queda pendiente de comprobar en el dispositivo físico (tarea 8.8).
 - Sonido y TalkBack sin verificar por la aplicación; TalkBack no se ejecuta por decisión del usuario.
 
