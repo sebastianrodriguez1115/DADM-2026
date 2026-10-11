@@ -25,8 +25,12 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.edu.unal.tictactoe.ui.online.lobby.NicknameDialog
 import com.edu.unal.tictactoe.ui.online.lobby.NicknameDialogTags
 import com.edu.unal.tictactoe.ui.theme.TicTacToeTheme
+import android.view.View
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.SoftwareKeyboardController
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -49,6 +53,7 @@ class NicknameDialogTest {
     private var dismissals = 0
     private var rejected by mutableStateOf(false)
     private var keyboard: SoftwareKeyboardController? = null
+    private var hostView: View? = null
 
     // Typing opens the soft keyboard, which outlives the test and would take the next Back press.
     @After
@@ -67,6 +72,7 @@ class NicknameDialogTest {
         rejected = isRejected
         viewport.setContent(width, height, fontScale) {
             keyboard = LocalSoftwareKeyboardController.current
+            hostView = LocalView.current
             TicTacToeTheme(dynamicColor = false) {
                 NicknameDialog(
                     nickname = nickname,
@@ -167,12 +173,30 @@ class NicknameDialogTest {
         assertTrue(accepted.isEmpty())
     }
 
+    private fun softKeyboardVisible(): Boolean {
+        var visible = false
+        composeTestRule.runOnUiThread {
+            visible = ViewCompat.getRootWindowInsets(hostView ?: return@runOnUiThread)?.isVisible(WindowInsetsCompat.Type.ime()) == true
+        }
+        return visible
+    }
+
+    // On a phone the soft keyboard can be open, and then the first Back only closes it.
+    private fun closeSoftKeyboardWithBack() {
+        if (!softKeyboardVisible()) return
+        pressBackAsUser()
+        composeTestRule.waitUntil(timeoutMillis = 5_000) { !softKeyboardVisible() }
+        composeTestRule.waitForIdle()
+    }
+
     @Test
     fun backInvokesTheDismissCallback() {
         show()
 
         composeTestRule.onNodeWithTag(NicknameDialogTags.DIALOG).assertIsDisplayed()
         composeTestRule.waitForIdle()
+        closeSoftKeyboardWithBack()
+        assertEquals("Back that closes the keyboard must not dismiss the dialog", 0, dismissals)
         pressBackAsUser()
         // The global action returns before the app has handled the key.
         composeTestRule.waitUntil(timeoutMillis = 5_000) { dismissals > 0 }
@@ -186,6 +210,7 @@ class NicknameDialogTest {
         val restoration = StateRestorationTester(composeTestRule)
         restoration.setContent {
             keyboard = LocalSoftwareKeyboardController.current
+            hostView = LocalView.current
             TicTacToeTheme(dynamicColor = false) {
                 NicknameDialog(
                     nickname = "Ana",
