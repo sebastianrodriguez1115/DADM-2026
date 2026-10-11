@@ -1,0 +1,97 @@
+17:31:05.851 TERCERA PASADA: commit eebfaf5 (correccion f337002); APK reconstruido e instalado con install -r en A y B. Indicadores: (energia) dumpsys power, SCREEN_BRIGHT_WAKE_LOCK 'WindowManager...' atribuido a la app; (ventana) dumpsys window windows, linea fl= de la ventana de MainActivity (KEEP_SCREEN_ON). Nota: antes de lanzar la app en A se hizo, por descuido, un volcado de uiautomator con la pantalla de inicio visible; solo se filtro en memoria por paquete de la app (resultado vacio) y no se guardo nada.
+17:31:41.737 ===== TERCERA PASADA, instancia probada: B (companera: A) =====
+17:31:49.528 instancia B | C1 pantalla inicial (app recien reiniciada) | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:31:59.497 instancia B | C1 lobby | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:32:05.259 instancia B | C1 Esperando rival… | energia=retiene | ventana=KEEP_SCREEN_ON | esperado=retenida | OK
+17:32:09.463 instancia B | C1 lobby tras cancelar | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:32:27.833 C2 B tras Inicio 4 s: textos ['Esperando rival…', 'Cancelar'] ; lista de A: ['Juegos disponibles', 'Juego de Luis', 'Crear juego', 'Cambiar apodo']
+17:32:27.993 instancia B | C2 Esperando rival… tras Inicio 4 s | energia=retiene | ventana=KEEP_SCREEN_ON | esperado=retenida | OK
+17:32:27.993 C2 juego sigue en la lista de A: True
+17:32:32.205 instancia B | C2 lobby tras cancelar | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:32:33.934 instancia B | C2 pantalla inicial | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:32:58.649 instancia B | C3 partida en curso | energia=retiene | ventana=KEEP_SCREEN_ON | esperado=retenida | OK
+17:33:08.262 C3 B tras Inicio 3 s: tablero X........ textos ['Rival: Ana', 'Tu turno', 'Salir']
+17:33:08.395 instancia B | C3 partida en curso tras Inicio 3 s | energia=retiene | ventana=KEEP_SCREEN_ON | esperado=retenida | OK
+17:33:43.193 C3 resultado: A=['Ganaste', 'Volver al lobby'] B=['Ganó Ana', 'Volver al lobby']
+17:33:43.335 instancia B | C3 resultado (victoria) instancia probada | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:33:43.634 instancia A | C3 resultado (victoria) instancia companera | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:33:50.295 instancia B | C3 lobby tras Volver al lobby | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:33:50.711 instancia A | C3 lobby companera | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:34:10.948 instancia B | C4 partida en curso | energia=retiene | ventana=KEEP_SCREEN_ON | esperado=retenida | OK
+17:34:37.905 C4 B tras Inicio 20 s: ['Juegas con O', 'Rival: Ana', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby'] ; companera: ['Juegas con X', 'Rival: Luis', 'Tu rival salió de la partida', 'Volver al lobby']
+17:34:40.366 instancia B | C4 mensaje de conexion perdida | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:34:44.529 instancia B | C4 lobby | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:34:46.255 instancia B | C4 pantalla inicial | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:34:50.239 RESUMEN B: 17 lecturas, 17 OK, 0 DEFECTO
+17:34:57.849 ===== TERCERA PASADA, instancia probada: A (companera: B) =====
+17:35:06.068 instancia A | C1 pantalla inicial (app recien reiniciada) | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:35:16.089 instancia A | C1 lobby | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:35:22.943 instancia A | C1 Esperando rival… | energia=retiene | ventana=sin KEEP_SCREEN_ON | esperado=retenida | DEFECTO
+17:35:27.947 instancia A | C1 lobby tras cancelar | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:35:46.856 C2 A tras Inicio 4 s: textos ['Esperando rival…', 'Cancelar'] ; lista de B: ['Juegos disponibles', 'Juego de Ana', 'Crear juego', 'Cambiar apodo']
+17:35:47.272 instancia A | C2 Esperando rival… tras Inicio 4 s | energia=retiene | ventana=sin KEEP_SCREEN_ON | esperado=retenida | DEFECTO
+17:35:47.273 C2 juego sigue en la lista de B: True
+17:35:52.187 instancia A | C2 lobby tras cancelar | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:35:54.175 instancia A | C2 pantalla inicial | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:36:19.401 instancia A | C3 partida en curso | energia=retiene | ventana=sin KEEP_SCREEN_ON | esperado=retenida | DEFECTO
+17:36:29.893 C3 A tras Inicio 3 s: tablero X........ textos ['Rival: Luis', 'Turno de Luis', 'Salir']
+17:36:30.315 instancia A | C3 partida en curso tras Inicio 3 s | energia=retiene | ventana=sin KEEP_SCREEN_ON | esperado=retenida | DEFECTO
+17:37:10.864 C3 resultado: A=['Ganaste', 'Volver al lobby'] B=['Ganó Ana', 'Volver al lobby']
+17:37:11.226 instancia A | C3 resultado (victoria) instancia probada | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:37:11.375 instancia B | C3 resultado (victoria) instancia companera | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:41:04.205 CAMBIO DE ENTORNO: a partir de aqui la instancia A es un emulador secundario (API 35) y la instancia B el emulador de referencia (API 35); el dispositivo fisico se desconecto y ya no se usa. Todo lo anterior en este log se hizo con A = dispositivo fisico. APK del commit 4a470b1 instalado con install -r en ambas. En A: pm clear, apodo 'Ana' (B conserva 'Luis').
+17:41:22.695 Comprobacion de identidades distintas: A crea un juego; B ve 'Juego de Ana' en su lista: False
+17:41:54.929 Comprobacion de identidades (cont.): B (apodo 'Luis' reintroducido; B tambien lo habia perdido) ve 'Juego de Ana': True ; B se une: A=['Rival: Luis', 'Tu turno', 'Salir'] B=['Rival: Ana', 'Turno de Ana', 'Salir']
+17:43:00.166 ===== EMULADORES: instancia A (emulador secundario) y B (emulador de referencia); las lecturas siguientes usan los indicadores de energia y de ventana =====
+17:43:00.192 ===== TERCERA PASADA, instancia probada: A (companera: B) =====
+17:43:07.760 instancia A | C1 pantalla inicial (app recien reiniciada) | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:43:17.305 instancia A | C1 lobby | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:43:23.171 instancia A | C1 Esperando rival… | energia=retiene | ventana=KEEP_SCREEN_ON | esperado=retenida | OK
+17:43:27.556 instancia A | C1 lobby tras cancelar | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:43:45.385 C2 A tras Inicio 4 s: textos ['Esperando rival…', 'Cancelar'] ; lista de B: ['Juegos disponibles', 'Juego de Ana', 'Crear juego', 'Cambiar apodo']
+17:43:45.538 instancia A | C2 Esperando rival… tras Inicio 4 s | energia=retiene | ventana=KEEP_SCREEN_ON | esperado=retenida | OK
+17:43:45.538 C2 juego sigue en la lista de B: True
+17:43:49.747 instancia A | C2 lobby tras cancelar | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:43:51.481 instancia A | C2 pantalla inicial | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:44:14.552 instancia A | C3 partida en curso | energia=retiene | ventana=KEEP_SCREEN_ON | esperado=retenida | OK
+17:44:24.182 C3 A tras Inicio 3 s: tablero X........ textos ['Rival: Luis', 'Turno de Luis', 'Salir']
+17:44:24.328 instancia A | C3 partida en curso tras Inicio 3 s | energia=retiene | ventana=KEEP_SCREEN_ON | esperado=retenida | OK
+17:44:57.214 C3 resultado: A=['Ganaste', 'Volver al lobby'] B=['Ganó Ana', 'Volver al lobby']
+17:44:57.359 instancia A | C3 resultado (victoria) instancia probada | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:44:57.487 instancia B | C3 resultado (victoria) instancia companera | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:45:03.823 instancia A | C3 lobby tras Volver al lobby | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:45:03.955 instancia B | C3 lobby companera | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:45:22.629 instancia A | C4 partida en curso | energia=retiene | ventana=KEEP_SCREEN_ON | esperado=retenida | OK
+17:45:49.287 C4 A tras Inicio 20 s: ['Juegas con X', 'Rival: Luis', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby'] ; companera: ['Juegas con O', 'Rival: Ana', 'Tu rival salió de la partida', 'Volver al lobby']
+17:45:51.412 instancia A | C4 mensaje de conexion perdida | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:45:55.776 instancia A | C4 lobby | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:45:57.513 instancia A | C4 pantalla inicial | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:46:01.272 RESUMEN A: 17 lecturas, 17 OK, 0 DEFECTO
+17:46:05.421 ===== TERCERA PASADA, instancia probada: B (companera: A) =====
+17:46:12.964 instancia B | C1 pantalla inicial (app recien reiniciada) | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:46:22.658 instancia B | C1 lobby | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:46:28.533 instancia B | C1 Esperando rival… | energia=retiene | ventana=KEEP_SCREEN_ON | esperado=retenida | OK
+17:46:32.927 instancia B | C1 lobby tras cancelar | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:46:50.730 C2 B tras Inicio 4 s: textos ['Esperando rival…', 'Cancelar'] ; lista de A: ['Juegos disponibles', 'Juego de Luis', 'Crear juego', 'Cambiar apodo']
+17:46:50.877 instancia B | C2 Esperando rival… tras Inicio 4 s | energia=retiene | ventana=KEEP_SCREEN_ON | esperado=retenida | OK
+17:46:50.877 C2 juego sigue en la lista de A: True
+17:46:55.186 instancia B | C2 lobby tras cancelar | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:46:56.921 instancia B | C2 pantalla inicial | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:47:20.121 instancia B | C3 partida en curso | energia=retiene | ventana=KEEP_SCREEN_ON | esperado=retenida | OK
+17:47:29.752 C3 B tras Inicio 3 s: tablero X........ textos ['Rival: Ana', 'Tu turno', 'Salir']
+17:47:29.904 instancia B | C3 partida en curso tras Inicio 3 s | energia=retiene | ventana=KEEP_SCREEN_ON | esperado=retenida | OK
+17:48:02.975 C3 resultado: A=['Ganaste', 'Volver al lobby'] B=['Ganó Ana', 'Volver al lobby']
+17:48:03.117 instancia B | C3 resultado (victoria) instancia probada | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:48:03.243 instancia A | C3 resultado (victoria) instancia companera | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:48:09.537 instancia B | C3 lobby tras Volver al lobby | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:48:09.665 instancia A | C3 lobby companera | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:48:28.126 instancia B | C4 partida en curso | energia=retiene | ventana=KEEP_SCREEN_ON | esperado=retenida | OK
+17:48:54.765 C4 B tras Inicio 20 s: ['Juegas con O', 'Rival: Ana', 'Se perdió la conexión. La partida terminó.', 'Volver al lobby'] ; companera: ['Juegas con X', 'Rival: Luis', 'Tu rival salió de la partida', 'Volver al lobby']
+17:48:56.881 instancia B | C4 mensaje de conexion perdida | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:49:01.256 instancia B | C4 lobby | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:49:02.973 instancia B | C4 pantalla inicial | energia=no retiene | ventana=sin KEEP_SCREEN_ON | esperado=no retenida | OK
+17:49:06.753 RESUMEN B: 17 lecturas, 17 OK, 0 DEFECTO
+17:49:38.180 ANALISIS DISCREPANCIA, prueba de retardo (emulador A): tras tocar 'Crear juego', lecturas simultaneas (energia y ventana en el mismo comando, cada ~0.03 s durante 4 s, 120 muestras): hasta 0.35 s energia=no y ventana=no; a 0.41 s ventana=KEEP_SCREEN_ON con energia=no; desde 0.44 s ambas si y asi hasta 4.0 s (la bandera de la ventana se adelanta ~0.03 s al bloqueo de energia; no hay desfase sostenido)
+17:49:50.362 ANALISIS DISCREPANCIA, retardo al liberar (emulador A): tras tocar 'Cancelar', desde la primera muestra (0.19 s) y hasta 3 s: energia=no y ventana=no (la liberacion es inmediata en ambos indicadores)
+17:50:19.314 NOTA SOBRE LA DISCREPANCIA (recuerdo, no registrado en archivo en su momento): en la segunda pasada, con el codigo anterior (view.keepScreenOn), el lector de ventana dio 'ninguna ventana con KEEP_SCREEN_ON' en el telefono mientras el bloqueo de energia estaba retenido, y en el emulador B con el mismo codigo si encontro KEEP_SCREEN_ON; es decir, la diferencia ya existia antes de la correccion.
+17:51:01.316 ESTADO FINAL: ambas apps reiniciadas en la pantalla inicial; listas de juegos vacias; ping correcto en ambos emuladores (la red nunca se corto en esta pasada)
