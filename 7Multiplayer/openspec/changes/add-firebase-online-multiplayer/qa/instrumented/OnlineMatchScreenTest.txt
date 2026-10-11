@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.OnlineMatchScreenTest:........................
+
+Time: 29.105
+
+OK (24 tests)
+
+

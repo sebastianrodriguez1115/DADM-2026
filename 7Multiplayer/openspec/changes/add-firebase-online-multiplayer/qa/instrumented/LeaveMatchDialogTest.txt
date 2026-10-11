@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.LeaveMatchDialogTest:.........
+
+Time: 9.191
+
+OK (9 tests)
+
+

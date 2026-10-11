@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.GameSessionSnapshotBundleTest:....
+
+Time: 0.024
+
+OK (4 tests)
+
+

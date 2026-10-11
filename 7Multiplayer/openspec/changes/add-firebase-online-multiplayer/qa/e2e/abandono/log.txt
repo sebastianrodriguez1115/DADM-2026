@@ -1,0 +1,15 @@
+11:39:21.149 M01 Salir -> dialogo [] ; Cancelar -> continua ['Rival: Luis', 'Tu turno', 'Salir'] tablero X...O....
+11:39:52.870 M03 A confirma Abandonar: A -> ['Juegos disponibles', 'No hay juegos disponibles'] ; B -> ['Rival: Ana', 'Tu rival salió de la partida', 'Volver al lobby'] ; cambio en B a 0.41s (comando 0.10s)
+11:40:03.160 M04 B Back con abandono -> ['Juegos disponibles', 'No hay juegos disponibles'] (sin dialogo)
+11:40:38.694 M05_cierre_de_B_creador_A: force-stop de instancia B con partida en curso (1 jugada): instancia A ve ['Rival: Luis', 'Turno de Luis', 'Salir'] ; cambio visual a 1.43s (cmd 0.03s)
+11:41:52.496 M05_cierre_de_B_invitado: force-stop de instancia B con partida en curso (1 jugada): instancia A ve ['Rival: Luis', 'Tu rival salió de la partida', 'Volver al lobby'] ; detección 0.78 s tras el comando (comando 0.03s)
+11:42:31.513 M06_cierre_de_A_invitado: force-stop de instancia A con partida en curso (1 jugada): instancia B ve ['Rival: Ana', 'Tu rival salió de la partida', 'Volver al lobby'] ; detección 0.34 s tras el comando (comando 0.12s)
+11:44:21.859 M08 corte breve de red en B (proceso nuevo) con partida en curso y turno de B: 'Sin conexión' a None s, casillas deshabilitadas, toque offline -> tablero X........; red restablecida a los 33.9s; B recupera a 2.1 s -> ['Rival: Ana', 'Tu rival salió de la partida', 'Volver al lobby'] habilitadas 000000000; A -> ['Rival: Luis', 'Tu rival salió de la partida', 'Volver al lobby']
+11:47:40.439 M07 corte de red de B (proceso nuevo, 1 jugada) a t=0: {'B_rival_salio': 0.5, 'B_sinconexion': None, 'A_abandono': None}
+12:00:38.937 M07b corte de red de B en partida (proceso nuevo): instancia A ve 'Tu rival salió de la partida' a 114.2 s del corte (deteccion del servicio por desconexion, resolucion ~0.4 s); B mostro 'Tu rival salió' (local) tambien: ['Rival: Ana', 'Tu rival salió de la partida', 'Volver al lobby']
+12:02:00.633 M09 B en segundo plano (HOME), A juega X en casilla 1, B vuelve: tablero X........, textos ['Rival: Ana', 'Tu rival salió de la partida', 'Volver al lobby'], habilitadas 000000000
+12:04:07.784 M09 (proceso B nuevo) B en segundo plano 10 s (HOME), A juega X en casilla 1, B vuelve: tablero X........, textos ['Rival: Ana', 'Tu rival salió de la partida', 'Volver al lobby'], habilitadas 000000000 ; A: ['Rival: Luis', 'Tu rival salió de la partida', 'Volver al lobby']
+12:04:56.890 M09b HOME en B (proceso nuevo, partida en curso, sin jugadas): A ve abandono a 6.7 s
+12:06:09.186 M09c B en segundo plano 2 s y vuelve: B=['Rival: Ana', 'Turno de Ana', 'Salir'] A=['Rival: Luis', 'Tu turno', 'Salir']
+12:06:54.520 M09c B en segundo plano 4 s y vuelve: B=['Rival: Ana', 'Turno de Ana', 'Salir'] A=['Rival: Luis', 'Tu turno', 'Salir']
+12:55:23.232 NOTA DE VALIDEZ: las lineas M05_cierre_de_B_creador_A (11:40), M07 (11:47, 'A_abandono None': la instancia A estaba ocupada por otra aplicacion del usuario) y M09 (12:02, B no era proceso nuevo tras cortes de red previos) son intentos NO VALIDOS, conservados solo por trazabilidad; sus capturas se descartaron. Valen M01-M06, M07b, M09 (12:04), M09b y M09c.

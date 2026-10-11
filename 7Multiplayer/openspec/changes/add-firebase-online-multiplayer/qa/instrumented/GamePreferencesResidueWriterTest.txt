@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.GamePreferencesResidueWriterTest:.
+
+Time: 0.007
+
+OK (1 test)
+
+

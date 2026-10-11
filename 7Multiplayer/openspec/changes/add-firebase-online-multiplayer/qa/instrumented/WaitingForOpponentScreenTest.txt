@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.WaitingForOpponentScreenTest:.....
+
+Time: 4.28
+
+OK (5 tests)
+
+

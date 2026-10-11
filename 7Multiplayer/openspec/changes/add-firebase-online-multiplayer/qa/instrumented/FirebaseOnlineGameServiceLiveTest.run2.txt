@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.FirebaseOnlineGameServiceLiveTest:.................
+
+Time: 37.509
+
+OK (17 tests)
+
+

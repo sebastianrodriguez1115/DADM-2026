@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.OnlineLobbyNavigationTest:..............
+
+Time: 13.929
+
+OK (14 tests)
+
+

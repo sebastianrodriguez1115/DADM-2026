@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.SharedPreferencesNicknameStoreTest:.......
+
+Time: 0.043
+
+OK (7 tests)
+
+
