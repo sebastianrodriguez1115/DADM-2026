@@ -1,0 +1,22 @@
+
+com.edu.unal.tictactoe.FirebaseOnlineGameServiceLiveTest:....INSTRUMENTATION_STATUS: live-third-player=result=NoLongerAvailable, guest kept=original, status=Playing, board=empty
+INSTRUMENTATION_STATUS_CODE: 0
+........INSTRUMENTATION_STATUS: live-race-round-1=first=guest A, Joined=guest B, other=NoLongerAvailable, game playing with the winner as guest
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: live-race-round-2=first=guest B, Joined=guest B, other=NoLongerAvailable, game playing with the winner as guest
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: live-race-round-3=first=guest A, Joined=guest B, other=NoLongerAvailable, game playing with the winner as guest
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: live-race-round-4=first=guest B, Joined=guest B, other=NoLongerAvailable, game playing with the winner as guest
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: live-race-round-5=first=guest A, Joined=guest B, other=NoLongerAvailable, game playing with the winner as guest
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: live-race-summary=1: first=guest A winner=guest B; 2: first=guest B winner=guest B; 3: first=guest A winner=guest B; 4: first=guest B winner=guest B; 5: first=guest A winner=guest B
+INSTRUMENTATION_STATUS_CODE: 0
+..........
+
+Time: 62.661
+
+OK (22 tests)
+
+

@@ -1,5 +1,6 @@
 package com.edu.unal.tictactoe
 
+import android.os.Bundle
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.edu.unal.tictactoe.data.online.FirebaseOnlineGameService
@@ -112,6 +113,14 @@ class FirebaseOnlineGameServiceLiveTest {
 
     private fun newGame(owner: Identity, nickname: String): String =
         runBlocking { owner.service.createGame(nickname) }.also { created += it }
+
+    /** Makes a result visible in the `am instrument` output as an INSTRUMENTATION_STATUS line. */
+    private fun report(key: String, value: String) {
+        InstrumentationRegistry.getInstrumentation().sendStatus(
+            0,
+            Bundle().apply { putString("live-$key", value) },
+        )
+    }
 
     private class Found<T>(val value: T)
 
@@ -286,6 +295,66 @@ class FirebaseOnlineGameServiceLiveTest {
     }
 
     @Test
+    fun aThirdIdentityCannotJoinAGameInProgressThroughTheService() {
+        val third = secondaryIdentity("live-third")
+        val id = joined(host, guest)
+        val result = runBlocking { third.service.joinGame(id, THIRD_NAME) }
+        assertEquals("Result of the third player joining a game in progress", JoinResult.NoLongerAvailable, result)
+        val game = awaitGame("the game in progress", host.service, id) { it != null }
+        assertEquals(guest.uid, game?.guest?.uid)
+        assertEquals(GUEST_NAME, game?.guest?.name)
+        assertEquals(host.uid, game?.host?.uid)
+        assertEquals(OnlineStatus.Playing, game?.status)
+        assertEquals(List(9) { Mark.Empty }, game?.board)
+        assertEquals(Player.X, game?.turn)
+        report("third-player", "result=NoLongerAvailable, guest kept=original, status=Playing, board=empty")
+    }
+
+    @Test
+    fun theJoinRaceRepeated5TimesAlwaysHasExactlyOneWinner() {
+        val guestB = secondaryIdentity("live-third")
+        // Each racer must be able to join on its own, otherwise losing the race proves nothing.
+        listOf("guest A" to guest, "guest B" to guestB).forEach { (name, racer) ->
+            val own = newGame(host, HOST_NAME)
+            assertEquals(
+                "Precondition: $name could not join a game of its own through the service",
+                JoinResult.Joined,
+                runBlocking { racer.service.joinGame(own, GUEST_NAME) },
+            )
+        }
+        val summary = mutableListOf<String>()
+        for (round in 1..RACE_ROUNDS) {
+            val label = "Race round $round of $RACE_ROUNDS"
+            val id = newGame(host, HOST_NAME)
+            val aFirst = round % 2 == 1
+            val results = runBlocking {
+                // results[0] is guest A's result and results[1] guest B's, whatever the launch order.
+                val calls = if (aFirst) {
+                    val a = async(Dispatchers.IO) { guest.service.joinGame(id, GUEST_NAME) }
+                    val b = async(Dispatchers.IO) { guestB.service.joinGame(id, THIRD_NAME) }
+                    listOf(a, b)
+                } else {
+                    val b = async(Dispatchers.IO) { guestB.service.joinGame(id, THIRD_NAME) }
+                    val a = async(Dispatchers.IO) { guest.service.joinGame(id, GUEST_NAME) }
+                    listOf(a, b)
+                }
+                calls.map { it.await() }
+            }
+            assertEquals("$label: Joined results ($results)", 1, results.count { it == JoinResult.Joined })
+            assertEquals("$label: NoLongerAvailable results ($results)", 1, results.count { it == JoinResult.NoLongerAvailable })
+            val winnerIsA = results[0] == JoinResult.Joined
+            val winner = if (winnerIsA) guest else guestB
+            val game = awaitGame("$label: the game in progress", host.service, id) { it?.status == OnlineStatus.Playing }
+            assertEquals("$label: the guest of the game is not the one that got Joined", winner.uid, game?.guest?.uid)
+            val first = if (aFirst) "guest A" else "guest B"
+            val name = if (winnerIsA) "guest A" else "guest B"
+            summary += "$round: first=$first winner=$name"
+            report("race-round-$round", "first=$first, Joined=$name, other=NoLongerAvailable, game playing with the winner as guest")
+        }
+        report("race-summary", summary.joinToString("; "))
+    }
+
+    @Test
     fun joiningAGameThatDoesNotExistIsNoLongerAvailable() {
         val missing = runBlocking { host.database.getReference("games").push().key }
         assertNotNull(missing)
@@ -415,5 +484,6 @@ class FirebaseOnlineGameServiceLiveTest {
         const val HOST_NAME = "Anfitrion"
         const val GUEST_NAME = "Invitado"
         const val THIRD_NAME = "Tercero"
+        const val RACE_ROUNDS = 5
     }
 }
