@@ -19,8 +19,10 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeoutOrNull
 import org.junit.After
@@ -352,6 +354,41 @@ class FirebaseOnlineGameServiceLiveTest {
             report("race-round-$round", "first=$first, Joined=$name, other=NoLongerAvailable, game playing with the winner as guest")
         }
         report("race-summary", summary.joinToString("; "))
+    }
+
+    @Test
+    fun aThirdIdentityObservingTheListSeesTheGameAppearAndDisappearWhenTheGuestJoins() {
+        val third = secondaryIdentity("live-third")
+        val id = newGame(host, HOST_NAME)
+        runBlocking {
+            // One subscription for the whole test: the list must change by itself, with no reload.
+            val snapshots = Channel<List<OnlineGame>>(Channel.UNLIMITED)
+            val collector = launch(Dispatchers.IO) {
+                third.service.observeAvailableGames().collect { snapshots.send(it) }
+            }
+            try {
+                suspend fun awaitSnapshot(what: String, predicate: (List<OnlineGame>) -> Boolean): List<OnlineGame> =
+                    withTimeoutOrNull(TIMEOUT_MILLIS) {
+                        var snapshot = snapshots.receive()
+                        while (!predicate(snapshot)) snapshot = snapshots.receive()
+                        snapshot
+                    } ?: throw AssertionError("Timed out waiting for $what")
+
+                val waiting = awaitSnapshot("the waiting game in the third identity's list") { games ->
+                    games.any { it.id == id }
+                }.single { it.id == id }
+                assertEquals(OnlineStatus.Waiting, waiting.status)
+                assertEquals(host.uid, waiting.host.uid)
+
+                assertEquals(JoinResult.Joined, guest.service.joinGame(id, GUEST_NAME))
+                awaitSnapshot("the joined game to leave the third identity's list") { games ->
+                    games.none { it.id == id }
+                }
+            } finally {
+                collector.cancel()
+            }
+        }
+        report("third-observer", "saw the waiting game, then saw it leave on the guest joining, same subscription")
     }
 
     @Test
