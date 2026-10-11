@@ -39,6 +39,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.edu.unal.tictactoe.game.models.Mark
 import com.edu.unal.tictactoe.game.models.Turn
 import com.edu.unal.tictactoe.ui.game.GameBoard
+import com.edu.unal.tictactoe.ui.game.InputGameBoard
 import com.edu.unal.tictactoe.ui.theme.TicTacToeTheme
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -197,6 +198,47 @@ class GameBoardInteractionTest {
             }
         }
         assertEquals(0, calls)
+    }
+
+    @Test
+    fun neutralBoardWithInputDisabledExposesNineDisabledCellsWithoutCallbacks() {
+        var calls = 0
+        compose.setContent {
+            TicTacToeTheme(dynamicColor = false) {
+                Surface {
+                    InputGameBoard(List(9) { Mark.Empty }, inputEnabled = false) { calls++ }
+                }
+            }
+        }
+        compose.waitForIdle()
+        (0..8).forEach { index ->
+            val disabled = compose.onNodeWithTag("tic_tac_toe_cell_$index").assertIsNotEnabled()
+            assertTrue(SemanticsActions.OnClick !in disabled.fetchSemanticsNode().config)
+            disabled.performTouchInput { click() }
+        }
+        assertEquals(0, calls)
+    }
+
+    @Test
+    fun neutralBoardWithInputEnabledRequestsEmptyCellAndIgnoresOccupiedCell() {
+        val requested = mutableListOf<Int>()
+        compose.setContent {
+            TicTacToeTheme(dynamicColor = false) {
+                Surface {
+                    InputGameBoard(
+                        board = listOf(Mark.Empty, Mark.O) + List(7) { Mark.Empty },
+                        inputEnabled = true,
+                        onCellClick = requested::add,
+                    )
+                }
+            }
+        }
+        compose.waitForIdle()
+        compose.onNodeWithTag("tic_tac_toe_cell_0").assertIsEnabled().performClick()
+        val occupied = compose.onNodeWithTag("tic_tac_toe_cell_1").assertIsNotEnabled()
+        assertTrue(SemanticsActions.OnClick !in occupied.fetchSemanticsNode().config)
+        occupied.performTouchInput { click() }
+        assertEquals(listOf(0), requested)
     }
 }
 

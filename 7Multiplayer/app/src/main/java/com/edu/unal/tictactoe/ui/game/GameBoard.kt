@@ -51,6 +51,19 @@ internal fun GameBoard(
     turn: Turn,
     onCellClick: (Int) -> Unit,
 ) {
+    InputGameBoard(
+        board = board,
+        inputEnabled = isGameActive && turn == Turn.Human,
+        onCellClick = onCellClick,
+    )
+}
+
+@Composable
+internal fun InputGameBoard(
+    board: List<Mark>,
+    inputEnabled: Boolean,
+    onCellClick: (Int) -> Unit,
+) {
     val boardDescription = stringResource(R.string.board_label)
     val gridColor = MaterialTheme.colorScheme.onSurfaceVariant
     Box(
@@ -71,7 +84,7 @@ internal fun GameBoard(
                             row = row,
                             column = column,
                             mark = mark,
-                            enabled = mark == Mark.Empty && isGameActive && turn == Turn.Human,
+                            enabled = mark == Mark.Empty && inputEnabled,
                             modifier = Modifier.weight(1f),
                             onClick = onCellClick,
                         )
