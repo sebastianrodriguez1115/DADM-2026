@@ -170,11 +170,9 @@ class MainActivityNavigationStateTest {
     }
 
     // --- Lobby marker: the only place that knows how the lobby is recognised. With a stored
-    // nickname the real lobby shows the failure of the provisional service. ---
+    // nickname the real lobby shows one of its connection states (see lobbyMarkerCount). ---
 
-    private fun lobbyMarkerCount(): Int = composeTestRule
-        .onAllNodesWithText(context.getString(R.string.lobby_connection_failed))
-        .fetchSemanticsNodes().size
+    private fun lobbyMarkerCount(): Int = composeTestRule.lobbyMarkerCount()
 
     private fun assertLobbyShown() {
         composeTestRule.waitUntil(WAIT_MILLIS) { lobbyMarkerCount() > 0 }

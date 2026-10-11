@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onAllNodesWithContentDescription
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
@@ -15,6 +16,7 @@ import com.edu.unal.tictactoe.data.online.SharedPreferencesNicknameStore
 import com.edu.unal.tictactoe.game.models.Mark
 import com.edu.unal.tictactoe.game.models.Player
 import com.edu.unal.tictactoe.ui.game.audio.MoveSoundSink
+import com.edu.unal.tictactoe.ui.online.lobby.OnlineLobbyTags
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -131,3 +133,19 @@ internal object NoMoveSound : MoveSoundSink {
 
     override fun stop() = Unit
 }
+
+/**
+ * Number of nodes that identify the online lobby on screen, whatever its connection state: the
+ * "connecting" notice, the failure with "retry", the offline notice or the games header.
+ *
+ * Tests with the real `MainActivity` that enter the lobby use the production wiring, so since the
+ * Firebase service is wired in (task 7.6) the app really tries to sign in anonymously against
+ * Firebase when the lobby opens. They therefore depend on the device network only for which of
+ * those states is shown, never for recognising the lobby.
+ */
+internal fun ComposeTestRule.lobbyMarkerCount(): Int = listOf(
+    OnlineLobbyTags.CONNECTING,
+    OnlineLobbyTags.RETRY,
+    OnlineLobbyTags.OFFLINE,
+    OnlineLobbyTags.HEADER,
+).sumOf { tag -> onAllNodesWithTag(tag).fetchSemanticsNodes().size }

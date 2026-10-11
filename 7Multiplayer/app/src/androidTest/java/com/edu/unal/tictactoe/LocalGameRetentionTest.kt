@@ -140,13 +140,10 @@ class LocalGameRetentionTest {
     }
 
     // --- Lobby marker: the only place that knows how the lobby is recognised. With a stored
-    // nickname the real lobby shows the failure of the provisional service. ---
+    // nickname the real lobby shows one of its connection states (see lobbyMarkerCount). ---
 
     private fun assertLobbyShown() {
-        val marker = context.getString(R.string.lobby_connection_failed)
-        composeTestRule.waitUntil(WAIT_MILLIS) {
-            composeTestRule.onAllNodesWithText(marker).fetchSemanticsNodes().isNotEmpty()
-        }
+        composeTestRule.waitUntil(WAIT_MILLIS) { composeTestRule.lobbyMarkerCount() > 0 }
     }
 
     // ------------------------------------------------------------------------------------------
