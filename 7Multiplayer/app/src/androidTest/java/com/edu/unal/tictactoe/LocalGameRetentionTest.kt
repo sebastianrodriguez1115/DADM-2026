@@ -49,6 +49,7 @@ class LocalGameRetentionTest {
     @Before
     fun launch() {
         fixture.prepare(context)
+        seedStoredNickname(context)
         scenario = ActivityScenario.launch(MainActivity::class.java)
         scenario.onActivity { gameViewModel = ViewModelProvider(it)[GameViewModel::class.java] }
         composeTestRule.waitForIdle()
@@ -60,7 +61,11 @@ class LocalGameRetentionTest {
         try {
             if (::scenario.isInitialized) scenario.close()
         } finally {
-            fixture.cleanup()
+            try {
+                clearStoredNickname(context)
+            } finally {
+                fixture.cleanup()
+            }
         }
     }
 
@@ -101,7 +106,7 @@ class LocalGameRetentionTest {
     }
 
     @Test
-    fun visitingTheProvisionalLobbyBetweenDoesNotChangeTheLocalGame() {
+    fun visitingTheLobbyBetweenDoesNotChangeTheLocalGame() {
         clickCell(0)
         val before = snapshot()
 
@@ -134,10 +139,11 @@ class LocalGameRetentionTest {
         assertScoreStored(terminal)
     }
 
-    // --- Provisional lobby marker: the only place that knows how the lobby is recognised. ---
+    // --- Lobby marker: the only place that knows how the lobby is recognised. With a stored
+    // nickname the real lobby shows the failure of the provisional service. ---
 
     private fun assertLobbyShown() {
-        val marker = context.getString(R.string.online_provisional_placeholder)
+        val marker = context.getString(R.string.lobby_connection_failed)
         composeTestRule.waitUntil(WAIT_MILLIS) {
             composeTestRule.onAllNodesWithText(marker).fetchSemanticsNodes().isNotEmpty()
         }

@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.edu.unal.tictactoe.data.online.OnlineServices
 import com.edu.unal.tictactoe.ui.game.GameViewModel
 import com.edu.unal.tictactoe.ui.game.audio.AndroidMoveSoundPlayerFactory
 import com.edu.unal.tictactoe.ui.game.audio.MoveSoundHost
@@ -14,12 +15,15 @@ import com.edu.unal.tictactoe.ui.navigation.AppNavigation
 import com.edu.unal.tictactoe.ui.navigation.AppScreen
 import com.edu.unal.tictactoe.ui.navigation.NavigationViewModel
 import com.edu.unal.tictactoe.ui.navigation.navigationViewModelFactory
+import com.edu.unal.tictactoe.ui.online.lobby.OnlineLobbyViewModel
+import com.edu.unal.tictactoe.ui.online.lobby.onlineLobbyViewModelFactory
 import com.edu.unal.tictactoe.ui.theme.TicTacToeTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private lateinit var gameViewModel: GameViewModel
     private lateinit var navigationViewModel: NavigationViewModel
+    private lateinit var lobbyViewModel: OnlineLobbyViewModel
     private lateinit var moveSoundHost: MoveSoundHost
 
     // The local mode runs only while both hold; see syncLocalModeHost.
@@ -32,6 +36,13 @@ class MainActivity : ComponentActivity() {
         // Resolve from the Activity's store once so lifecycle callbacks and Compose share it.
         gameViewModel = ViewModelProvider(this, gameViewModelFactory())[GameViewModel::class.java]
         navigationViewModel = ViewModelProvider(this, navigationViewModelFactory())[NavigationViewModel::class.java]
+        lobbyViewModel = ViewModelProvider(
+            this,
+            onlineLobbyViewModelFactory(
+                service = OnlineServices.gameService,
+                nicknameStore = OnlineServices.nicknameStore(applicationContext),
+            ),
+        )[OnlineLobbyViewModel::class.java]
         moveSoundHost = MoveSoundHost(
             gameViewModel,
             AndroidMoveSoundPlayerFactory(applicationContext),
@@ -47,6 +58,7 @@ class MainActivity : ComponentActivity() {
                 AppNavigation(
                     navigationViewModel = navigationViewModel,
                     gameViewModel = gameViewModel,
+                    lobbyViewModel = lobbyViewModel,
                 )
             }
         }

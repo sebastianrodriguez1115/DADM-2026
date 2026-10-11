@@ -49,6 +49,7 @@ class MainActivityLocalPauseTest {
     @Before
     fun launch() {
         preferencesFixture.prepare(context)
+        seedStoredNickname(context)
         scenario = ActivityScenario.launch(MainActivity::class.java)
         scenario.onActivity {
             game = ViewModelProvider(it)[GameViewModel::class.java]
@@ -62,7 +63,11 @@ class MainActivityLocalPauseTest {
         try {
             scenario.close()
         } finally {
-            preferencesFixture.cleanup()
+            try {
+                clearStoredNickname(context)
+            } finally {
+                preferencesFixture.cleanup()
+            }
         }
     }
 
@@ -82,7 +87,7 @@ class MainActivityLocalPauseTest {
     }
 
     @Test
-    fun pendingTurnDoesNotAdvanceInProvisionalLobbyAndResumesFromRemainingTimeOnReturn() {
+    fun pendingTurnDoesNotAdvanceInTheLobbyAndResumesFromRemainingTimeOnReturn() {
         chooseLocal()
         val movedAt = startPendingTurnAndConsumeSomeTime()
         val leftWith = game.uiState.value

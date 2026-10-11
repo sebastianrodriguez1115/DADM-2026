@@ -52,6 +52,7 @@ class MainActivityNavigationStateTest {
     @Before
     fun launch() {
         fixture.prepare(context)
+        seedStoredNickname(context)
         scenario = ActivityScenario.launch(MainActivity::class.java)
         scenario!!.onActivity { originalOrientation = it.requestedOrientation }
         composeTestRule.waitForIdle()
@@ -76,7 +77,11 @@ class MainActivityNavigationStateTest {
                 }
             }
         } finally {
-            fixture.cleanup()
+            try {
+                clearStoredNickname(context)
+            } finally {
+                fixture.cleanup()
+            }
         }
     }
 
@@ -164,10 +169,11 @@ class MainActivityNavigationStateTest {
         assertEquals(AppScreen.Start, restoreNavigation(null).currentScreen.value)
     }
 
-    // --- Provisional lobby marker: the only place that knows how the lobby is recognised. ---
+    // --- Lobby marker: the only place that knows how the lobby is recognised. With a stored
+    // nickname the real lobby shows the failure of the provisional service. ---
 
     private fun lobbyMarkerCount(): Int = composeTestRule
-        .onAllNodesWithText(context.getString(R.string.online_provisional_placeholder))
+        .onAllNodesWithText(context.getString(R.string.lobby_connection_failed))
         .fetchSemanticsNodes().size
 
     private fun assertLobbyShown() {

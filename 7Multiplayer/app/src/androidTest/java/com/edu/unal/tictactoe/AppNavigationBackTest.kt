@@ -18,6 +18,7 @@ import com.edu.unal.tictactoe.ui.game.GameViewModel
 import com.edu.unal.tictactoe.ui.navigation.AppNavigation
 import com.edu.unal.tictactoe.ui.navigation.AppScreen
 import com.edu.unal.tictactoe.ui.navigation.NavigationViewModel
+import com.edu.unal.tictactoe.ui.online.lobby.OnlineLobbyViewModel
 import com.edu.unal.tictactoe.ui.theme.TicTacToeTheme
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -43,6 +44,7 @@ class AppNavigationBackTest {
     fun setUp() {
         navigation = NavigationViewModel(SavedStateHandle())
         val game = GameViewModel(InMemoryGamePreferences(), SavedStateHandle())
+        val lobby = OnlineLobbyViewModel(FakeOnlineBackend().serviceFor("me"), FakeNicknameStore("Ana"))
         // Registered before the content, so any handler AppNavigation declares takes priority over
         // it. It only counts the Back presses the app did not intercept, and consumes them so the
         // test Activity is not finished.
@@ -57,7 +59,7 @@ class AppNavigationBackTest {
         }
         composeRule.setContent {
             TicTacToeTheme(dynamicColor = false) {
-                AppNavigation(navigationViewModel = navigation, gameViewModel = game)
+                AppNavigation(navigationViewModel = navigation, gameViewModel = game, lobbyViewModel = lobby)
             }
         }
     }
@@ -78,7 +80,8 @@ class AppNavigationBackTest {
     @Test
     fun backFromLobbyShowsStart() {
         goTo(AppScreen.Lobby)
-        assertEquals(1, composeRule.onAllNodesWithText(placeholder).fetchSemanticsNodes().size)
+        awaitLobbyShown()
+        assertEquals(1, composeRule.onAllNodesWithText(lobbyMarker).fetchSemanticsNodes().size)
 
         pressBackAsUser()
         awaitStartShown()
@@ -118,7 +121,14 @@ class AppNavigationBackTest {
         assertEquals(0, backReachedSystem)
     }
 
-    private val placeholder get() = context.getString(R.string.online_provisional_placeholder)
+    // The lobby, with a stored nickname and a connected fake service, shows its games header.
+    private val lobbyMarker get() = context.getString(R.string.lobby_games_header)
+
+    private fun awaitLobbyShown() {
+        composeRule.waitUntil(timeoutMillis = 5_000) {
+            composeRule.onAllNodesWithText(lobbyMarker).fetchSemanticsNodes().isNotEmpty()
+        }
+    }
 
     private fun goTo(screen: AppScreen) {
         composeRule.runOnUiThread { navigation.navigateTo(screen) }
