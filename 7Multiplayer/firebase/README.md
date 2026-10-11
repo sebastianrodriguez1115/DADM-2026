@@ -7,6 +7,8 @@ Esta carpeta contiene las reglas de seguridad de Realtime Database y los pasos p
 - `app/google-services.json` está versionado en git. Solo contiene identificadores del proyecto, no secretos. Va en `app/`, junto a `build.gradle.kts`.
 - La seguridad de los datos no depende de ocultar ese archivo, sino de las reglas publicadas (`firebase/database.rules.json`) y de restringir la clave de API en la consola de Google Cloud (Credenciales).
 
+Para entender qué hace cada regla y por qué existe, véase [RULES.md](RULES.md).
+
 ## Pasos previos (una sola vez)
 
 1. **Activar el inicio de sesión anónimo.** Consola de Firebase, Compilación (Build), Authentication, pestaña Método de acceso (Sign-in method), Anónimo (Anonymous): activar y guardar.
