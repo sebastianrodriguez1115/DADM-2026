@@ -17,15 +17,27 @@ Para entender qué hace cada regla y por qué existe, véase [RULES.md](RULES.md
 
 ## Enlace de instalación para «Compartir app»
 
-El lobby en línea puede mostrar «Compartir app», que abre un código QR con el enlace para instalar la app. El enlace se configura en la clave `share.url` de `local.properties` (el archivo de la raíz del proyecto, junto a `sdk.dir`):
+El lobby en línea puede mostrar «Compartir app», que abre un código QR con el enlace para instalar la app. El enlace se configura en la clave `share.url` de `local.properties` (el archivo de la raíz del proyecto, junto a `sdk.dir`). Admite cualquier enlace de instalación:
 
 ```properties
-share.url=https://example.com/invitacion
+share.url=https://example.com/enlace-de-instalacion
 ```
 
-- Use un **enlace de invitación** de Firebase App Distribution (Consola de Firebase, App Distribution, Testers y grupos, grupo, «Enlace de invitación»), no el enlace de una versión concreta. El de una versión solo lo abren testers que ya tienen acceso y apunta a una única versión, así que quien escanee el QR no podría instalar nada.
+Hay dos opciones; elija según lo que necesite:
+
+- **(a) Descarga directa del APK**, por ejemplo un archivo adjunto a una versión (Release) de GitHub de un repositorio público. No exige registro a quien instala, pero deja el APK al alcance de cualquiera que tenga el enlace. Conviene cuando se quiere que cualquiera instale sin trámites.
+- **(b) Enlace de invitación de Firebase App Distribution** (Consola de Firebase, App Distribution, Testers y grupos, grupo, «Enlace de invitación»). Exige cuenta de Google y registrar un correo, pero permite saber quién instala. Las versiones subidas **caducan a los 150 días**: pasado ese plazo hay que subir una versión nueva para que el enlace siga sirviendo una instalación. No use el enlace de una versión concreta: solo lo abren testers que ya tienen acceso y apunta a una única versión, así que quien escanee el QR no podría instalar nada.
+
+Para GitHub Releases:
+
+- El enlace sigue el patrón `https://github.com/<usuario>/<repositorio>/releases/download/<etiqueta>/<archivo>.apk`.
+- La dirección no cambia si se reemplaza el archivo adjunto conservando la etiqueta y el nombre, así que el QR sigue siendo válido al publicar un APK nuevo.
+- Configure la clave **antes** de compilar el APK que va a adjuntar: el enlace queda incrustado en el APK, y el QR de un APK compilado antes apuntaría al sitio equivocado (o a ninguno).
+
+Notas comunes:
+
+- Fuera de una tienda, quien instala debe permitir «instalar apps desconocidas» para el navegador o gestor de archivos que use y confirmar la instalación. La app requiere Android 15 o superior.
 - El valor **no se versiona**: `local.properties` está ignorado por git y el enlace solo queda dentro del APK compilado. No lo copie en archivos del repositorio, issues ni capturas.
-- Las versiones subidas a App Distribution **caducan a los 150 días**: pasado ese plazo hay que subir una versión nueva para que el enlace siga sirviendo una instalación.
 - Sin la clave, o con ella vacía, la acción «Compartir app» no aparece. Tras cambiar el valor, vuelva a compilar: el build lo lee de nuevo solo.
 
 ## Qué se ve en la app si falta un paso
