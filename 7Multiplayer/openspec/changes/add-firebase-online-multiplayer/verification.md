@@ -1,19 +1,19 @@
 # Verification record
 
-Cambio: `add-firebase-online-multiplayer` (reto 7, triqui en línea con Firebase Realtime Database). Rama `reto-7-triqui-online`. Este documento está en curso: la tarea 8.8 depende del usuario y sigue pendiente, así que la tarea 8.9 (este registro) no está marcada todavía.
+Cambio: `add-firebase-online-multiplayer` (reto 7, triqui en línea con Firebase Realtime Database). Rama `reto-7-triqui-online`. La tarea 8.8 depende del usuario y sigue parcial, así que la tarea 8.9 (este registro) no está marcada todavía.
 
 ## 1. Resumen
 
-- El cambio está implementado y verificado de forma automática: 390 pruebas JVM y 297 pruebas instrumentadas en 45 clases, todas en verde en el commit `5d26dfb` (secciones 2 y 3).
+- El cambio está implementado y verificado de forma automática: 390 pruebas JVM y 308 pruebas instrumentadas en 46 clases, todas en verde en el commit `f59f264`, que incluye la acción «Volver al inicio» (secciones 2 y 3).
 - La verificación con dos instancias reales contra Firebase se hizo en tres pasadas de QA. Encontró cuatro defectos: D-1, D-2 y D-4 están corregidos y verificados; D-3 no se reprodujo en el dispositivo físico según el reporte del usuario (sección 5).
 - Hay comprobaciones que solo puede hacer el usuario (tarea 8.8) y varias cosas que no se verificaron. Están en las secciones 6 y 7, sin suavizar: léelas antes de dar el cambio por cerrado.
 - La tarea 8.8 (sesión manual del usuario) está **parcial**: ver [qa/manual-sound-talkback.md](qa/manual-sound-talkback.md) y la sección 6.
-- Hay un grupo 10 pendiente (acción «Volver al inicio», D17): cambia código y pruebas, así que la batería de la sección 2 habrá que repetirla sobre el código final (tarea 10.3) y este documento se actualizará con el commit y las cifras nuevas.
+- La acción «Volver al inicio» (grupo 10, D17) está implementada y la batería completa se repitió sobre el código final (tarea 10.3); las cifras de la sección 2 son las de esa pasada.
 - Estado de `tasks.md`: ver la sección 11.
 
 ## 2. Comandos y resultados vigentes
 
-Commit probado: `5d26dfb` (árbol de trabajo limpio), 2026-10-11. Los resultados de 8.1 y 8.2 son los de esta misma batería.
+Commit probado: `f59f264` (árbol de trabajo limpio), 2026-10-11. Los resultados de 8.1, 8.2 y 10.3 son los de esta misma batería.
 
 **Tarea 8.1, build, pruebas JVM y lint**
 
@@ -21,9 +21,9 @@ Commit probado: `5d26dfb` (árbol de trabajo limpio), 2026-10-11. Los resultados
 ./gradlew testDebugUnitTest lintDebug assembleDebug --rerun-tasks
 ```
 
-Resultado: 390 pruebas JVM, 0 fallos, 0 errores, 0 omitidas. Lint con 0 errores y 11 advertencias (`UnusedResources` 7, `UseKtx` 2, `RedundantLabel` 1, `ObsoleteSdkInt` 1). Fuente: la ejecución de la batería final, informada por el orquestador; no hay un archivo de salida guardado de este comando en `qa/` (ver sección 7).
+Resultado: 390 pruebas JVM, 0 fallos, 0 errores, 0 omitidas. Lint con 0 errores y 11 advertencias (`UnusedResources` 7, `UseKtx` 2, `RedundantLabel` 1, `ObsoleteSdkInt` 1). Salida guardada en [qa/instrumented/pasada-final-2/gradle-8.1.txt](qa/instrumented/pasada-final-2/gradle-8.1.txt).
 
-**Tarea 8.2, batería instrumentada completa**
+**Tareas 8.2 y 10.3, batería instrumentada completa**
 
 ```
 ./gradlew :app:assembleDebug :app:assembleDebugAndroidTest
@@ -31,7 +31,9 @@ adb -s <emulador> install -r <APK de la app> y <APK de pruebas>
 adb -s <emulador> shell am instrument -w -e class com.edu.unal.tictactoe.<Clase> com.edu.unal.tictactoe.test/androidx.test.runner.AndroidJUnitRunner
 ```
 
-Resultado: 45 clases y 297 métodos `@Test`, una instrumentación por clase, una sola pasada, sin exclusiones ni repeticiones; las 297 ejecutadas, todas en `OK`, 0 fallos, 0 omitidas, 925 s de pared. Destino: emulador de referencia, API 35, con la identidad verificada antes de cada operación. Evidencia: [qa/instrumented/pasada-final/README.md](qa/instrumented/pasada-final/README.md) y las 45 salidas de esa carpeta (la suma de sus líneas `OK (N tests)` es 297). La batería anterior, con 43 clases y 277 pruebas y un fallo ya corregido de `FirebaseOnlineGameServiceLiveTest`, se conserva como registro en [qa/instrumented/README.md](qa/instrumented/README.md).
+Resultado: 46 clases y 308 métodos `@Test`, una instrumentación por clase, una sola pasada, sin exclusiones ni repeticiones; los 308 ejecutados, todos en `OK`, 0 fallos, 0 omitidos. Incluye `FirebaseOnlineGameServiceLiveTest` (23 pruebas) y la clase nueva `LocalBackToStartTest` (2). Destino: emulador de referencia, API 35, con la identidad verificada antes de cada operación. Evidencia: [qa/instrumented/pasada-final-2/README.md](qa/instrumented/pasada-final-2/README.md) y las 46 salidas de esa carpeta.
+
+La batería anterior a la acción «Volver al inicio» (commit `5d26dfb`, 45 clases y 297 pruebas, todas en `OK`) se conserva como registro en [qa/instrumented/pasada-final/README.md](qa/instrumented/pasada-final/README.md); la más antigua, con un fallo ya corregido, en [qa/instrumented/README.md](qa/instrumented/README.md).
 
 ## 3. Evidencia por tarea
 
@@ -42,9 +44,9 @@ Todos los enlaces apuntan a archivos que existen.
 | 1.4 y 1.5 | El build con el plugin `google-services` y la caché de configuración, y la inicialización de Firebase en el dispositivo | [qa/firebase-build-probe.md](qa/firebase-build-probe.md) |
 | 1.8 | Actualización de dependencias y de Gradle | [qa/dependency-upgrade.md](qa/dependency-upgrade.md) |
 | 7.11 | Reglas de seguridad probadas con la prueba automática en vivo (sustituye al simulador de la consola) | [qa/rules-simulator.md](qa/rules-simulator.md), [firebase/RULES.md](../../../firebase/RULES.md) |
-| 7.12 | Prueba en vivo `FirebaseOnlineGameServiceLiveTest` | [qa/instrumented/pasada-final/FirebaseOnlineGameServiceLiveTest.txt](qa/instrumented/pasada-final/FirebaseOnlineGameServiceLiveTest.txt) |
-| 8.1 | Build, JVM y lint | sección 2 |
-| 8.2 | Batería instrumentada completa | [qa/instrumented/pasada-final/README.md](qa/instrumented/pasada-final/README.md) |
+| 7.12 | Prueba en vivo `FirebaseOnlineGameServiceLiveTest` | [qa/instrumented/pasada-final-2/FirebaseOnlineGameServiceLiveTest.txt](qa/instrumented/pasada-final-2/FirebaseOnlineGameServiceLiveTest.txt) |
+| 8.1 | Build, JVM y lint | [qa/instrumented/pasada-final-2/gradle-8.1.txt](qa/instrumented/pasada-final-2/gradle-8.1.txt) |
+| 8.2 | Batería instrumentada completa | [qa/instrumented/pasada-final-2/README.md](qa/instrumented/pasada-final-2/README.md); anterior: [qa/instrumented/pasada-final/README.md](qa/instrumented/pasada-final/README.md) |
 | 8.3 | Preparación con dos instancias y precondiciones | [qa/e2e/setup.md](qa/e2e/setup.md), [qa/e2e/test-plan.md](qa/e2e/test-plan.md) |
 | 8.4 | Puntos del reto | [qa/e2e/reto/checklist.md](qa/e2e/reto/checklist.md) (primera pasada) y la tabla de pruebas automáticas de [qa/e2e/segunda-pasada/resultados.md](qa/e2e/segunda-pasada/resultados.md) |
 | 8.5 | Cancelación y carrera | [qa/e2e/lobby/resultados.md](qa/e2e/lobby/resultados.md) |
@@ -52,6 +54,8 @@ Todos los enlaces apuntan a archivos que existen.
 | 8.7 | Riesgos que el diseño manda comprobar | [qa/e2e/riesgos/resultados.md](qa/e2e/riesgos/resultados.md) |
 | 9.4 | Carrera al unirse y tercer jugador | [qa/e2e/lobby/carrera-automatizada-pasada-1.txt](qa/e2e/lobby/carrera-automatizada-pasada-1.txt), [qa/e2e/lobby/carrera-automatizada-pasada-2.txt](qa/e2e/lobby/carrera-automatizada-pasada-2.txt) y la sección «Cobertura automática de L05 y L07» de [qa/e2e/lobby/resultados.md](qa/e2e/lobby/resultados.md) |
 | 9.5 | Segunda y tercera pasada de QA | [qa/e2e/segunda-pasada/resultados.md](qa/e2e/segunda-pasada/resultados.md), [qa/e2e/tercera-pasada/resultados.md](qa/e2e/tercera-pasada/resultados.md) |
+| 10.1 y 10.2 | Acción «Volver al inicio» en el menú local y en el lobby | pruebas `GameMenuTest`, `GameScreenTest`, `LocalBackToStartTest`, `OnlineLobbyScreenTest` y `OnlineLobbyNavigationTest` dentro de [qa/instrumented/pasada-final-2/README.md](qa/instrumented/pasada-final-2/README.md) |
+| 10.3 | Batería completa sobre el código final | [qa/instrumented/pasada-final-2/README.md](qa/instrumented/pasada-final-2/README.md) y [qa/instrumented/pasada-final-2/gradle-8.1.txt](qa/instrumented/pasada-final-2/gradle-8.1.txt) |
 | Informe de la primera pasada | Veredicto y defectos D-1 a D-3 | [qa/e2e/report.md](qa/e2e/report.md) |
 | 8.8 (parcial) | Sesión manual del usuario del 2026-10-11 | [qa/manual-sound-talkback.md](qa/manual-sound-talkback.md) |
 
@@ -96,6 +100,8 @@ La tarea 8.8 está parcial (sección 6).
 | D-3 | Primera pasada | En el emulador, el segundo corte de red en el mismo proceso no mostró «Sin conexión» en el lobby | **No reproducido en el dispositivo físico**, según el reporte del usuario en la sesión manual del 2026-10-11 (puntos 4 y 5 de [qa/manual-sound-talkback.md](qa/manual-sound-talkback.md): «Sin conexión» apareció en los dos cortes seguidos y el botón se restableció). El fallo solo se vio en el emulador y su causa allí no se investigó; no se cambió nada en la app y no se dice «corregido». |
 | D-4 | Segunda pasada (`8977186`) | Tras pasar la app por segundo plano (3 s bastan), la pantalla quedaba retenida encendida en el resultado, el lobby y la pantalla inicial | Corregido en `f337002` (la bandera se pide a la ventana de la Activity, con un contador de peticiones). Verificado en la tercera pasada con las reservas de la sección 7. Detalle en D16. |
 
+La acción «Volver al inicio» (D17) se planificó en `6d46846` (con el registro de la sesión manual) y `8f2aa32` (tareas marcadas), y se implementó en `f59f264`.
+
 Otros commits del proceso: la revisión del plan tras la primera pasada fue `8977186`; la cobertura de la carrera y del tercer jugador, `39b0b9c`; la prueba de la lista vista por una tercera identidad, `eebfaf5`; los registros de la segunda y tercera pasada, `6e2b91f` y `5d26dfb`.
 
 ## 6. Estado de la tarea 8.8 (parcial)
@@ -131,9 +137,10 @@ Esta lista es completa hasta donde se sabe; nada de lo siguiente debe darse por 
 - Un fallo real de Firebase al crear un juego: el fallo al crear solo se cubre con pruebas con servicio falso, y con la red cortada el botón queda deshabilitado, así que no se pudo provocar.
 - La carrera automática demuestra exclusión mutua (exactamente un ganador por repetición), no un reparto equilibrado de ganadores: dentro de cada pasada ganó siempre la misma identidad.
 - El tiempo de detección tras un corte brusco de red lo decide el servicio: 115,7 s con la red del otro cortada hasta el final (114 s en la primera pasada); otra medición de la primera pasada dio más de 34 s sin detección.
-- El comando de 8.1 no tiene un archivo de salida guardado en `qa/`; el resultado es el informado por quien lo ejecutó. La batería instrumentada de 8.2 conserva la salida cruda de `am instrument` por clase, no archivos XML.
-- La salida de la ejecución de `aThirdIdentityObservingTheListSeesTheGameAppearAndDisappearWhenTheGuestJoins` no está guardada por separado; la clase `FirebaseOnlineGameServiceLiveTest` aparece con 23 pruebas en `OK` en la pasada final.
+- La batería instrumentada conserva la salida cruda de `am instrument` por clase, no archivos XML.
+- La salida de la ejecución de `aThirdIdentityObservingTheListSeesTheGameAppearAndDisappearWhenTheGuestJoins` no está guardada por separado; la clase `FirebaseOnlineGameServiceLiveTest` aparece con 23 pruebas en `OK` en la pasada final sobre `f59f264`.
 - Los cortes de red se hicieron solo en la instancia emulada; la red del teléfono nunca se tocó.
+- La acción «Volver al inicio» (D17): los estados «Conectando…», fallo de identidad y sin conexión del lobby solo están cubiertos a nivel de pantalla; la navegación con la app completa se probó con el servicio falso en estado conectado. La accesibilidad se comprobó por semántica, sin TalkBack real.
 - Rotación en las pantallas en línea con las dos instancias: la cubren las pruebas instrumentadas, no las pasadas de QA.
 
 ## 8. Notas y limitaciones conocidas
@@ -176,4 +183,4 @@ Valores de `app/google-services.json`: los 7 valores de texto de 8 o más caract
 
 ## 11. Estado final de `tasks.md`
 
-73 tareas más las 3 del grupo 10 (76 en total), 71 marcadas. Sin marcar: 8.8 (parcial: faltan dos puntos de sonido), 8.9 (este documento) y 10.1 a 10.3 (acción «Volver al inicio» y repetición de la batería).
+76 tareas (73 más las 3 del grupo 10), 74 marcadas. Sin marcar: 8.8 (parcial: faltan dos puntos de sonido) y 8.9 (este documento, pendiente de 8.8).

@@ -6,7 +6,7 @@ Lint: 0 errores (el build termina en BUILD SUCCESSFUL); advertencias por tipo: {
 
 > Task :app:lintDebug
 
-[Incubating] Problems report is available at: file:///Users/jsrc1115/Code/DADM-2026/7Multiplayer/build/reports/problems/problems-report.html
+[Incubating] Problems report is available at: build/reports/problems/problems-report.html
 
 BUILD SUCCESSFUL in 5s
 52 actionable tasks: 52 executed
