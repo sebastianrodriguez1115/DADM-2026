@@ -1,0 +1,13 @@
+Comando: ./gradlew testDebugUnitTest lintDebug assembleDebug --rerun-tasks
+Commit: f59f264
+Pruebas JVM: 390 ejecutadas, 0 fallos, 0 errores, 0 omitidas (35 archivos XML)
+Lint: 0 errores (el build termina en BUILD SUCCESSFUL); advertencias por tipo: {'RedundantLabel': 1, 'ObsoleteSdkInt': 1, 'UnusedResources': 7, 'UseKtx': 2}
+--- ultimas lineas de Gradle ---
+
+> Task :app:lintDebug
+
+[Incubating] Problems report is available at: file:///Users/jsrc1115/Code/DADM-2026/7Multiplayer/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 5s
+52 actionable tasks: 52 executed
+Configuration cache entry reused.

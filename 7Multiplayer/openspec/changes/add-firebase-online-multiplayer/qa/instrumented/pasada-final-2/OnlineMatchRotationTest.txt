@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.OnlineMatchRotationTest:......
+
+Time: 10.683
+
+OK (6 tests)
+
+

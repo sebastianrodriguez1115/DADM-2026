@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.OnlineLobbyRotationTest:..
+
+Time: 3.118
+
+OK (2 tests)
+
+

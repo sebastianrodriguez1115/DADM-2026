@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.LocalBackToStartTest:..
+
+Time: 4.993
+
+OK (2 tests)
+
+

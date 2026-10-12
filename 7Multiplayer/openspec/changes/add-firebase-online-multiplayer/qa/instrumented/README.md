@@ -1,4 +1,4 @@
-> Nota: la pasada válida es la de `pasada-final/`; esta carpeta se conserva como registro del fallo (ya corregido) de `FirebaseOnlineGameServiceLiveTest`.
+> Nota: la pasada vigente es la de `pasada-final-2/` (commit `f59f264`); `pasada-final/` corresponde al commit `5d26dfb`, anterior a la función nueva «Volver al inicio». Esta carpeta se conserva como registro del fallo (ya corregido) de `FirebaseOnlineGameServiceLiveTest`.
 
 # Batería instrumentada completa (tarea 8.2)
 

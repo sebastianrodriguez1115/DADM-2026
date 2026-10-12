@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.DifficultyDialogTest:......
+
+Time: 7.314
+
+OK (6 tests)
+
+

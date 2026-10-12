@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.SharedPreferencesGamePreferencesTest:.......
+
+Time: 0.084
+
+OK (7 tests)
+
+

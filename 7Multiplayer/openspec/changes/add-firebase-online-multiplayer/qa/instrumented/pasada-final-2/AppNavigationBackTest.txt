@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.AppNavigationBackTest:....
+
+Time: 3.682
+
+OK (4 tests)
+
+

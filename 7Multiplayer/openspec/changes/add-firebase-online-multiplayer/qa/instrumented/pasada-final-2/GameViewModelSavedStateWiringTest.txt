@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.GameViewModelSavedStateWiringTest:.......
+
+Time: 246.477
+
+OK (7 tests)
+
+

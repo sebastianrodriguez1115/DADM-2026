@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.StartScreenTest:..........
+
+Time: 9.148
+
+OK (10 tests)
+
+

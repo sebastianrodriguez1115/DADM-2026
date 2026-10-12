@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.MainActivityPendingTurnOptionsTest:...
+
+Time: 6.879
+
+OK (3 tests)
+
+

@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.LauncherIconTest:..
+
+Time: 0.055
+
+OK (2 tests)
+
+
