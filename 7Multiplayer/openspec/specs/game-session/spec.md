@@ -144,7 +144,7 @@ A efectos de esta capacidad, una sesión viva es el estado en memoria de la mism
 - **THEN** O espera lo restante; la restauración por sí sola no mueve, puntúa ni reproduce sonido, pero la jugada legítima posterior sí sigue reglas normales una sola vez
 
 ### Requirement: Límites de la sesión en memoria
-Un snapshot temporal de SavedStateHandle MUST restaurar únicamente recreación soportada y nunca ser almacén permanente. Sin snapshot válido, se inicia tablero vacío y X; SharedPreferences es la única autoridad de scores y dificultad, incluso tras muerte de proceso soportada. SoundEnabled se conserva solo en snapshot temporal y vuelve a true en sesión nueva. No se restaura una partida tras cierre deliberado, force-stop o nuevo lanzamiento sin snapshot; background no equivale a cierre. Código de dificultad estable: 0 Easy, 1 Hard, 2 Expert, 3 Impossible; códigos ausentes o inválidos usan Expert. Back aplica navegación normal y no garantiza finalizar tarea.
+Un snapshot temporal de SavedStateHandle MUST restaurar únicamente recreación soportada y nunca ser almacén permanente. Sin snapshot válido, se inicia tablero vacío y X; SharedPreferences es la única autoridad de scores y dificultad, incluso tras muerte de proceso soportada. SoundEnabled se conserva solo en snapshot temporal y vuelve a true en sesión nueva. No se restaura una partida tras cierre deliberado, force-stop o nuevo lanzamiento sin snapshot; background no equivale a cierre. Código de dificultad estable: 0 Easy, 1 Hard, 2 Expert, 3 Impossible; códigos ausentes o inválidos usan Expert. Back desde la partida local vuelve a la pantalla inicial sin finalizar la tarea ni reiniciar la sesión; Back desde la pantalla inicial aplica la navegación normal del sistema y no garantiza finalizar tarea.
 
 #### Scenario: Rotación con estado guardado
 - **GIVEN** que el host se recrea por configuración con estado temporal válido
@@ -182,9 +182,9 @@ Un snapshot temporal de SavedStateHandle MUST restaurar únicamente recreación 
 - **THEN** el tablero inicia vacío con X y scores/dificultad proceden de preferencias válidas o defaults
 
 #### Scenario: Background y Back
-- **GIVEN** que se envía a background o se pulsa Back
+- **GIVEN** que se envía a background o se pulsa Back desde la partida local
 - **WHEN** Android conserva la tarea
-- **THEN** no se fuerza terminación ni se reinicia estado por el mero background
+- **THEN** no se fuerza terminación ni se reinicia estado por el mero background; Back desde la partida local solo muestra la pantalla inicial con la sesión intacta
 
 #### Scenario: Códigos de dificultad
 - **GIVEN** que se carga un código entero persistido
