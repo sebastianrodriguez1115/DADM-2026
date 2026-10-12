@@ -6,8 +6,7 @@ Lista de lo que se muestra en la app, taller por taller; se presenta con la app 
 
 Se muestra en «Jugar contra la computadora».
 
-- [ ] Abrir la partida: tablero de 3 por 3 vacío y el texto «La persona hace la primera jugada».
-- [ ] Tocar una casilla libre: aparece una X verde y el texto pasa a «Turno de la computadora».
+- [ ] Tablero y figuras se muestran correctamente.
 - [ ] La computadora responde con una O roja y el texto vuelve a «Tu turno».
 - [ ] Tocar una casilla ocupada: no pasa nada.
 - [ ] Con la dificultad «Experto», la computadora gana si puede y, si no, bloquea al humano.
@@ -15,8 +14,7 @@ Se muestra en «Jugar contra la computadora».
 - [ ] Perder: el texto dice «Victoria de la computadora».
 - [ ] Llenar el tablero sin ganador: el texto dice «Empate».
 - [ ] Terminada la partida, tocar una casilla libre no hace nada.
-- [ ] Tocar el botón «Nueva partida»: el tablero queda vacío.
-- [ ] Abrir el menú y elegir «Nueva partida»: hace lo mismo.
+- [ ] El boton de nueva partida y el item del menu reinician la partida.
 
 ### Extras
 
@@ -42,7 +40,7 @@ Se muestra en «Jugar contra la computadora», con el menú de opciones.
 
 ## Taller 5: Gráficos y sonido
 
-Se muestra en «Jugar contra la computadora».
+Se muestra en «Jugar contra la computadora». Se usaron funciones basicas de JetPack Compose para dibujar lineas y circulos sobre un canvas.
 
 - [ ] El tablero se ve dibujado: cuadrícula con las marcas X y O, sin botones ni números.
 - [ ] Tocar cada una de las nueve casillas pone allí la marca.
@@ -76,19 +74,13 @@ Se muestra en «Jugar contra la computadora».
 
 ## Taller 7: Triqui en línea
 
-Se muestra en «Jugar en línea», con dos dispositivos.
+Se muestra en «Jugar en línea», con dos dispositivos. El servicio en la nube es Firebase Realtime Database.
 
-- [ ] Elegir «Jugar en línea» (la primera vez pide un apodo en «Tu apodo»): aparece «Juegos disponibles».
-- [ ] En un dispositivo, «Crear juego»: se ve «Esperando rival…» y «Cancelar», sin tablero.
-- [ ] En el otro dispositivo, la lista muestra «Juego de <apodo>» sin recargar.
-- [ ] Elegir ese juego: ambos ven el tablero; quien creó ve «Juegas con X» y quien se unió «Juegas con O».
-- [ ] Cada uno ve «Rival: <apodo>»; quien creó ve «Tu turno» y el otro «Turno de <apodo>».
-- [ ] Solo marca quien tiene el turno; en el otro dispositivo las casillas no responden.
-- [ ] Cada jugada aparece en el otro dispositivo sin tocar nada y el turno pasa.
-- [ ] Al ganar: «Ganaste» para el ganador y «Ganó <apodo>» para el otro; en empate ambos ven «Empate».
-- [ ] Al terminar el tablero queda bloqueado y se ofrece «Volver al lobby».
+- [ ] Al entrar se ve la lista de juegos disponibles.
+- [ ] Un jugador crea un juego y no puede jugar hasta que otro se une.
+- [ ] El otro jugador ve ese juego en su lista y se une.
+- [ ] Ambos juegan por turnos y cada jugada aparece en el otro dispositivo.
 
 ### Añadidos (no los pide el enunciado)
 
-- [ ] «Volver al inicio» en el lobby (y en el menú de la partida contra la computadora) lleva a la pantalla inicial.
-- [ ] «Compartir app» en el lobby abre un diálogo con un código QR, el texto «Escanea para instalar el Triqui» y «Cerrar».
+- [ ] «Volver al inicio» y «Compartir app» (código QR) en el lobby.
