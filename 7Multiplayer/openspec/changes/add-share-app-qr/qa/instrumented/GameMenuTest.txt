@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.GameMenuTest:........
+
+Time: 9.556
+
+OK (8 tests)
+
+

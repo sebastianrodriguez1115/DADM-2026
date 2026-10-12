@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.OnlineDoesNotAffectLocalScoreTest:...
+
+Time: 4.724
+
+OK (3 tests)
+
+

@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.MainActivityLifecycleTest:....
+
+Time: 12.586
+
+OK (4 tests)
+
+

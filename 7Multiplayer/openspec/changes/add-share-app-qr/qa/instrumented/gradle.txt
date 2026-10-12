@@ -1,0 +1,19 @@
+Commit: b033dca; local.properties sin la clave share.url (solo sdk.dir).
+
+## 1. ./gradlew testDebugUnitTest lintDebug assembleDebug --rerun-tasks
+Pruebas JVM: 400 ejecutadas, 0 fallos, 0 errores, 0 omitidas (36 archivos XML)
+Lint: 0 errores (BUILD SUCCESSFUL); advertencias por tipo: {'RedundantLabel': 1, 'ObsoleteSdkInt': 1, 'UnusedResources': 7, 'UseKtx': 2}
+--- ultimas lineas ---
+
+> Task :app:lintDebug
+
+[Incubating] Problems report is available at: <proyecto>/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 17s
+54 actionable tasks: 54 executed
+Configuration cache entry reused.
+
+## 2. ./gradlew assembleDebug dos veces seguidas
+Primera: BUILD SUCCESSFUL; Configuration cache entry stored.
+Segunda: BUILD SUCCESSFUL; Configuration cache entry reused.
+La segunda reutiliza la entrada de la cache de configuracion: si.

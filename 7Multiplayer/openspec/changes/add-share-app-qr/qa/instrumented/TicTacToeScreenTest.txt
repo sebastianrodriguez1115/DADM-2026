@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.TicTacToeScreenTest:.................
+
+Time: 43.445
+
+OK (17 tests)
+
+

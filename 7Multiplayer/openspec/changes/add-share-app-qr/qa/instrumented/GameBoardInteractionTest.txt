@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.GameBoardInteractionTest:.......
+
+Time: 8.087
+
+OK (7 tests)
+
+

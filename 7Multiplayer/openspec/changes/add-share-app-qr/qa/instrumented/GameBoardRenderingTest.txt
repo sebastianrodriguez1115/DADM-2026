@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.GameBoardRenderingTest:....
+
+Time: 5.167
+
+OK (4 tests)
+
+

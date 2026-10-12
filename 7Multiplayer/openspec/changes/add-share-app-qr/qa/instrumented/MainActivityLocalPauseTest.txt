@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.MainActivityLocalPauseTest:....
+
+Time: 18.824
+
+OK (4 tests)
+
+

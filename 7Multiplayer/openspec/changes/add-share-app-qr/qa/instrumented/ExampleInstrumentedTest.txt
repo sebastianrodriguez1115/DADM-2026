@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.ExampleInstrumentedTest:.
+
+Time: 0.002
+
+OK (1 test)
+
+

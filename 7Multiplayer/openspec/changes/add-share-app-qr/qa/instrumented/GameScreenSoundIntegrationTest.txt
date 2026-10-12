@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.GameScreenSoundIntegrationTest:.
+
+Time: 5.368
+
+OK (1 test)
+
+

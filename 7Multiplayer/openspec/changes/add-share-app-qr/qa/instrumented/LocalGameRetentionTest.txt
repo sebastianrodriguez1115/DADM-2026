@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.LocalGameRetentionTest:....
+
+Time: 14.117
+
+OK (4 tests)
+
+

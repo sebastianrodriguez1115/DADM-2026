@@ -1,0 +1,8 @@
+
+com.edu.unal.tictactoe.OnlineLobbyScreenTest:.........................
+
+Time: 26.675
+
+OK (25 tests)
+
+
