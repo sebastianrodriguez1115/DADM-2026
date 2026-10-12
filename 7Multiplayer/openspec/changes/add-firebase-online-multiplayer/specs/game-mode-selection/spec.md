@@ -56,6 +56,46 @@ El botón Back SHALL aplicar la navegación de la aplicación sin finalizar la t
 - **WHEN** se pulsa Back
 - **THEN** se aplica la navegación normal del sistema, sin que la aplicación cambie de pantalla ni muestre un diálogo propio
 
+### Requirement: Acción visible para volver a la pantalla inicial
+
+La partida local y el lobby SHALL ofrecer una acción visible «Volver al inicio» que muestre la pantalla inicial, sin diálogo de confirmación y con el mismo efecto que Back sin menú ni diálogo abierto. En la partida local la acción SHALL ser la última entrada del menú de opciones (definida en `game-options`); al usarla, la partida local conserva su estado y permanece en pausa mientras no se ve, como en «El modo local no avanza mientras su pantalla no está visible». En el lobby SHALL ser una acción visible en todos sus estados (definida en `online-lobby`). La espera de rival y la partida en línea MUST NOT incorporarla ni ganar un menú de opciones: conservan «Cancelar», «Salir» y «Volver al lobby». Back MUST seguir funcionando igual en todas las pantallas. La acción MUST medir al menos 48 dp, exponer una etiqueta de recursos y ser alcanzable en portrait y landscape.
+
+#### Scenario: Volver al inicio desde la partida local
+
+- **GIVEN** que se muestra la partida local con tablero, marcador y dificultad vigentes
+- **WHEN** la persona abre el menú de opciones y elige «Volver al inicio»
+- **THEN** el menú se cierra, se muestra la pantalla inicial sin confirmación y, al elegir de nuevo «Jugar contra la computadora», la partida local conserva el mismo estado
+
+#### Scenario: La partida local queda en pausa
+
+- **GIVEN** que O tiene una jugada pendiente y la persona usa «Volver al inicio» desde el menú de la partida local
+- **WHEN** permanece en la pantalla inicial más que el tiempo restante
+- **THEN** el tablero local no cambia y no suena ningún efecto
+
+#### Scenario: Volver al inicio desde el lobby
+
+- **GIVEN** que se muestra el lobby, en cualquiera de sus estados
+- **WHEN** la persona elige «Volver al inicio»
+- **THEN** se muestra la pantalla inicial sin confirmación, con el mismo efecto que Back desde el lobby
+
+#### Scenario: Las pantallas en línea de espera y partida no cambian
+
+- **GIVEN** que se muestra «Esperando rival…» o una partida en línea
+- **WHEN** se revisan sus acciones
+- **THEN** no hay «Volver al inicio» ni menú de opciones, y siguen las acciones «Cancelar», «Salir» y «Volver al lobby» según el caso
+
+#### Scenario: Back no cambia
+
+- **GIVEN** que se muestra la partida local o el lobby
+- **WHEN** se pulsa Back
+- **THEN** el efecto es el mismo que antes de existir la acción «Volver al inicio»
+
+#### Scenario: Acción accesible
+
+- **GIVEN** que se muestra la partida local con el menú abierto, o el lobby, en landscape o con la fuente escalada
+- **WHEN** se recorre la acción «Volver al inicio» con una tecnología de asistencia
+- **THEN** es alcanzable, expone su etiqueta, mide al menos 48 dp y no queda recortada
+
 ### Requirement: Conservación de la pantalla actual
 
 La aplicación SHALL conservar la pantalla actual (inicio, partida local o lobby) al rotar el dispositivo y tras la restauración de la tarea por muerte del proceso. Si la pantalla guardada es una partida en línea, la aplicación MUST restaurar el lobby en su lugar, porque una partida en línea no se reanuda tras muerte del proceso; la rotación sí conserva la partida en línea. Un lanzamiento nuevo, sin estado guardado, SHALL mostrar la pantalla inicial.

@@ -11,6 +11,7 @@ El reto 7 pide que dos jugadores jueguen al triqui a través de un servicio en l
 - Usar Firebase Realtime Database como servicio en la nube que media la interacción, con identidad anónima de Firebase: no hay cuentas de usuario.
 - Pedir un apodo una sola vez al entrar a «Jugar en línea» y recordarlo entre aperturas de la aplicación. La lista muestra cada juego como «Juego de <apodo>».
 - Quien crea el juego lleva X y empieza; quien se une lleva O. Solo se puede marcar después de que un rival se una. Una jugada se muestra solo cuando el servicio la confirma.
+- Añadir una acción visible «Volver al inicio» en el menú de opciones de la partida local y en el lobby, con el mismo efecto que Back (ver D17 en `design.md`).
 - Sin revancha: al terminar la partida se ve el resultado y cada jugador vuelve al lobby por su cuenta.
 - Si el rival se va (sale o se desconecta), la partida queda abandonada, sin ganador; quien permanece ve un aviso y vuelve al lobby. Quien pierde la conexión durante la partida ve «Se perdió la conexión. La partida terminó.» y no puede reanudarla; la aplicación mantiene la pantalla encendida mientras espera rival y durante la partida en curso (ver D16 en `design.md`).
 - Lo jugado en línea no modifica el marcador local ni se muestra en la pantalla en línea.

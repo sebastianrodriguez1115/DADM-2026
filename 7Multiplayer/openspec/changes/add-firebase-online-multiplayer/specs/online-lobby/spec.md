@@ -248,6 +248,28 @@ La aplicación MUST NOT permitir marcar casillas en línea hasta que el juego te
 - **WHEN** se muestra la partida
 - **THEN** ambas ven el tablero y solo quien tiene el turno puede marcar
 
+### Requirement: Volver al inicio desde el lobby
+
+El lobby SHALL mostrar la acción «Volver al inicio» en todos sus estados (conectando, fallo de identidad con «Reintentar», sin conexión y conectado), siempre habilitada, con el mismo efecto que Back desde el lobby sin espera de rival ni diálogo abierto: mostrar la pantalla inicial sin confirmación. «Crear juego» MUST seguir siendo la acción principal del lobby. La acción MUST medir al menos 48 dp, exponer una etiqueta de recursos y ser alcanzable en portrait y landscape y con fuentes escaladas.
+
+#### Scenario: Acción presente en todos los estados
+
+- **GIVEN** que se muestra el lobby en estado conectando, con fallo de identidad, sin conexión o conectado
+- **WHEN** se revisa la pantalla
+- **THEN** aparece «Volver al inicio», habilitada y expuesta como acción ejecutable
+
+#### Scenario: Volver al inicio sin conexión
+
+- **GIVEN** que el lobby muestra «Sin conexión» y «Crear juego» está deshabilitado
+- **WHEN** la persona elige «Volver al inicio»
+- **THEN** se muestra la pantalla inicial
+
+#### Scenario: Crear juego sigue siendo la acción principal
+
+- **GIVEN** que el lobby está conectado
+- **WHEN** se revisa la pantalla
+- **THEN** «Crear juego» y «Volver al inicio» son acciones distintas y «Crear juego» conserva su comportamiento
+
 ### Requirement: Orientación y accesibilidad del lobby
 
 El lobby, el diálogo de apodo y la pantalla de espera SHALL ser operables en portrait y landscape sin fijar orientación y sin recortar contenido con fuentes escaladas (con desplazamiento o disposición compacta si hace falta). Cada acción MUST medir al menos 48 dp, exponer una etiqueta de recursos y exponer su estado deshabilitado a las tecnologías de asistencia cuando lo esté; los elementos de la lista MUST ser alcanzables y exponer su texto «Juego de <apodo>» como etiqueta.

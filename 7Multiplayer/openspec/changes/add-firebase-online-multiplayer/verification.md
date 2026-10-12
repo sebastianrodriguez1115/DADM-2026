@@ -5,9 +5,11 @@ Cambio: `add-firebase-online-multiplayer` (reto 7, triqui en línea con Firebase
 ## 1. Resumen
 
 - El cambio está implementado y verificado de forma automática: 390 pruebas JVM y 297 pruebas instrumentadas en 45 clases, todas en verde en el commit `5d26dfb` (secciones 2 y 3).
-- La verificación con dos instancias reales contra Firebase se hizo en tres pasadas de QA. Encontró cuatro defectos: D-1, D-2 y D-4 están corregidos y verificados; D-3 sigue abierto (sección 5).
+- La verificación con dos instancias reales contra Firebase se hizo en tres pasadas de QA. Encontró cuatro defectos: D-1, D-2 y D-4 están corregidos y verificados; D-3 no se reprodujo en el dispositivo físico según el reporte del usuario (sección 5).
 - Hay comprobaciones que solo puede hacer el usuario (tarea 8.8) y varias cosas que no se verificaron. Están en las secciones 6 y 7, sin suavizar: léelas antes de dar el cambio por cerrado.
-- Estado de `tasks.md`: 73 tareas, 71 marcadas. Sin marcar: 8.8 (usuario) y 8.9 (este documento).
+- La tarea 8.8 (sesión manual del usuario) está **parcial**: ver [qa/manual-sound-talkback.md](qa/manual-sound-talkback.md) y la sección 6.
+- Hay un grupo 10 pendiente (acción «Volver al inicio», D17): cambia código y pruebas, así que la batería de la sección 2 habrá que repetirla sobre el código final (tarea 10.3) y este documento se actualizará con el commit y las cifras nuevas.
+- Estado de `tasks.md`: ver la sección 11.
 
 ## 2. Comandos y resultados vigentes
 
@@ -51,8 +53,9 @@ Todos los enlaces apuntan a archivos que existen.
 | 9.4 | Carrera al unirse y tercer jugador | [qa/e2e/lobby/carrera-automatizada-pasada-1.txt](qa/e2e/lobby/carrera-automatizada-pasada-1.txt), [qa/e2e/lobby/carrera-automatizada-pasada-2.txt](qa/e2e/lobby/carrera-automatizada-pasada-2.txt) y la sección «Cobertura automática de L05 y L07» de [qa/e2e/lobby/resultados.md](qa/e2e/lobby/resultados.md) |
 | 9.5 | Segunda y tercera pasada de QA | [qa/e2e/segunda-pasada/resultados.md](qa/e2e/segunda-pasada/resultados.md), [qa/e2e/tercera-pasada/resultados.md](qa/e2e/tercera-pasada/resultados.md) |
 | Informe de la primera pasada | Veredicto y defectos D-1 a D-3 | [qa/e2e/report.md](qa/e2e/report.md) |
+| 8.8 (parcial) | Sesión manual del usuario del 2026-10-11 | [qa/manual-sound-talkback.md](qa/manual-sound-talkback.md) |
 
-La evidencia de 8.8 no existe todavía y no se enlaza (sección 6).
+La tarea 8.8 está parcial (sección 6).
 
 ## 4. Decisiones, supuestos y sustituciones de evidencia
 
@@ -90,33 +93,41 @@ La evidencia de 8.8 no existe todavía y no se enlaza (sección 6).
 |---|---|---|---|
 | D-1 | Primera pasada (`86be80a`) | Quien perdía la red veía «Tu rival salió de la partida», no «Sin conexión», a 0,49 s | Nueva fase `ConnectionLost` y mensaje propio, commit `e6fdb06`. Verificado en la segunda pasada: 4 de 4 cortes de red con el mensaje correcto, ninguno con «Tu rival salió de la partida». |
 | D-2 | Primera pasada | Con la app en segundo plano 6,7 s la partida terminaba para ambos | No se evita (decisión 5 de D16): ahora quien sale ve el mensaje de conexión perdida (`e6fdb06`). Verificado en la segunda pasada: 3 s conservan la partida; 20 s la terminan con el mensaje correcto y el rival ve el abandono a los 7 u 8 s. Limitación aceptada. |
-| D-3 | Primera pasada | En el emulador, el segundo corte de red en el mismo proceso no mostró «Sin conexión» en el lobby | **Abierto.** No se corrige en este cambio; queda pendiente de repetir en un dispositivo físico (8.8). |
+| D-3 | Primera pasada | En el emulador, el segundo corte de red en el mismo proceso no mostró «Sin conexión» en el lobby | **No reproducido en el dispositivo físico**, según el reporte del usuario en la sesión manual del 2026-10-11 (puntos 4 y 5 de [qa/manual-sound-talkback.md](qa/manual-sound-talkback.md): «Sin conexión» apareció en los dos cortes seguidos y el botón se restableció). El fallo solo se vio en el emulador y su causa allí no se investigó; no se cambió nada en la app y no se dice «corregido». |
 | D-4 | Segunda pasada (`8977186`) | Tras pasar la app por segundo plano (3 s bastan), la pantalla quedaba retenida encendida en el resultado, el lobby y la pantalla inicial | Corregido en `f337002` (la bandera se pide a la ventana de la Activity, con un contador de peticiones). Verificado en la tercera pasada con las reservas de la sección 7. Detalle en D16. |
 
 Otros commits del proceso: la revisión del plan tras la primera pasada fue `8977186`; la cobertura de la carrera y del tercer jugador, `39b0b9c`; la prueba de la lista vista por una tercera identidad, `eebfaf5`; los registros de la segunda y tercera pasada, `6e2b91f` y `5d26dfb`.
 
-## 6. Estado de la tarea 8.8 (pendiente del usuario)
+## 6. Estado de la tarea 8.8 (parcial)
 
-La tarea 8.8 no se ha ejecutado y no se inventa ningún resultado. La componen:
+El usuario hizo una sesión manual el 2026-10-11 con su teléfono (dispositivo físico, API 35) contra un emulador con ventana, con la versión final de la app. El registro, con sus respuestas literales, está en [qa/manual-sound-talkback.md](qa/manual-sound-talkback.md). La tarea **no está marcada**: faltan dos puntos.
 
-- Comprobar a mano el sonido: efectos de X y O una vez por jugada propia y del rival, sin sonido al abrir o rotar, con «Sonido» deshabilitado ni con la app en segundo plano.
-- Borrar desde la consola un juego en espera y ver en el lobby «Este juego ya no está disponible».
-- Confirmar en la consola que no quedan juegos de prueba.
-- Alternar el modo avión dos veces en el lobby de un dispositivo físico, para resolver D-3.
+Respondido por el usuario (ver el archivo para el texto exacto):
 
-El teléfono de pruebas se desconectó el 2026-10-11, a mitad de la tercera pasada; las comprobaciones que necesitan un dispositivo físico quedan pendientes hasta que haya uno. TalkBack no se ejecuta, por una propuesta del orquestador que el usuario no objetó (no es una decisión expresa suya): queda como no verificado. Cuando el usuario reporte, el resultado irá a `qa/manual-sound-talkback.md` (todavía no existe).
+- La partida completa en línea entre teléfono y emulador funcionó.
+- Sonido en la partida: una vez por jugada, propia y del rival, sonidos distintos para X y O, y nada al abrir la partida.
+- Modo avión en el lobby: «Sin conexión», «Crear juego» deshabilitado, el aviso se va solo; repetido una segunda vez sin cerrar la app, «Sin conexión» apareció de nuevo y el botón se restableció (D-3 no se reprodujo, sección 5).
+- Borrar desde la consola un juego en espera: el teléfono volvió al lobby con «Este juego ya no está disponible».
+- Al final, con las dos apps en la pantalla inicial, no quedaban juegos en `games`.
+- Partida en curso, Inicio 20 s y volver: el teléfono mostró «Se perdió la conexión. La partida terminó.» y el emulador «Tu rival salió de la partida».
+
+Pendiente: que el sonido no se reproduzca al girar el teléfono a mitad de partida, y que no se reproduzca con «Sonido» deshabilitado desde el menú del juego local (el usuario no ha respondido).
+
+TalkBack no se ejecutó: fue una propuesta del orquestador que el usuario no objetó (no es una decisión expresa suya); queda como no verificado.
+
+Lectura del orquestador, no respuesta del usuario: minutos después del punto del Inicio de 20 s, con el lobby en primer plano en el teléfono, `dumpsys power` no mostraba ningún bloqueo de pantalla de la app y la ventana no tenía `KEEP_SCREEN_ON`. Es coherente con la corrección de D-4 tras un segundo plano largo en el dispositivo físico (sección 7 para las reservas).
 
 ## 7. No verificado
 
 Esta lista es completa hasta donde se sabe; nada de lo siguiente debe darse por comprobado.
 
-- El sonido real (reproducción de audio) y TalkBack: no se oyen ni se ejecutan en la automatización.
-- D-3 en un dispositivo físico: solo se vio fallar en el emulador (primera pasada) y no se repitió.
+- El sonido real: lo oyó el usuario en una partida normal, pero siguen pendientes el sonido al girar el teléfono y con «Sonido» deshabilitado. TalkBack no se ejecutó.
 - Espera real de más de 10 minutos sin tocar la pantalla con la partida en curso. Solo se hizo en «Esperando rival…» (735 s en el dispositivo físico, segunda pasada); en la partida en curso solo se leyó el indicador del sistema.
-- D-4 en el dispositivo físico: confirmado según el indicador de energía en los casos 1 a 3 (10 de 10 lecturas); el caso de segundo plano largo y «Volver al lobby» del caso 3 no se ejecutaron porque el teléfono se desconectó. Confirmado completo solo en los dos emuladores (34 de 34 lecturas).
+- D-4 en el dispositivo físico: confirmado según el indicador de energía en los casos 1 a 3 (10 de 10 lecturas). El caso de segundo plano largo se vio después en la sesión manual: una sola lectura del orquestador (sin bloqueo de energía de la app ni `KEEP_SCREEN_ON` en la ventana), hecha minutos después de volver al lobby y no en el instante de volver, y con un indicador de ventana poco fiable en ese teléfono; «Volver al lobby» del caso 3 sigue sin ejecutarse allí. Confirmado completo solo en los dos emuladores (34 de 34 lecturas).
 - La discrepancia del indicador de ventana en el dispositivo físico: la línea de banderas de la ventana nunca contenía `KEEP_SCREEN_ON` mientras el bloqueo de energía estaba retenido. No se reprodujo en emuladores, ya aparecía con el código anterior y queda sin explicar; el requisito lo decide el indicador de energía.
 - El orden de llegada de los avisos (el de conexión perdida antes del juego nulo): comprobado solo de forma empírica en 4 cortes de red y varias salidas a segundo plano, en los dos tipos de dispositivo. No se leyó en el código del SDK, y las pruebas automáticas fijan ese orden a mano con el servicio falso.
-- Las comprobaciones de consola de 8.8: el borrado externo de un juego en espera, que no quedan juegos de prueba, y el residuo de nodos tras las pasadas (las listas de ambas instancias se vieron vacías, pero la consola no se revisó).
+- Las comprobaciones de consola de 8.8 se apoyan solo en el reporte del usuario, sin captura ni salida guardada: el borrado externo de un juego en espera y que no quedan juegos en `games` al final de la sesión. El residuo de nodos tras las pasadas de QA anteriores no se revisó por separado.
+- D-3 en el dispositivo físico: el reporte del usuario dice que no se reprodujo; no hay captura ni salida guardada. Sigue sin explicarse por qué falló en el emulador.
 - Un fallo real de Firebase al crear un juego: el fallo al crear solo se cubre con pruebas con servicio falso, y con la red cortada el botón queda deshabilitado, así que no se pudo provocar.
 - La carrera automática demuestra exclusión mutua (exactamente un ganador por repetición), no un reparto equilibrado de ganadores: dentro de cada pasada ganó siempre la misma identidad.
 - El tiempo de detección tras un corte brusco de red lo decide el servicio: 115,7 s con la red del otro cortada hasta el final (114 s en la primera pasada); otra medición de la primera pasada dio más de 34 s sin detección.
@@ -146,6 +157,8 @@ No reverificadas (no se ejecutó Gradle ni adb para este documento):
 - Una batería instrumentada intermedia terminó con un fallo de `FirebaseOnlineGameServiceLiveTest`, ya corregido; se conserva en `qa/instrumented/` como registro.
 - En la primera pasada, el uso del teléfono por el usuario interrumpió pruebas: el teléfono se bloqueó una vez en pleno bloque, otras apps pasaron a primer plano y algunos intentos se invalidaron (anotados en la nota de validez de [qa/e2e/abandono/resultados.md](qa/e2e/abandono/resultados.md) y en el informe). En la segunda pasada, un primer intento de espera real no fue válido porque la app salió de primer plano y se repitió.
 - El teléfono se desconectó a mitad de la tercera pasada; el resto se hizo con dos emuladores (el emulador de la instancia B y un emulador secundario).
+- En la sesión manual del usuario (8.8), el teléfono tuvo instalada unos minutos la app del taller anterior, porque el usuario la lanzó desde otro proyecto del IDE con el mismo identificador de aplicación; se corrigió antes de las comprobaciones.
+- En esa sesión el emulador se colgó y se cerró una vez (fallo del emulador, no de la app) y se volvió a abrir.
 - El agente de QA leyó una vez por descuido la estructura de la pantalla de inicio del teléfono; ese contenido no se guardó en la evidencia.
 - En la segunda pasada se descartó un indicador demasiado laxo de pantalla encendida; en la tercera se corrigió el lector del indicador de ventana (ambos anotados en sus informes).
 
@@ -163,4 +176,4 @@ Valores de `app/google-services.json`: los 7 valores de texto de 8 o más caract
 
 ## 11. Estado final de `tasks.md`
 
-73 tareas, 71 marcadas. Sin marcar: 8.8 (comprobaciones manuales del usuario) y 8.9 (este documento, pendiente de 8.8).
+73 tareas más las 3 del grupo 10 (76 en total), 71 marcadas. Sin marcar: 8.8 (parcial: faltan dos puntos de sonido), 8.9 (este documento) y 10.1 a 10.3 (acción «Volver al inicio» y repetición de la batería).

@@ -199,7 +199,7 @@ La primera pasada con dos instancias (`qa/e2e/report.md`, commit `86be80a`) most
 **No confirmado**
 
 - Que el SDK aplique `onDisconnect().removeValue()` en su copia local al detectar la pérdida de conexión es la explicación coherente con lo medido (el servidor conserva el juego mientras B ya ve el nodo nulo), pero no se comprobó en el código del SDK.
-- D-3. En el emulador, el segundo corte de red dentro del mismo proceso no mostró «Sin conexión» en el lobby. Puede ser una rareza del emulador (el corte con `svc` no cierra los sockets); queda pendiente de repetir en el dispositivo físico y no se corrige en este cambio.
+- D-3. En el emulador, el segundo corte de red dentro del mismo proceso no mostró «Sin conexión» en el lobby. Puede ser una rareza del emulador (el corte con `svc` no cierra los sockets). En la sesión manual del 2026-10-11 no se reprodujo en el dispositivo físico: según el reporte del usuario, «Sin conexión» apareció en los dos cortes seguidos de modo avión y «Crear juego» se restableció al volver la conexión (`qa/manual-sound-talkback.md`). El fallo solo se vio en el emulador y su causa allí no se investigó; no se cambió nada en la app.
 
 **Decisión**
 
@@ -239,10 +239,29 @@ Detalle de diseño derivado de esa elección (no decisión del usuario):
 - Orden de llegada sin leer en el código del SDK: la segunda pasada lo comprobó empíricamente en los dos dispositivos, pero si el juego nulo llegara antes que el aviso de conexión, quien pierde la conexión vería «Tu rival salió de la partida».
 - Corte brusco de red: el rival espera del orden de minutos a que el servicio lo detecte, viendo la partida en curso.
 - D-4 corregido: confirmado en dos emuladores (34 de 34 lecturas) y, en el dispositivo físico, solo según el indicador de energía en tres de los cuatro casos (10 de 10 lecturas); el segundo plano largo no se ejecutó en el dispositivo físico, el indicador de ventana de ese dispositivo discrepa sin explicación y no hubo espera real en la partida en curso, solo en la espera.
-- D-3 sin resolver: la visibilidad de «Sin conexión» en el lobby tras cortes sucesivos queda pendiente de comprobar en el dispositivo físico (tarea 8.8).
+- D-3, no reproducido en el dispositivo físico: el fallo de «Sin conexión» tras cortes sucesivos en el lobby solo se vio en el emulador, su causa allí no se investigó y no se cambió nada en la app.
 - Sonido y TalkBack sin verificar por la aplicación; TalkBack no se ejecuta (propuesto por el orquestador y no objetado por el usuario).
 
 Efectos en las tareas: el grupo 9 de `tasks.md` implementa los puntos 2 y 3 y la cobertura del punto 7, y repite la pasada de QA; las tareas 8.2, 8.4, 8.5, 8.6, 8.8 y 8.9 se ajustan a lo anterior.
+
+### D17. Acción visible para volver a la pantalla inicial
+
+**Petición del usuario (2026-10-11), literal:** «Una entrada en los menús o una forma para volver al menú de selección de tipo de partida desde las vistas respectivas. En este momento solo se puede volver con back.»
+
+**Concreción decidida por el orquestador.** El usuario dejó abierta la forma; lo siguiente no es una decisión expresa suya:
+
+- Texto de la acción: «Volver al inicio».
+- Juego local: entrada nueva en el menú de opciones, la última. Al pulsarla se cierra el menú y se muestra la pantalla inicial, con el mismo efecto que Back: sin confirmación, y la partida local se conserva y queda en pausa mientras no se ve (D2).
+- Lobby: acción «Volver al inicio» visible en todos sus estados (conectando, fallo de identidad, sin conexión, conectado), siempre habilitada, con el mismo efecto que Back desde el lobby. «Crear juego» sigue siendo la acción principal.
+- «Esperando rival…» y la partida en línea no cambian: ya tienen «Cancelar», «Salir» y «Volver al lobby». No se añade menú de opciones a las pantallas en línea (A6 se mantiene).
+- Back sigue funcionando igual en todas las pantallas. Objetivo táctil de 48 dp, etiqueta de recursos, accesible y alcanzable en horizontal.
+
+**Alternativas descartadas**
+
+- Barra superior con flecha de regreso en el lobby: añade un elemento de navegación que el resto de las pantallas no tiene (la pantalla inicial y la espera son pantallas sin barra superior) y obligaría a rediseñar la disposición del lobby, adaptable ya a landscape y a fuente grande; una acción de texto en el contenido es más simple y se etiqueta como las demás.
+- Menú de opciones en las pantallas en línea: contradice A6 (dificultad y reinicio de puntajes son solo del modo local) y daría un menú casi vacío; ya hay una acción de salida propia en cada estado de la partida y la espera.
+
+**Efecto en las especificaciones.** El requisito común vive en `game-mode-selection`; la entrada del menú, en el delta de `game-options` (que pasa a seis entradas y modifica también «Accesibilidad de opciones y diálogos», que mencionaba «las cinco entradas»); la acción del lobby, en `online-lobby`. El delta de `game-session` no cambia: el efecto de la acción es el de Back y ya está cubierto por «Límites de la sesión en memoria». Las tareas están en el grupo 10 de `tasks.md`.
 
 ## Risks / Trade-offs
 
@@ -257,7 +276,7 @@ Efectos en las tareas: el grupo 9 de `tasks.md` implementa los puntos 2 y 3 y la
 - [Un juego huérfano podría quedar en la lista si el servidor nunca registró el `onDisconnect`] → se registra antes de escribir el nodo, lo que las reglas admiten por la cláusula inocua (D7, D8); si el registro falla, no se crea el juego; un residuo se borra a mano desde la consola.
 - [Las reglas publicadas a mano pueden divergir del archivo versionado] → el archivo es la fuente y la verificación de extremo a extremo se hace con ellas publicadas.
 - [El plan gratuito admite 100 conexiones simultáneas] → suficiente para una clase; si se supera, nuevas conexiones fallan y aparece «Sin conexión».
-- [La carrera al unirse y el tercer jugador no se pueden reproducir con dos dispositivos, y «Sin conexión» tras cortes sucesivos en el lobby (D-3) no está confirmado] → la carrera y el tercer jugador se cubren con `FirebaseOnlineGameServiceLiveTest`; D-3 queda pendiente de comprobar en el dispositivo físico (D16).
+- [La carrera al unirse y el tercer jugador no se pueden reproducir con dos dispositivos, y «Sin conexión» tras cortes sucesivos en el lobby (D-3) falló en el emulador] → la carrera y el tercer jugador se cubren con `FirebaseOnlineGameServiceLiveTest`; D-3 no se reprodujo en el dispositivo físico (D16).
 - [Las instrumentadas `MainActivity*` fallan al cambiar la pantalla de arranque] → ayudante de prueba y adaptación explícita (D13).
 
 ## Migration Plan
