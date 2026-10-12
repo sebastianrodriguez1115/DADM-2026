@@ -1,13 +1,13 @@
 # Verification record
 
-Cambio: `add-firebase-online-multiplayer` (reto 7, triqui en línea con Firebase Realtime Database). Rama `reto-7-triqui-online`. La tarea 8.8 depende del usuario y sigue parcial, así que la tarea 8.9 (este registro) no está marcada todavía.
+Cambio: `add-firebase-online-multiplayer` (reto 7, triqui en línea con Firebase Realtime Database). Rama `reto-7-triqui-online`. Las tareas 8.8 (sesión manual del usuario) y 8.9 (este registro) están hechas, con las reservas de la sección 7.
 
 ## 1. Resumen
 
 - El cambio está implementado y verificado de forma automática: 390 pruebas JVM y 308 pruebas instrumentadas en 46 clases, todas en verde en el commit `f59f264`, que incluye la acción «Volver al inicio» (secciones 2 y 3).
 - La verificación con dos instancias reales contra Firebase se hizo en tres pasadas de QA. Encontró cuatro defectos: D-1, D-2 y D-4 están corregidos y verificados; D-3 no se reprodujo en el dispositivo físico según el reporte del usuario (sección 5).
-- Hay comprobaciones que solo puede hacer el usuario (tarea 8.8) y varias cosas que no se verificaron. Están en las secciones 6 y 7, sin suavizar: léelas antes de dar el cambio por cerrado.
-- La tarea 8.8 (sesión manual del usuario) está **parcial**: ver [qa/manual-sound-talkback.md](qa/manual-sound-talkback.md) y la sección 6.
+- La sesión manual del usuario (tarea 8.8) se completó; quedan cosas que no se verificaron. Están en la sección 7, sin suavizar: léelas antes de dar el cambio por cerrado.
+- La tarea 8.8 (sesión manual del usuario) está hecha, con TalkBack sin ejecutar y el sonido en segundo plano sin comprobar a mano: ver [qa/manual-sound-talkback.md](qa/manual-sound-talkback.md) y la sección 6.
 - La acción «Volver al inicio» (grupo 10, D17) está implementada y la batería completa se repitió sobre el código final (tarea 10.3); las cifras de la sección 2 son las de esa pasada.
 - Estado de `tasks.md`: ver la sección 11.
 
@@ -57,9 +57,9 @@ Todos los enlaces apuntan a archivos que existen.
 | 10.1 y 10.2 | Acción «Volver al inicio» en el menú local y en el lobby | pruebas `GameMenuTest`, `GameScreenTest`, `LocalBackToStartTest`, `OnlineLobbyScreenTest` y `OnlineLobbyNavigationTest` dentro de [qa/instrumented/pasada-final-2/README.md](qa/instrumented/pasada-final-2/README.md) |
 | 10.3 | Batería completa sobre el código final | [qa/instrumented/pasada-final-2/README.md](qa/instrumented/pasada-final-2/README.md) y [qa/instrumented/pasada-final-2/gradle-8.1.txt](qa/instrumented/pasada-final-2/gradle-8.1.txt) |
 | Informe de la primera pasada | Veredicto y defectos D-1 a D-3 | [qa/e2e/report.md](qa/e2e/report.md) |
-| 8.8 (parcial) | Sesión manual del usuario del 2026-10-11 | [qa/manual-sound-talkback.md](qa/manual-sound-talkback.md) |
+| 8.8 | Sesión manual del usuario del 2026-10-11 | [qa/manual-sound-talkback.md](qa/manual-sound-talkback.md) |
 
-La tarea 8.8 está parcial (sección 6).
+La tarea 8.8 y sus reservas: sección 6.
 
 ## 4. Decisiones, supuestos y sustituciones de evidencia
 
@@ -104,20 +104,22 @@ La acción «Volver al inicio» (D17) se planificó en `6d46846` (con el registr
 
 Otros commits del proceso: la revisión del plan tras la primera pasada fue `8977186`; la cobertura de la carrera y del tercer jugador, `39b0b9c`; la prueba de la lista vista por una tercera identidad, `eebfaf5`; los registros de la segunda y tercera pasada, `6e2b91f` y `5d26dfb`.
 
-## 6. Estado de la tarea 8.8 (parcial)
+## 6. Tarea 8.8 (sesión manual del usuario)
 
-El usuario hizo una sesión manual el 2026-10-11 con su teléfono (dispositivo físico, API 35) contra un emulador con ventana, con la versión final de la app. El registro, con sus respuestas literales, está en [qa/manual-sound-talkback.md](qa/manual-sound-talkback.md). La tarea **no está marcada**: faltan dos puntos.
+El usuario hizo una sesión manual el 2026-10-11 con su teléfono (dispositivo físico, API 35) contra un emulador con ventana, con la versión final de la app. El registro, con sus respuestas literales, está en [qa/manual-sound-talkback.md](qa/manual-sound-talkback.md). La tarea está hecha: todas las comprobaciones pedidas tienen respuesta del usuario, con las reservas de abajo.
 
 Respondido por el usuario (ver el archivo para el texto exacto):
 
 - La partida completa en línea entre teléfono y emulador funcionó.
 - Sonido en la partida: una vez por jugada, propia y del rival, sonidos distintos para X y O, y nada al abrir la partida.
+- Al girar el teléfono a mitad de una partida, el giro no hace sonar nada («No lo hace.», tras aclarar la pregunta).
+- Con «Sonido» deshabilitado desde el menú de «Jugar contra la computadora», la partida en línea queda en silencio («Sí»).
 - Modo avión en el lobby: «Sin conexión», «Crear juego» deshabilitado, el aviso se va solo; repetido una segunda vez sin cerrar la app, «Sin conexión» apareció de nuevo y el botón se restableció (D-3 no se reprodujo, sección 5).
 - Borrar desde la consola un juego en espera: el teléfono volvió al lobby con «Este juego ya no está disponible».
 - Al final, con las dos apps en la pantalla inicial, no quedaban juegos en `games`.
 - Partida en curso, Inicio 20 s y volver: el teléfono mostró «Se perdió la conexión. La partida terminó.» y el emulador «Tu rival salió de la partida».
 
-Pendiente: que el sonido no se reproduzca al girar el teléfono a mitad de partida, y que no se reproduzca con «Sonido» deshabilitado desde el menú del juego local (el usuario no ha respondido).
+No comprobado a mano: «sin sonido con la app en segundo plano», que forma parte del texto de la tarea pero no se le preguntó al usuario como comprobación propia. Lo cubre solo la prueba automática `OnlineMatchSoundIntegrationTest.aRivalMoveInTheBackgroundDoesNotSoundNeitherThenNorOnReturning`, con un reproductor de prueba y no con audio real.
 
 TalkBack no se ejecutó: fue una propuesta del orquestador que el usuario no objetó (no es una decisión expresa suya); queda como no verificado.
 
@@ -127,7 +129,8 @@ Lectura del orquestador, no respuesta del usuario: minutos después del punto de
 
 Esta lista es completa hasta donde se sabe; nada de lo siguiente debe darse por comprobado.
 
-- El sonido real: lo oyó el usuario en una partida normal, pero siguen pendientes el sonido al girar el teléfono y con «Sonido» deshabilitado. TalkBack no se ejecutó.
+- TalkBack: no se ejecutó (propuesta del orquestador no objetada por el usuario).
+- El sonido con la app en segundo plano: no se comprobó a mano; solo lo cubre la prueba automática citada en la sección 6, con un reproductor de prueba. El resto del sonido (partida normal, giro y «Sonido» deshabilitado) lo respondió el usuario, sin captura ni grabación.
 - Espera real de más de 10 minutos sin tocar la pantalla con la partida en curso. Solo se hizo en «Esperando rival…» (735 s en el dispositivo físico, segunda pasada); en la partida en curso solo se leyó el indicador del sistema.
 - D-4 en el dispositivo físico: confirmado según el indicador de energía en los casos 1 a 3 (10 de 10 lecturas). El caso de segundo plano largo se vio después en la sesión manual: una sola lectura del orquestador (sin bloqueo de energía de la app ni `KEEP_SCREEN_ON` en la ventana), hecha minutos después de volver al lobby y no en el instante de volver, y con un indicador de ventana poco fiable en ese teléfono; «Volver al lobby» del caso 3 sigue sin ejecutarse allí. Confirmado completo solo en los dos emuladores (34 de 34 lecturas).
 - La discrepancia del indicador de ventana en el dispositivo físico: la línea de banderas de la ventana nunca contenía `KEEP_SCREEN_ON` mientras el bloqueo de energía estaba retenido. No se reprodujo en emuladores, ya aparecía con el código anterior y queda sin explicar; el requisito lo decide el indicador de energía.
@@ -183,4 +186,4 @@ Valores de `app/google-services.json`: los 7 valores de texto de 8 o más caract
 
 ## 11. Estado final de `tasks.md`
 
-76 tareas (73 más las 3 del grupo 10), 74 marcadas. Sin marcar: 8.8 (parcial: faltan dos puntos de sonido) y 8.9 (este documento, pendiente de 8.8).
+76 tareas (73 más las 3 del grupo 10), 76 marcadas. No queda ninguna sin marcar; las reservas están en la sección 7.

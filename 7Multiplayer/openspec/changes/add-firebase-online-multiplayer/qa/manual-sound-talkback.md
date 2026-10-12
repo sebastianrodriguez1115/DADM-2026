@@ -1,8 +1,9 @@
-# Sesión manual del usuario (tarea 8.8), registro parcial
+# Sesión manual del usuario (tarea 8.8)
 
 - Fecha: 2026-10-11.
 - Quién: el usuario, con su teléfono (dispositivo físico, API 35) contra un emulador con ventana, con la versión final de la app. Antes de empezar, el orquestador comprobó que la app instalada en el teléfono contenía las clases del modo en línea y la corrección de la pantalla encendida.
-- Estado de la tarea 8.8: **parcial**. Faltan las respuestas de los puntos 2 y 3. TalkBack no se ejecutó. La tarea no está marcada.
+- Estado de la tarea 8.8: la sesión **ya no es parcial**; todas las comprobaciones pedidas tienen respuesta del usuario (los puntos 2 y 3 se respondieron después, el mismo 2026-10-11). TalkBack no se ejecutó (propuesto por el orquestador y no objetado por el usuario).
+- No comprobado a mano: el texto de la tarea 8.8 menciona también «sin sonido con la app en segundo plano». Nadie se lo preguntó al usuario en esta sesión como comprobación propia, así que no se da por cubierto a mano; solo lo cubre una prueba automática (ver más abajo).
 
 ## Respuestas del usuario
 
@@ -12,8 +13,8 @@ Las respuestas van entre comillas, tal como las dio el usuario; no se amplían n
 |---|---|---|
 | — | Partida completa en línea entre teléfono y emulador | «Me funcionó el happy path» |
 | 1 | En la partida suena una vez cada jugada, propia y del rival, con sonidos distintos para X y O, y nada al abrirse la partida | «Sí, sonido normal.» |
-| 2 | Girar el teléfono a mitad de partida no reproduce ningún sonido | Sin respuesta todavía: el usuario pidió aclarar la pregunta. **Pendiente.** |
-| 3 | Con «Sonido» deshabilitado desde el menú del juego local, la partida en línea no suena | Sin respuesta todavía. **Pendiente.** |
+| 2 | Girar el teléfono a mitad de partida no reproduce ningún sonido | Se aclaró la pregunta antes de la respuesta («Al girar el teléfono a mitad de una partida en línea, ¿el giro hace sonar algo por sí solo? Lo correcto es que no.»). Respuesta: «No lo hace.» |
+| 3 | Con «Sonido» deshabilitado desde el menú del juego local, la partida en línea no suena | Pregunta: «Con "Sonido" en "Deshabilitado" (desde el menú de "Jugar contra la computadora"), ¿la partida en línea queda en silencio?» Respuesta: «Sí» |
 | 4 | Modo avión en el lobby: aparece «Sin conexión», «Crear juego» queda deshabilitado y el aviso se va solo al desactivarlo | «Sirvió como describes.» |
 | 5 | Repetir el modo avión sin cerrar la app: «Sin conexión» aparece también la segunda vez | «Sí, y se restaura el botón cuando vuelve la conexión también.» |
 | 6 | Borrar desde la consola un juego en espera: el teléfono vuelve al lobby con «Este juego ya no está disponible» | «Sí, funcionó como describes» |
@@ -32,6 +33,10 @@ Es coherente con la corrección de D-4 tras un segundo plano largo en el disposi
 ## Qué dicen los puntos 4 y 5 sobre D-3
 
 Según el reporte del usuario, en el teléfono «Sin conexión» apareció en los dos cortes seguidos de modo avión y la acción «Crear juego» se restableció al volver la conexión. Lo que falló en el emulador en la primera pasada (D-3) no se reprodujo en el dispositivo físico. No se cambió nada en la app: el fallo solo se vio en el emulador y su causa allí no se investigó.
+
+## Sonido con la app en segundo plano
+
+No se comprobó a mano. La cubre la prueba automática `OnlineMatchSoundIntegrationTest.aRivalMoveInTheBackgroundDoesNotSoundNeitherThenNorOnReturning` (instrumentada): con la Activity en segundo plano, una jugada del rival no suena ni entonces ni al volver, y en primer plano la jugada siguiente vuelve a sonar. Usa un reproductor de prueba, no audio real.
 
 ## TalkBack
 
