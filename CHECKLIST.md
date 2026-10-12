@@ -17,26 +17,6 @@ Este documento lista, taller por taller, lo que pide el enunciado de cada carpet
 
 ---
 
-## Taller 0: HelloWorld
-
-No hay enunciado de este taller en el repositorio. La carpeta [0HelloWorld](0HelloWorld/) contiene un proyecto, pero no se sabe qué pedía.
-
-- [ ] Completar aquí las actividades cuando se tenga el enunciado.
-
-## Taller 1
-
-No hay enunciado ni carpeta de este taller en el repositorio.
-
-- [ ] Completar aquí las actividades cuando se tenga el enunciado.
-
-## Taller 2
-
-No hay enunciado ni carpeta de este taller en el repositorio.
-
-- [ ] Completar aquí las actividades cuando se tenga el enunciado.
-
----
-
 ## Taller 3: Tic-Tac-Toe
 
 Enunciado: [3TicTacToe/TicTacToe.pdf](3TicTacToe/TicTacToe.pdf), «Challenge: Tic-Tac-Toe App».
@@ -326,4 +306,4 @@ Estas casillas salen de las pruebas hechas en este repositorio, no del PDF.
 
 - Proyecto: [7Multiplayer](7Multiplayer/).
 - Cambio archivado: [add-firebase-online-multiplayer](7Multiplayer/openspec/changes/archive/2026-10-11-add-firebase-online-multiplayer/), con [verification.md](7Multiplayer/openspec/changes/archive/2026-10-11-add-firebase-online-multiplayer/verification.md).
-- Cambio activo, fuera del enunciado: [add-share-app-qr](7Multiplayer/openspec/changes/add-share-app-qr/) (compartir la app con un código QR).
+- Cambio archivado, fuera del enunciado: [add-share-app-qr](7Multiplayer/openspec/changes/archive/2026-10-12-add-share-app-qr/) (compartir la app con un código QR).

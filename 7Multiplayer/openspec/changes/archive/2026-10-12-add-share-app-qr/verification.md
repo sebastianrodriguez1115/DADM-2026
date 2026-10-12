@@ -1,11 +1,11 @@
 # Verification record
 
-Cambio: `add-share-app-qr` (acción «Compartir app» en el lobby en línea, con el código QR del enlace de instalación). Rama `reto-7-triqui-online`. La tarea 5.2 (batería completa) y este registro (5.3) están hechos; la tarea 5.4 (comprobación manual del usuario) sigue pendiente.
+Cambio: `add-share-app-qr` (acción «Compartir app» en el lobby en línea, con el código QR del enlace de instalación). Rama `reto-7-triqui-online`. La tarea 5.2 (batería completa) y este registro (5.3) están hechos; la tarea 5.4 (comprobación manual del usuario) está hecha, con reservas (sección 5).
 
 ## 1. Resumen
 
 - El cambio está implementado y verificado de forma automática: 400 pruebas JVM y 325 pruebas instrumentadas en 47 clases, todas en verde en el commit `b033dca` (secciones 2 y 3).
-- Quedan sin marcar la tarea 5.4 (escanear el QR con otro teléfono, del usuario) y, por tanto, el cierre del cambio. Lo que no se verificó está en la sección 5, sin suavizar.
+- La tarea 5.4 está hecha (2026-10-12): el usuario escaneó el QR con otro teléfono, descargó e instaló sin registro, y el QR en tema oscuro también sirvió. Registro en [qa/manual-qr-scan.md](qa/manual-qr-scan.md). Lo que no quedó comprobado está en la sección 5, sin suavizar.
 - La batería se ejecutó con la clave `share.url` ausente de `local.properties`: el camino con el enlace real solo lo cubren las pruebas que reciben un enlace ficticio.
 - Estado de `tasks.md`: ver la sección 8.
 
@@ -53,6 +53,7 @@ Resultado: `Change 'add-share-app-qr' is valid`.
 | 4.1 Documentación | Lectura de `firebase/README.md`: clave `share.url`, las dos vías del enlace con sus limitaciones (incluida la caducidad de 150 días de App Distribution), sin clave no hay acción; solo enlaces de ejemplo. El README fue reescrito después (2026-10-12) por otro agente para las dos vías; esta fila debe releerse contra su versión final. |
 | 5.1 Validación | Sección 2. |
 | 5.2 Batería | Sección 2. |
+| 5.4 Comprobación manual | [qa/manual-qr-scan.md](qa/manual-qr-scan.md): respuestas literales del usuario («Funciono, descargo e instalo sin pedir registro.»; «El QR en el tema oscuro tambien sirvio normal.») y, aparte, la comprobación del orquestador de que la dirección publicada descarga un archivo idéntico byte a byte al APK compilado con ese enlace. |
 
 ## 4. Cobertura de la especificación
 
@@ -68,7 +69,7 @@ Requisitos y escenarios de `specs/share-app/spec.md` contra la evidencia:
 
 Sin suavizar:
 
-- **Descarga e instalación reales desde el QR** (tarea 5.4, pendiente del usuario): escanear con una cámara real, descargar `triqui.apk` sin registro e instalarlo. Nunca se hizo. Solo se comprobó que el QR dibujado en pantalla se decodifica al enlace exacto, con el decodificador de ZXing.
+- **De la comprobación manual (5.4) no quedó comprobado:** si la app instalada se abrió (el usuario no lo dijo); el escaneo en horizontal (no lo mencionó); qué aviso mostró Android al instalar; y otras cámaras o versiones de Android (una sola prueba con un teléfono lector). Lo que sí confirmó el usuario: descarga e instalación sin registro y QR legible en tema oscuro.
 - **Cierre del diálogo tocando fuera:** sin prueba propia; comparte el camino `onDismissRequest` con Back, que sí la tiene.
 - **Las pruebas nuevas se vieron fallar por compilación, no por aserción:** no hay evidencia de que cada aserción detecte su defecto.
 - **Build con la clave presente o vacía y la invalidación de la caché al cambiar el valor:** los comprobó el implementador en una copia del proyecto, sin evidencia en el repositorio.
@@ -104,7 +105,7 @@ Sin suavizar:
 
 ## 8. Ausencia de identificadores y estado final
 
-Búsqueda sobre la carpeta del cambio: ver el resultado literal al final de esta sección. El estado final de `tasks.md`: 15 tareas, 14 marcadas (1.1 a 1.3, 2.1 a 2.3, 3.1 a 3.4, 4.1, 5.1, 5.2 y 5.3); sin marcar solo la 5.4.
+Búsqueda sobre la carpeta del cambio: ver el resultado literal al final de esta sección. El estado final de `tasks.md`: 15 tareas, 15 marcadas.
 
 Comprobaciones sobre toda la carpeta del cambio, `qa/` incluida:
 
