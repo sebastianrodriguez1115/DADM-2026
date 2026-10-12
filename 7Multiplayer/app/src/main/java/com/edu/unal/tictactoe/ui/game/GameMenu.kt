@@ -28,19 +28,23 @@ internal object GameMenuTags {
     const val SOUND = "game_menu_sound"
     const val ABOUT = "game_menu_about"
     const val RESET_SCORES = "game_menu_reset_scores"
+    const val BACK_TO_START = "game_menu_back_to_start"
 }
 
 /**
- * Options menu with exactly five entries, in this order: New game, Difficulty (only actionable
- * if [canChangeDifficulty]), Sound (exposes its state), Reset scores and About. Every entry has
- * an icon and a text label, and choosing one closes the menu before invoking its callback.
+ * Options menu with exactly six entries, in this order: New game, Difficulty (only actionable
+ * if [canChangeDifficulty]), Sound (exposes its state), Reset scores, About and Back to start.
+ * Every entry has an icon and a text label, and choosing one closes the menu before invoking its
+ * callback.
  *
  * It is shown as a compact button placed next to the game controls, not in a top bar.
  *
  * [onResetScores] is immediate (no confirmation), always enabled, and only zeroes the three
  * score counters, which are stored persistently; it does not change the game in progress or the
- * finished one. There is no exit option. The game in progress is not permanent storage: only the
- * score and the difficulty persist.
+ * finished one. [onBackToStart] is always enabled and only asks the caller to show the start
+ * screen: the menu has no say in what happens to the game, which the caller keeps. There is no
+ * exit option. The game in progress is not permanent storage: only the score and the difficulty
+ * persist.
  */
 @Composable
 fun GameMenu(
@@ -51,6 +55,7 @@ fun GameMenu(
     onToggleSound: () -> Unit,
     onResetScores: () -> Unit,
     onAbout: () -> Unit,
+    onBackToStart: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -150,6 +155,20 @@ fun GameMenu(
                     )
                 },
                 modifier = Modifier.testTag(GameMenuTags.ABOUT),
+            )
+            DropdownMenuItem(
+                text = { Text(text = stringResource(R.string.back_to_start)) },
+                onClick = {
+                    expanded = false
+                    onBackToStart()
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_menu_back_to_start),
+                        contentDescription = null,
+                    )
+                },
+                modifier = Modifier.testTag(GameMenuTags.BACK_TO_START),
             )
         }
     }

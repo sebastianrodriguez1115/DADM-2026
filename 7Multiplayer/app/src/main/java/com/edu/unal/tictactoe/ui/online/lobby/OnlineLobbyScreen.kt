@@ -24,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -55,6 +56,7 @@ internal object OnlineLobbyTags {
     const val NO_GAMES = "lobby_no_games"
     const val CREATE = "lobby_create_game"
     const val CHANGE_NICKNAME = "lobby_change_nickname"
+    const val BACK_TO_START = "lobby_back_to_start"
 
     fun game(id: String): String = "lobby_game_$id"
 }
@@ -72,6 +74,10 @@ private val ActionsPaneWidth = 240.dp
  * header with one item per entry of [games] (or the empty notice), [onCreateGame] and
  * [onChangeNickname]. While offline it adds the offline notice and disables creating and joining
  * ([onJoinGame]), exposing that state to assistive technologies.
+ *
+ * In every state it offers [onBackToStart], a low-emphasis text button that is always enabled
+ * because it does not need the service: after the "connecting" text, after "retry", and below
+ * [onChangeNickname], so it never competes with "create game".
  *
  * In portrait the games list takes the free height and the actions sit below it; in landscape the
  * list takes the left part and the actions a scrollable column on the right, so a long list or a
@@ -91,6 +97,7 @@ fun OnlineLobbyScreen(
     onCreateGame: () -> Unit,
     onJoinGame: (String) -> Unit,
     onChangeNickname: () -> Unit,
+    onBackToStart: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -125,6 +132,7 @@ fun OnlineLobbyScreen(
                         textAlign = TextAlign.Center,
                         modifier = Modifier.testTag(OnlineLobbyTags.CONNECTING),
                     )
+                    BackToStartButton(onClick = onBackToStart)
                 }
 
                 LobbyConnection.IdentityFailed -> CenteredContent {
@@ -140,6 +148,7 @@ fun OnlineLobbyScreen(
                     ) {
                         Text(text = stringResource(R.string.lobby_retry))
                     }
+                    BackToStartButton(onClick = onBackToStart)
                 }
 
                 LobbyConnection.Offline, LobbyConnection.Connected -> GamesContent(
@@ -148,6 +157,7 @@ fun OnlineLobbyScreen(
                     onCreateGame = onCreateGame,
                     onJoinGame = onJoinGame,
                     onChangeNickname = onChangeNickname,
+                    onBackToStart = onBackToStart,
                 )
             }
         }
@@ -174,6 +184,7 @@ private fun GamesContent(
     onCreateGame: () -> Unit,
     onJoinGame: (String) -> Unit,
     onChangeNickname: () -> Unit,
+    onBackToStart: () -> Unit,
 ) {
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val landscape = maxWidth > maxHeight
@@ -190,6 +201,7 @@ private fun GamesContent(
                 createEnabled = online,
                 onCreateGame = onCreateGame,
                 onChangeNickname = onChangeNickname,
+                onBackToStart = onBackToStart,
             )
         }
         if (landscape) {
@@ -285,6 +297,7 @@ private fun LobbyActions(
     createEnabled: Boolean,
     onCreateGame: () -> Unit,
     onChangeNickname: () -> Unit,
+    onBackToStart: () -> Unit,
 ) {
     Button(
         onClick = onCreateGame,
@@ -304,5 +317,18 @@ private fun LobbyActions(
             .testTag(OnlineLobbyTags.CHANGE_NICKNAME),
     ) {
         Text(text = stringResource(R.string.nickname_change))
+    }
+    BackToStartButton(onClick = onBackToStart, modifier = Modifier.fillMaxWidth())
+}
+
+@Composable
+private fun BackToStartButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    TextButton(
+        onClick = onClick,
+        modifier = modifier
+            .heightIn(min = MinActionHeight)
+            .testTag(OnlineLobbyTags.BACK_TO_START),
+    ) {
+        Text(text = stringResource(R.string.back_to_start))
     }
 }

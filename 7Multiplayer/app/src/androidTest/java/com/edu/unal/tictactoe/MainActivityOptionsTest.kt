@@ -86,7 +86,7 @@ class MainActivityOptionsTest {
 
         openMenu()
         assertEquals(
-            5,
+            6,
             composeTestRule.onAllNodes(
                 hasAnyAncestor(hasTestTag(GameMenuTags.MENU)) and hasClickAction(),
             ).fetchSemanticsNodes().size,

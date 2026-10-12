@@ -90,6 +90,7 @@ fun AppNavigation(
                     ).show()
                 },
                 onResetScores = gameViewModel::resetScores,
+                onBackToStart = { navigationViewModel.navigateTo(AppScreen.Start) },
                 modifier = modifier,
             )
         }
@@ -165,6 +166,7 @@ private fun LobbyDestination(
                 onCreateGame = lobbyViewModel::onCreateGame,
                 onJoinGame = lobbyViewModel::onJoinGame,
                 onChangeNickname = lobbyViewModel::onChangeNicknameRequested,
+                onBackToStart = onBackToStart,
                 modifier = modifier,
             )
         }

@@ -365,6 +365,38 @@ class GameScreenTest {
         assertEquals(Score(), afterReply.score)
     }
 
+    @Test
+    fun backToStartEntryIsReachableAndInvokesItsCallbackInLandscapeAndWithLargeFont() {
+        val viewModel = controlledViewModel()
+        var backToStarts = 0
+        viewport.setContent(640, 360, fontScale = 2f) {
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            TicTacToeTheme(dynamicColor = false) {
+                GameScreen(
+                    uiState = uiState,
+                    onCellClick = viewModel::onHumanMove,
+                    onNewGame = viewModel::newGame,
+                    onToggleSound = viewModel::toggleSound,
+                    onDifficultySelected = viewModel::setDifficulty,
+                    onShowToast = {},
+                    onResetScores = viewModel::resetScores,
+                    onBackToStart = { backToStarts++ },
+                )
+            }
+        }
+
+        openMenu()
+        composeTestRule.onNodeWithTag(GameMenuTags.BACK_TO_START)
+            .performScrollTo()
+            .assertIsDisplayed()
+            .assertIsEnabled()
+            .performClick()
+        composeTestRule.waitForIdle()
+        waitUntilMenuClosed()
+
+        assertEquals(1, backToStarts)
+    }
+
     private fun setSizedHost(viewModel: GameViewModel, width: Int, height: Int) {
         val host = HostState()
         viewport.setContent(width, height) {
@@ -378,6 +410,7 @@ class GameScreenTest {
                     onDifficultySelected = viewModel::setDifficulty,
                     onShowToast = { host.toasts += it },
                     onResetScores = viewModel::resetScores,
+                    onBackToStart = {},
                 )
             }
         }
@@ -458,6 +491,7 @@ class GameScreenTest {
                         onDifficultySelected = viewModel::setDifficulty,
                         onShowToast = { host.toasts += it },
                         onResetScores = viewModel::resetScores,
+                        onBackToStart = {},
                     )
                 }
             }

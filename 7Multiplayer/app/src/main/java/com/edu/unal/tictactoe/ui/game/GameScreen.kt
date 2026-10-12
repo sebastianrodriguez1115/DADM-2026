@@ -26,9 +26,10 @@ private enum class GameWindow { Difficulty, About }
  * arrangement from its constraints (see its documentation for the rules and the compact
  * fallback). The compact menu button sits in the controls row beside the "New game" shortcut.
  *
- * The menu has five entries (see [GameMenu]); there is no exit option, so Back keeps the normal
- * system navigation. Only the score and the difficulty are persistent; the game in progress is
- * not permanent storage. [onResetScores] applies immediately and only affects the three counters.
+ * The menu has six entries (see [GameMenu]); the last one, [onBackToStart], asks the caller to
+ * show the start screen. There is no exit option, so Back keeps the normal system navigation.
+ * Only the score and the difficulty are persistent; the game in progress is not permanent
+ * storage. [onResetScores] applies immediately and only affects the three counters.
  */
 @Composable
 fun GameScreen(
@@ -39,6 +40,7 @@ fun GameScreen(
     onDifficultySelected: (DifficultyLevel) -> Boolean,
     onShowToast: (DifficultyLevel) -> Unit,
     onResetScores: () -> Unit,
+    onBackToStart: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var activeWindow by remember { mutableStateOf<GameWindow?>(null) }
@@ -65,6 +67,7 @@ fun GameScreen(
                     },
                     onResetScores = onResetScores,
                     onAbout = { activeWindow = GameWindow.About },
+                    onBackToStart = onBackToStart,
                 )
             },
         )

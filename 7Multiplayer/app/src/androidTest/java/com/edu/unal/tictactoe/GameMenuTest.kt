@@ -10,12 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasClickAction
+import androidx.compose.ui.test.getUnclippedBoundsInRoot
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
@@ -26,11 +28,13 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.compose.ui.unit.dp
 import androidx.test.platform.app.InstrumentationRegistry
 import com.edu.unal.tictactoe.ui.game.GameMenu
 import com.edu.unal.tictactoe.ui.game.GameMenuTags
 import com.edu.unal.tictactoe.ui.theme.TicTacToeTheme
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -44,7 +48,7 @@ class GameMenuTest {
         get() = InstrumentationRegistry.getInstrumentation().targetContext
 
     @Test
-    fun menuHasExactlyFiveEntriesInSpecifiedOrder() {
+    fun menuHasExactlySixEntriesInSpecifiedOrderWithBackToStartLast() {
         setMenu(canChangeDifficulty = true)
         openMenu()
 
@@ -54,9 +58,10 @@ class GameMenuTest {
             GameMenuTags.SOUND to R.string.menu_sound,
             GameMenuTags.RESET_SCORES to R.string.menu_reset_scores,
             GameMenuTags.ABOUT to R.string.menu_about,
+            GameMenuTags.BACK_TO_START to R.string.back_to_start,
         )
         assertEquals(
-            5,
+            6,
             composeTestRule.onAllNodes(
                 hasAnyAncestor(hasTestTag(GameMenuTags.MENU)) and hasClickAction(),
             ).fetchSemanticsNodes().size,
@@ -67,6 +72,42 @@ class GameMenuTest {
             composeTestRule.onNodeWithTag(tag).fetchSemanticsNode().boundsInRoot.top
         }
         assertEquals(tops.sorted(), tops)
+        assertEquals("Volver al inicio", context.getString(R.string.back_to_start))
+    }
+
+    @Test
+    fun backToStartEntryClosesTheMenuAndInvokesItsCallbackOnceAndNothingElse() {
+        var backToStartCount = 0
+        var otherCount = 0
+        setMenu(
+            canChangeDifficulty = true,
+            onNewGame = { otherCount++ },
+            onDifficulty = { otherCount++ },
+            onToggleSound = { otherCount++ },
+            onResetScores = { otherCount++ },
+            onAbout = { otherCount++ },
+            onBackToStart = { backToStartCount++ },
+        )
+
+        clickEntry(GameMenuTags.BACK_TO_START, R.string.back_to_start)
+
+        assertEquals(1, backToStartCount)
+        assertEquals(0, otherCount)
+        assertMenuClosed()
+    }
+
+    @Test
+    fun backToStartEntryIsEnabledEvenWhenDifficultyIsNotAndMeasuresAtLeast48Dp() {
+        setMenu(canChangeDifficulty = false)
+        openMenu()
+
+        composeTestRule.onNodeWithTag(GameMenuTags.BACK_TO_START)
+            .assertIsDisplayed()
+            .assertIsEnabled()
+            .assertHasClickAction()
+        val bounds = composeTestRule.onNodeWithTag(GameMenuTags.BACK_TO_START).getUnclippedBoundsInRoot()
+        assertTrue("shorter than 48 dp", bounds.bottom - bounds.top >= 48.dp)
+        assertTrue("narrower than 48 dp", bounds.right - bounds.left >= 48.dp)
     }
 
     @Test
@@ -125,6 +166,7 @@ class GameMenuTest {
                         },
                         onResetScores = {},
                         onAbout = {},
+                        onBackToStart = {},
                     )
                 }
             }
@@ -192,6 +234,7 @@ class GameMenuTest {
                         onToggleSound = {},
                         onResetScores = {},
                         onAbout = {},
+                        onBackToStart = {},
                     )
                 }
             }
@@ -234,6 +277,7 @@ class GameMenuTest {
         onToggleSound: () -> Unit = {},
         onResetScores: () -> Unit = {},
         onAbout: () -> Unit = {},
+        onBackToStart: () -> Unit = {},
     ) {
         composeTestRule.setContent {
             TicTacToeTheme(dynamicColor = false) {
@@ -246,6 +290,7 @@ class GameMenuTest {
                         onToggleSound = onToggleSound,
                         onResetScores = onResetScores,
                         onAbout = onAbout,
+                        onBackToStart = onBackToStart,
                     )
                 }
             }

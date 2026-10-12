@@ -233,7 +233,7 @@ class MainActivityAccessibilityTest {
 
     private fun assertMenuEntries(difficultyEnabled: Boolean) {
         assertEquals(
-            5,
+            6,
             composeTestRule.onAllNodes(
                 hasAnyAncestor(hasTestTag(GameMenuTags.MENU)) and hasClickAction(),
             )
@@ -242,6 +242,7 @@ class MainActivityAccessibilityTest {
         assertLabeled(GameMenuTags.NEW_GAME, R.string.new_game, enabled = true)
         assertLabeled(GameMenuTags.ABOUT, R.string.menu_about, enabled = true)
         assertLabeled(GameMenuTags.RESET_SCORES, R.string.menu_reset_scores, enabled = true)
+        assertLabeled(GameMenuTags.BACK_TO_START, R.string.back_to_start, enabled = true)
         assertLabeled(GameMenuTags.DIFFICULTY, R.string.menu_difficulty, enabled = difficultyEnabled)
         assertLabeled(GameMenuTags.SOUND, R.string.menu_sound, enabled = true)
         composeTestRule.onNodeWithTag(GameMenuTags.SOUND)

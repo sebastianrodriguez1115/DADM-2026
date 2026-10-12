@@ -16,6 +16,7 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.unit.dp
@@ -48,6 +49,7 @@ class OnlineLobbyScreenTest {
     private var retries = 0
     private var creations = 0
     private var nicknameChanges = 0
+    private var backToStarts = 0
     private val joined = mutableListOf<String>()
     private var shown = 0
     private var currentMessage by mutableStateOf<LobbyMessage?>(null)
@@ -84,6 +86,7 @@ class OnlineLobbyScreenTest {
                     onCreateGame = { creations++ },
                     onJoinGame = { joined += it },
                     onChangeNickname = { nicknameChanges++ },
+                    onBackToStart = { backToStarts++ },
                 )
             }
         }
@@ -299,6 +302,80 @@ class OnlineLobbyScreenTest {
         show(connection = LobbyConnection.IdentityFailed)
         val retry = composeTestRule.onNodeWithTag(OnlineLobbyTags.RETRY).getUnclippedBoundsInRoot()
         assertTrue("retry is shorter than 48 dp", retry.bottom - retry.top >= 48.dp)
+    }
+
+    private val allConnections = listOf(
+        LobbyConnection.Connecting,
+        LobbyConnection.IdentityFailed,
+        LobbyConnection.Offline,
+        LobbyConnection.Connected,
+    )
+
+    @Test
+    fun backToStartIsOfferedInEveryStateEnabledAndInvokesOnlyItsCallback() {
+        assertEquals("Volver al inicio", text(R.string.back_to_start))
+        allConnections.forEachIndexed { index, connection ->
+            show(connection = connection, games = twoGames)
+
+            composeTestRule.onNodeWithText(text(R.string.back_to_start)).assertIsDisplayed()
+            composeTestRule.onNodeWithTag(OnlineLobbyTags.BACK_TO_START)
+                .assertIsDisplayed()
+                .assertIsEnabled()
+                .assertHasClickAction()
+                .performClick()
+
+            assertEquals("$connection", index + 1, backToStarts)
+        }
+        assertEquals(0, retries)
+        assertEquals(0, creations)
+        assertEquals(0, nicknameChanges)
+        assertTrue(joined.isEmpty())
+    }
+
+    @Test
+    fun backToStartSitsBelowChangeNicknameAndBelowRetryAndNeverOutranksCreate() {
+        show(games = twoGames)
+        val create = composeTestRule.onNodeWithTag(OnlineLobbyTags.CREATE).getUnclippedBoundsInRoot()
+        val nickname = composeTestRule.onNodeWithTag(OnlineLobbyTags.CHANGE_NICKNAME).getUnclippedBoundsInRoot()
+        val back = composeTestRule.onNodeWithTag(OnlineLobbyTags.BACK_TO_START).getUnclippedBoundsInRoot()
+        assertTrue("create must come first", create.bottom <= nickname.top)
+        assertTrue("back to start must be below change nickname", nickname.bottom <= back.top)
+
+        show(connection = LobbyConnection.IdentityFailed)
+        val retry = composeTestRule.onNodeWithTag(OnlineLobbyTags.RETRY).getUnclippedBoundsInRoot()
+        val backAfterRetry = composeTestRule.onNodeWithTag(OnlineLobbyTags.BACK_TO_START).getUnclippedBoundsInRoot()
+        assertTrue("back to start must be below retry", retry.bottom <= backAfterRetry.top)
+    }
+
+    @Test
+    fun backToStartMeasuresAtLeast48DpInEveryState() {
+        allConnections.forEach { connection ->
+            show(connection = connection, games = twoGames)
+
+            val bounds = composeTestRule.onNodeWithTag(OnlineLobbyTags.BACK_TO_START).getUnclippedBoundsInRoot()
+            assertTrue("$connection: shorter than 48 dp", bounds.bottom - bounds.top >= 48.dp)
+            assertTrue("$connection: narrower than 48 dp", bounds.right - bounds.left >= 48.dp)
+        }
+    }
+
+    @Test
+    fun backToStartStaysReachableInLandscapeAndWithLargeFontInEveryState() {
+        listOf(320 to 480, 640 to 360).forEach { (width, height) ->
+            allConnections.forEach { connection ->
+                show(connection = connection, games = twoGames, width = width, height = height, fontScale = 2f)
+
+                val back = composeTestRule.onNodeWithTag(OnlineLobbyTags.BACK_TO_START)
+                val fits = back.getUnclippedBoundsInRoot().let { it.bottom <= height.dp && it.right <= width.dp }
+                // A screen that does not fit its content scrolls it; scrolling is only legitimate then.
+                if (!fits) back.performScrollTo()
+                back.assertIsDisplayed()
+                val bounds = back.getUnclippedBoundsInRoot()
+                assertTrue(
+                    "$connection ${width}x$height: unreachable at ${bounds.top} - ${bounds.bottom}",
+                    fits || bounds.top >= 0.dp,
+                )
+            }
+        }
     }
 
     @Test

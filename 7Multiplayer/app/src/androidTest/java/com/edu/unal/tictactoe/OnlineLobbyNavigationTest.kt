@@ -19,6 +19,7 @@ import com.edu.unal.tictactoe.ui.navigation.AppNavigation
 import com.edu.unal.tictactoe.ui.navigation.AppScreen
 import com.edu.unal.tictactoe.ui.navigation.NavigationViewModel
 import com.edu.unal.tictactoe.ui.online.lobby.NicknameDialogTags
+import com.edu.unal.tictactoe.ui.online.lobby.OnlineLobbyTags
 import com.edu.unal.tictactoe.ui.online.lobby.OnlineLobbyViewModel
 import com.edu.unal.tictactoe.ui.online.match.OnlineMatchViewModel
 import com.edu.unal.tictactoe.ui.theme.TicTacToeTheme
@@ -305,6 +306,39 @@ class OnlineLobbyNavigationTest {
         awaitStartShown()
 
         assertEquals(AppScreen.Start, navigation.currentScreen.value)
+    }
+
+    @Test
+    fun backToStartButtonShowsStartLikeBackAndTheLobbyCanBeEnteredAgain() {
+        mount()
+        enterLobby()
+        awaitLobbyShown()
+
+        composeRule.onNodeWithTag(OnlineLobbyTags.BACK_TO_START).performClick()
+        awaitStartShown()
+
+        assertEquals(AppScreen.Start, navigation.currentScreen.value)
+        assertEquals(0, backend.cancelCount)
+        assertEquals(0, backend.createCount)
+        assertTextCount(R.string.lobby_games_header, 0)
+
+        enterLobby()
+        awaitLobbyShown()
+        pressBackAsUser()
+        awaitStartShown()
+        assertEquals(AppScreen.Start, navigation.currentScreen.value)
+    }
+
+    @Test
+    fun backToStartIsAbsentFromTheWaitingView() {
+        mount()
+        enterLobby()
+        awaitLobbyShown()
+        composeRule.onNodeWithText(context.getString(R.string.lobby_create_game)).performClick()
+        awaitWaitingShown()
+
+        assertTextCount(R.string.back_to_start, 0)
+        assertEquals(0, composeRule.onAllNodesWithTag(OnlineLobbyTags.BACK_TO_START).fetchSemanticsNodes().size)
     }
 
     private fun availableIds(): List<String> =

@@ -25,6 +25,7 @@
     <string name="sound_enabled">Habilitado</string>
     <string name="sound_disabled">Deshabilitado</string>
     <string name="menu_about">Acerca de</string>
+    <string name="back_to_start">Volver al inicio</string>
     <string name="menu_reset_scores">Reiniciar puntajes</string>
 
     <string name="difficulty_dialog_title">Dificultad</string>

@@ -72,6 +72,7 @@ class GameScreenSoundIntegrationTest {
                     onDifficultySelected = viewModel::setDifficulty,
                     onShowToast = {},
                     onResetScores = viewModel::resetScores,
+                    onBackToStart = {},
                 )
             }
         }
