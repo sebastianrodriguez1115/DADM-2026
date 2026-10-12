@@ -8,7 +8,7 @@ La interfaz SHALL ofrecer un menú principal en Compose, visible y accesible dur
 
 - **GIVEN** que la interfaz muestra una partida activa o terminada
 - **WHEN** la persona abre el menú principal
-- **THEN** aparecen las cinco entradas Nueva partida, Dificultad, Sonido, Reiniciar puntajes y Acerca de, cada una con su etiqueta y su icono, seguidas de Volver al inicio como sexta y última entrada
+- **THEN** aparecen las cinco entradas Nueva partida, Dificultad, Sonido, Reiniciar puntajes y Acerca de, en ese orden y cada una con su etiqueta y su icono, seguidas de Volver al inicio como sexta y última entrada
 
 #### Scenario: Nueva partida desde el menú respeta las reglas previas
 
