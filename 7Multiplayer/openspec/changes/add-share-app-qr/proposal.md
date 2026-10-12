@@ -2,7 +2,7 @@
 
 ## Why
 
-El usuario subió el APK a Firebase App Distribution y quiere que otra persona pueda instalar la app escaneando un código QR desde la propia app. Petición literal: «Y podemos poner el QR como una opcion del menu?». Hoy compartir el enlace de instalación se hace fuera de la aplicación.
+El usuario distribuye el APK de la app (primero lo subió a Firebase App Distribution) y quiere que otra persona pueda instalarla escaneando un código QR desde la propia app. Petición literal: «Y podemos poner el QR como una opcion del menu?». Hoy compartir el enlace de instalación se hace fuera de la aplicación.
 
 ## What Changes
 
@@ -11,7 +11,7 @@ El usuario subió el APK a Firebase App Distribution y quiere que otra persona p
 - El QR codifica exactamente el enlace configurado, se dibuja siempre con módulos oscuros sobre fondo blanco y con su margen de silencio (también en tema oscuro), es cuadrado y no se recorta. Expone la descripción «Código QR para instalar la app».
 - El enlace no se versiona: se lee de la clave `share.url` del archivo `local.properties` del proyecto y se incrusta en el APK al compilar. Si no hay enlace configurado, la acción no existe.
 - Generar el QR con la librería ZXing (`com.google.zxing:core`, Apache 2.0), declarada en el catálogo de versiones.
-- Documentar en `firebase/README.md` cómo obtener y configurar el enlace y la limitación de caducidad de App Distribution.
+- Documentar en `firebase/README.md` cómo obtener y configurar el enlace, con las dos vías consideradas (descarga directa del APK desde GitHub Releases, que es la elegida, y enlace de invitación de Firebase App Distribution) y sus limitaciones.
 
 ## Capabilities
 
@@ -35,7 +35,7 @@ Ninguna. Se revisaron `online-lobby` y `game-mode-selection`: ninguna de sus fra
 ## Out of Scope
 
 - Compartir por otras vías (menú de compartir del sistema, mensajería), copiar el enlace al portapapeles, mostrar el enlace como texto.
-- Publicar la app en una tienda o crear el enlace de invitación (se hace en la consola de Firebase).
+- Publicar la app en una tienda y crear o alojar el enlace de instalación (el APK y su enlace los gestiona el usuario fuera de la app).
 - Mostrar la acción en la pantalla inicial, en la partida local, en la partida en línea o en la pantalla de espera.
 - Ocultar o cifrar el enlace dentro del APK (ver riesgos en `design.md`).
 
@@ -43,6 +43,7 @@ Ninguna. Se revisaron `online-lobby` y `game-mode-selection`: ninguna de sus fra
 
 - **U1**: ubicación en el lobby, «debajo de cambiar apodo en la pantalla de multiplayer».
 - **U2**: el enlace no se versiona: «dejémoslo en una configuración y que solo esté en el APK compilado».
+- **U3** (2026-10-12): el QR apunta a la descarga directa del APK, «llamalo triqui.apk», adjunto a una versión del repositorio público del usuario en GitHub Releases, porque el enlace de invitación de App Distribution obliga a registrar un correo. La app no cambia: codifica cualquier enlace que haya en `share.url`.
 
 ## Assumptions of the Orchestrator
 
@@ -54,4 +55,4 @@ Decididas por el orquestador; el usuario no las objetó ni las decidió de forma
 - **O4**: el QR codifica exactamente el enlace; módulos oscuros sobre fondo blanco con margen de silencio incluso en tema oscuro; cuadrado, de al menos 200 dp de lado cuando hay espacio, sin recorte en horizontal ni con fuente grande; descripción «Código QR para instalar la app».
 - **O5**: clave `share.url` de `local.properties`, incrustada en el APK; el valor nunca se escribe en archivos versionados, pruebas ni documentos; la caché de configuración de Gradle sigue funcionando.
 - **O6**: ZXing `com.google.zxing:core`. Alternativas descartadas: imagen fija del QR en recursos y codificador propio (ver `design.md`).
-- **O7**: el enlace recomendado es un enlace de invitación de Firebase App Distribution, no el de una versión concreta; las versiones caducan a los 150 días (ver `design.md` y la tarea de documentación).
+- **O7**: se usa la dirección de una etiqueta fija de GitHub Releases, no la de «última versión» (ver D10 y D11 de `design.md`).

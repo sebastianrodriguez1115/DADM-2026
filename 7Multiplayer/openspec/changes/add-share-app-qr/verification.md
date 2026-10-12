@@ -50,7 +50,7 @@ Resultado: `Change 'add-share-app-qr' is valid`.
 | 3.1 Cadenas | `showsTheTitleTheQrTheTextAndTheCloseAction`; lint sin errores. |
 | 3.3 Acción en el lobby | `OnlineLobbyScreenTest`: `shareAppSitsBetweenChangeNicknameAndBackToStartOfflineAndConnected`, `shareAppIsAlwaysEnabledMeasuresAtLeast48DpAndInvokesOnlyItsCallback`, `shareAppIsAbsentWhileConnectingAndAfterTheIdentityFailure`, `withoutALinkThereIsNoShareAppAndTheRestOfTheLobbyIsUnchanged`, `shareAppStaysReachableInPortraitAndLandscapeWithLargeFont`. |
 | 3.4 Navegación y rotación | `OnlineLobbyNavigationTest`: `shareAppOpensTheDialogAndCloseLeavesTheLobbyAsItWas`, `backWithTheShareDialogOpenClosesOnlyTheDialog`, `withoutALinkTheLobbyOffersNoShareAction`, `theShareActionAppearsNowhereOutsideTheLobby`; `OnlineLobbyRotationTest.rotatingWithTheShareDialogOpenKeepsItOpenAndTheQrReachable`. |
-| 4.1 Documentación | Lectura de `firebase/README.md`: clave `share.url`, enlace de invitación, caducidad de 150 días, sin clave no hay acción; solo el enlace de ejemplo. |
+| 4.1 Documentación | Lectura de `firebase/README.md`: clave `share.url`, las dos vías del enlace con sus limitaciones (incluida la caducidad de 150 días de App Distribution), sin clave no hay acción; solo enlaces de ejemplo. El README fue reescrito después (2026-10-12) por otro agente para las dos vías; esta fila debe releerse contra su versión final. |
 | 5.1 Validación | Sección 2. |
 | 5.2 Batería | Sección 2. |
 
@@ -68,7 +68,7 @@ Requisitos y escenarios de `specs/share-app/spec.md` contra la evidencia:
 
 Sin suavizar:
 
-- **Escaneo con una cámara real** (tarea 5.4, pendiente del usuario). Solo se comprobó que el QR dibujado en pantalla se decodifica al enlace exacto, con el decodificador de ZXing.
+- **Descarga e instalación reales desde el QR** (tarea 5.4, pendiente del usuario): escanear con una cámara real, descargar `triqui.apk` sin registro e instalarlo. Nunca se hizo. Solo se comprobó que el QR dibujado en pantalla se decodifica al enlace exacto, con el decodificador de ZXing.
 - **Cierre del diálogo tocando fuera:** sin prueba propia; comparte el camino `onDismissRequest` con Back, que sí la tiene.
 - **Las pruebas nuevas se vieron fallar por compilación, no por aserción:** no hay evidencia de que cada aserción detecte su defecto.
 - **Build con la clave presente o vacía y la invalidación de la caché al cambiar el valor:** los comprobó el implementador en una copia del proyecto, sin evidencia en el repositorio.
@@ -85,18 +85,22 @@ Sin suavizar:
 **Decididas por el usuario**
 - La acción vive en el lobby, «debajo de cambiar apodo en la pantalla de multiplayer».
 - El enlace no se versiona y solo está en el APK compilado («en una configuración»).
+- (2026-10-12) La vía del enlace: descarga directa del APK desde GitHub Releases, no la invitación de App Distribution, porque esta obliga a registrar un correo. Literal: «Vamos con GitHub Releases, llamalo triqui.apk».
 
 **Decididas por el orquestador** (el usuario no las objetó ni las decidió de forma expresa)
 - Texto «Compartir app», posición y estados; sin enlace la acción no existe.
 - Diálogo con «Escanea para instalar el Triqui» y «Cerrar»; colores fijos del QR.
 - ZXing `core` (versión 3.5.4 elegida en la implementación) y clave `share.url` de `local.properties`.
-- Recomendar el enlace de invitación de App Distribution, no el de una versión concreta.
+- Usar la dirección de una etiqueta fija de GitHub Releases y no la de «última versión», porque el repositorio contiene varios talleres y una versión futura de otro taller dejaría sin efecto esta última (D11).
 
 ## 7. Limitaciones conocidas
 
 - El enlace queda extraíble del APK; no es un secreto, solo no se versiona.
-- Las versiones subidas a App Distribution caducan a los 150 días: el QR de una app ya instalada deja de servir hasta que se suba otra versión.
-- Si se configura el enlace de una versión concreta en lugar del de invitación, el QR no sirve a quien no sea ya tester, y apunta solo a esa versión.
+- Con la vía elegida (descarga directa), el APK queda al alcance de cualquiera que tenga el enlace.
+- Fuera de una tienda, quien instala debe permitir «instalar apps desconocidas» y confirmar: no es un solo toque, aunque no haya registro.
+- El APK debe compilarse después de configurar el enlace para que su QR apunte al sitio correcto.
+- Vía descartada: la invitación de App Distribution obliga a registrar un correo y sus versiones caducan a los 150 días; el enlace de una versión concreta solo lo abren testers con acceso.
+- Si se configura un enlace que no descarga el APK, el QR no sirve; la app no puede distinguirlo.
 
 ## 8. Ausencia de identificadores y estado final
 

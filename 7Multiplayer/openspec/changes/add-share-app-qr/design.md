@@ -9,7 +9,7 @@ Estado actual:
 - El lobby (`app/src/main/java/com/edu/unal/tictactoe/ui/online/lobby/OnlineLobbyScreen.kt`) ofrece «Crear juego», «Cambiar apodo» y «Volver al inicio». Las pantallas en línea no tienen menú de opciones, por decisión de diseño del cambio archivado `2026-10-11-add-firebase-online-multiplayer` (A6), que se mantiene: por eso la acción vive en el lobby y no en un menú.
 - `local.properties` ya está ignorado por git (`.gitignore`). `app/google-services.json` sí se versiona, por decisión previa del usuario; no tiene relación con este enlace.
 - Gradle 9.8.1 con `org.gradle.configuration-cache=true`; AGP 9.4.1; catálogo en `gradle/libs.versions.toml`.
-- El usuario subió el APK a Firebase App Distribution y de ahí sale el enlace que se quiere mostrar como QR.
+- El usuario subió primero el APK a Firebase App Distribution; el enlace que se muestra como QR puede venir de ahí o de otra vía (ver D10).
 
 ## Goals / Non-Goals
 
@@ -76,27 +76,37 @@ Estado actual:
 
 - Los textos de interfaz van en recursos de cadenas, como los demás. «Código QR para instalar la app» es la `contentDescription` del QR. La acción mide al menos 48 dp y expone etiqueta, como las demás acciones del lobby.
 
-### D10. Enlace recomendado y documentación
+### D10. Vía del enlace de instalación: dos opciones, una elegida
 
-- **Decidido por el orquestador:** el enlace recomendado es un enlace de invitación de Firebase App Distribution, no el enlace de una versión concreta. Razón: el enlace de una versión solo lo abren testers que ya tienen acceso y apunta a una única versión, así que el QR de un APK nuevo llevaría a la versión anterior. El enlace de invitación sigue sirviendo cuando se sube un APK nuevo.
-- Limitación conocida: las versiones subidas a App Distribution caducan a los 150 días; entonces el QR de una app ya instalada deja de servir hasta que se suba otra versión.
-- `firebase/README.md` documenta: la clave `share.url` y su ubicación, qué enlace usar (invitación) y cuál no, la caducidad a los 150 días y que, sin la clave, la acción no aparece. Los ejemplos usan `https://example.com/invitacion`.
+- La app no distingue el tipo de enlace: codifica lo que haya en `share.url`. Se consideraron dos vías:
+  1. **Descarga directa del APK** (GitHub Releases): sin registro, pero sin caducidad propia; el APK queda al alcance de cualquiera que tenga el enlace, y quien instala debe permitir «instalar apps desconocidas» y confirmar la instalación, así que no es de un solo toque.
+  2. **Enlace de invitación de Firebase App Distribution**: obliga a quien escanea a escribir su correo e inscribirse como tester (la documentación oficial lo define como una URL para que los testers se inscriban), y las versiones caducan a los 150 días; entonces el QR de una app ya instalada deja de servir hasta que se suba otra versión. El enlace de una versión concreta de App Distribution queda descartado en cualquier caso: solo lo abren testers que ya tienen acceso y apunta a una única versión.
+- **Decidido por el usuario (2026-10-12):** la vía 1. Primero configuró la invitación de App Distribution, vio que exige registrar un correo y preguntó: «Es obligatorio el paso del correo?, no se puede descargar o instalar el APK en un solo paso?». Respuesta literal: «Vamos con GitHub Releases, llamalo triqui.apk».
+- `firebase/README.md` documenta las dos vías con sus limitaciones, la clave `share.url` y su ubicación, y que, sin la clave, la acción no aparece. Los ejemplos usan `https://example.com/invitacion` o marcadores genéricos.
+
+### D11. Dirección de una etiqueta fija, no la de «última versión»
+
+- **Decidido por el orquestador:** el enlace apunta a la descarga del archivo `triqui.apk` adjunto a una versión con una etiqueta fija (forma genérica: `https://github.com/<usuario>/<repositorio>/releases/download/<etiqueta>/triqui.apk`), no a la dirección de «última versión». Razón: el repositorio contiene varios talleres y una versión futura de otro taller dejaría sin efecto la dirección de «última versión». Con etiqueta y nombre de archivo fijos, la dirección no cambia al reemplazar el archivo, y el QR de una app ya instalada sigue sirviendo.
+- Consecuencia: el APK debe compilarse después de configurar el enlace, para que su QR apunte al sitio correcto.
+- Alternativa descartada: «última versión» (se rompe con versiones de otros talleres).
 
 ## Risks / Trade-offs
 
-- [El enlace queda extraíble del APK (cadenas del `BuildConfig` o de recursos)] → aceptado: el enlace se muestra como QR a cualquiera que abra el diálogo, de modo que no es un secreto; U2 pide no versionarlo, no ocultarlo. Un enlace de invitación puede revocarse o regenerarse desde la consola de Firebase.
-- [Las versiones de App Distribution caducan a los 150 días y el QR de una app ya instalada deja de servir] → documentado en `firebase/README.md` (D10); remedio: subir otra versión.
-- [Se configura por error el enlace de una versión concreta en lugar del de invitación] → la documentación indica cuál usar; la app no puede distinguirlos. La comprobación manual del usuario (escanear con otro teléfono y llegar a la página de instalación) lo detecta.
+- [El enlace queda extraíble del APK (cadenas del `BuildConfig` o de recursos)] → aceptado: el enlace se muestra como QR a cualquiera que abra el diálogo, de modo que no es un secreto; U2 pide no versionarlo, no ocultarlo. Con la descarga directa, el APK queda al alcance de cualquiera que tenga el enlace; se acepta, es un taller de clase. El enlace puede cambiarse reemplazando el archivo o la etiqueta.
+- [Si se usara la invitación de App Distribution: obliga a registrar un correo y las versiones caducan a los 150 días, tras lo cual el QR de una app ya instalada deja de servir] → razón por la que el usuario eligió la descarga directa (D10); queda documentado en `firebase/README.md`.
+- [Fuera de una tienda, quien instala debe permitir «instalar apps desconocidas» y confirmar, así que no es un solo toque] → limitación de la vía elegida, documentada; no depende de la app.
+- [El APK se compiló antes de configurar el enlace y su QR apunta al sitio equivocado, o no hay QR] → D11: compilar después de configurar `share.url`; la comprobación manual (5.4) lo detecta.
+- [Se configura un enlace que no descarga el APK (por ejemplo la dirección de «última versión» que otro taller deja sin efecto, o el enlace de una versión concreta de App Distribution)] → la documentación indica la forma correcta; la app no puede distinguirlos. La comprobación manual del usuario (escanear con otro teléfono, descargar e instalar) lo detecta.
 - [La lectura de `local.properties` puede romper la caché de configuración o dejar un valor viejo] → requisito de D7 con verificación explícita con y sin la clave, y con el valor cambiado.
 - [Un QR en tema oscuro con colores del tema no se lee] → colores fijos y margen de silencio, con prueba instrumentada (D5).
-- [Un enlace muy largo produce un QR muy denso que se lee mal en pantallas pequeñas] → los enlaces de invitación son cortos; la comprobación manual lo confirma. No se acota la longitud en código.
+- [Un enlace muy largo produce un QR muy denso que se lee mal en pantallas pequeñas] → los enlaces de descarga de GitHub Releases son de longitud moderada; la comprobación manual lo confirma. No se acota la longitud en código.
 - [Dependencia nueva en un proyecto con otras ya pinadas a las últimas versiones] → solo `core`, sin dependencias transitivas relevantes; se comprueba con `./gradlew :app:dependencies`.
 
 ## Migration Plan
 
 Orden: (1) dependencia y lectura de la configuración; (2) codificación del QR; (3) diálogo y acción del lobby; (4) documentación; (5) batería completa y verificación; (6) comprobación manual del usuario.
 
-Precondición del usuario para la comprobación manual: tener un enlace de invitación de App Distribution y ponerlo en su `local.properties` (clave `share.url`), sin compartirlo con quien implementa.
+Precondición del usuario para la comprobación manual: tener el APK publicado como `triqui.apk` en una versión con etiqueta fija de GitHub Releases, poner su dirección de descarga en su `local.properties` (clave `share.url`) y compilar el APK después.
 
 Rollback: revertir el cambio (dependencia, lectura de la configuración, acción y diálogo, documentación). No hay datos remotos ni migraciones.
 
