@@ -28,6 +28,7 @@ import com.edu.unal.tictactoe.ui.online.lobby.WaitingForOpponentScreen
 import com.edu.unal.tictactoe.ui.online.match.MatchPhase
 import com.edu.unal.tictactoe.ui.online.match.OnlineMatchScreen
 import com.edu.unal.tictactoe.ui.online.match.OnlineMatchViewModel
+import com.edu.unal.tictactoe.ui.share.ShareAppDialog
 import com.edu.unal.tictactoe.ui.start.StartScreen
 
 /**
@@ -50,6 +51,10 @@ import com.edu.unal.tictactoe.ui.start.StartScreen
  * are played on [onlineMoveSound], collected only while the lifecycle is RESUMED. A
  * [AppScreen.Match] without an open match goes back to [AppScreen.Lobby].
  *
+ * [shareLink] is the install link the lobby offers as a QR code ("Compartir app"); empty means
+ * there is none and the lobby shows no such action. Whether the QR dialog is open lives in the
+ * lobby destination, saved across rotation; it is its own window, so it consumes Back.
+ *
  * Every screen's state holder is a parameter, so a test can mount this with fakes and without the
  * real Activity.
  */
@@ -61,6 +66,7 @@ fun AppNavigation(
     matchViewModel: OnlineMatchViewModel,
     onlineMoveSound: MoveSoundSink,
     modifier: Modifier = Modifier,
+    shareLink: String = "",
 ) {
     val currentScreen by navigationViewModel.currentScreen.collectAsStateWithLifecycle()
     var isLeaveDialogOpen by rememberSaveable { mutableStateOf(false) }
@@ -97,6 +103,7 @@ fun AppNavigation(
 
         AppScreen.Lobby -> LobbyDestination(
             lobbyViewModel = lobbyViewModel,
+            shareLink = shareLink,
             onBackToStart = { navigationViewModel.navigateTo(AppScreen.Start) },
             onMatchReady = { ticket ->
                 isLeaveDialogOpen = false
@@ -121,10 +128,14 @@ fun AppNavigation(
     }
 }
 
-/** The lobby: nickname dialog, games list or waiting view, Back and the lobby's signals. */
+/**
+ * The lobby: nickname dialog, share dialog, games list or waiting view, Back and the lobby's
+ * signals. "Share app" exists only while [shareLink] is not blank.
+ */
 @Composable
 private fun LobbyDestination(
     lobbyViewModel: OnlineLobbyViewModel,
+    shareLink: String,
     onBackToStart: () -> Unit,
     onMatchReady: (MatchTicket) -> Unit,
     modifier: Modifier = Modifier,
@@ -132,6 +143,7 @@ private fun LobbyDestination(
     val state by lobbyViewModel.uiState.collectAsStateWithLifecycle()
     val games by lobbyViewModel.games.collectAsStateWithLifecycle()
     var message by rememberSaveable { mutableStateOf<LobbyMessage?>(null) }
+    var isShareDialogOpen by rememberSaveable { mutableStateOf(false) }
     val isWaiting = state.waitingGameId != null
 
     LaunchedEffect(lobbyViewModel) { lobbyViewModel.onLobbyEntered() }
@@ -166,10 +178,14 @@ private fun LobbyDestination(
                 onCreateGame = lobbyViewModel::onCreateGame,
                 onJoinGame = lobbyViewModel::onJoinGame,
                 onChangeNickname = lobbyViewModel::onChangeNicknameRequested,
+                onShareApp = if (shareLink.isBlank()) null else ({ isShareDialogOpen = true }),
                 onBackToStart = onBackToStart,
                 modifier = modifier,
             )
         }
+    }
+    if (isShareDialogOpen && shareLink.isNotBlank()) {
+        ShareAppDialog(link = shareLink, onDismiss = { isShareDialogOpen = false })
     }
     state.nicknameDialog?.let { dialog ->
         NicknameDialog(

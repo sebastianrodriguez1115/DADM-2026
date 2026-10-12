@@ -2,6 +2,7 @@ package com.edu.unal.tictactoe
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
@@ -21,6 +22,7 @@ import com.edu.unal.tictactoe.ui.navigation.NavigationViewModel
 import com.edu.unal.tictactoe.ui.online.lobby.NicknameDialogTags
 import com.edu.unal.tictactoe.ui.online.lobby.OnlineLobbyTags
 import com.edu.unal.tictactoe.ui.online.lobby.OnlineLobbyViewModel
+import com.edu.unal.tictactoe.ui.share.ShareAppDialogTags
 import com.edu.unal.tictactoe.ui.online.match.OnlineMatchViewModel
 import com.edu.unal.tictactoe.ui.theme.TicTacToeTheme
 import kotlinx.coroutines.flow.Flow
@@ -37,6 +39,7 @@ import org.junit.runner.RunWith
 
 private const val BOARD_TAG = "tic_tac_toe_board"
 private const val WAIT_MILLIS = 5_000L
+private const val EXAMPLE_LINK = "https://example.com/invitacion"
 
 /**
  * Mounts [AppNavigation] with ViewModels built on the fakes, without the real `MainActivity`:
@@ -73,6 +76,7 @@ class OnlineLobbyNavigationTest {
     private fun mount(
         storedNickname: String? = "Ana",
         lobbyService: OnlineGameService = service,
+        shareLink: String = EXAMPLE_LINK,
     ) {
         store = FakeNicknameStore(storedNickname)
         navigation = NavigationViewModel(SavedStateHandle())
@@ -81,7 +85,7 @@ class OnlineLobbyNavigationTest {
         val match = OnlineMatchViewModel(lobbyService)
         composeRule.setContent {
             TicTacToeTheme(dynamicColor = false) {
-                AppNavigation(navigationViewModel = navigation, gameViewModel = game, lobbyViewModel = lobby, matchViewModel = match, onlineMoveSound = NoMoveSound)
+                AppNavigation(navigationViewModel = navigation, gameViewModel = game, lobbyViewModel = lobby, matchViewModel = match, onlineMoveSound = NoMoveSound, shareLink = shareLink)
             }
         }
     }
@@ -339,6 +343,71 @@ class OnlineLobbyNavigationTest {
 
         assertTextCount(R.string.back_to_start, 0)
         assertEquals(0, composeRule.onAllNodesWithTag(OnlineLobbyTags.BACK_TO_START).fetchSemanticsNodes().size)
+    }
+
+    @Test
+    fun shareAppOpensTheDialogAndCloseLeavesTheLobbyAsItWas() {
+        mount()
+        enterLobby()
+        awaitLobbyShown()
+
+        composeRule.onNodeWithTag(OnlineLobbyTags.SHARE_APP).performClick()
+        composeRule.onNodeWithTag(ShareAppDialogTags.DIALOG).assertIsDisplayed()
+        composeRule.onNodeWithTag(ShareAppDialogTags.QR).assertIsDisplayed()
+        composeRule.onNodeWithTag(ShareAppDialogTags.CLOSE).performClick()
+        composeRule.waitForIdle()
+
+        composeRule.onAllNodesWithTag(ShareAppDialogTags.DIALOG).assertCountEquals(0)
+        assertEquals(AppScreen.Lobby, navigation.currentScreen.value)
+        assertEquals(0, backend.createCount)
+        assertEquals(0, backend.cancelCount)
+        composeRule.onNodeWithText(context.getString(R.string.lobby_games_header)).assertIsDisplayed()
+        composeRule.onNodeWithTag(OnlineLobbyTags.SHARE_APP).assertIsDisplayed()
+    }
+
+    @Test
+    fun backWithTheShareDialogOpenClosesOnlyTheDialog() {
+        mount()
+        enterLobby()
+        awaitLobbyShown()
+        composeRule.onNodeWithTag(OnlineLobbyTags.SHARE_APP).performClick()
+        composeRule.onNodeWithTag(ShareAppDialogTags.DIALOG).assertIsDisplayed()
+
+        pressBackAsUser()
+        composeRule.waitUntil(WAIT_MILLIS) {
+            composeRule.onAllNodesWithTag(ShareAppDialogTags.DIALOG).fetchSemanticsNodes().isEmpty()
+        }
+
+        assertEquals(AppScreen.Lobby, navigation.currentScreen.value)
+        assertEquals(0, backend.createCount)
+        assertEquals(0, backend.cancelCount)
+        composeRule.onNodeWithText(context.getString(R.string.lobby_games_header)).assertIsDisplayed()
+    }
+
+    @Test
+    fun withoutALinkTheLobbyOffersNoShareAction() {
+        mount(shareLink = "")
+        enterLobby()
+        awaitLobbyShown()
+
+        composeRule.onAllNodesWithTag(OnlineLobbyTags.SHARE_APP).assertCountEquals(0)
+        assertTextCount(R.string.share_app, 0)
+        composeRule.onNodeWithTag(OnlineLobbyTags.CHANGE_NICKNAME).assertIsDisplayed()
+        composeRule.onNodeWithTag(OnlineLobbyTags.BACK_TO_START).assertIsDisplayed()
+    }
+
+    @Test
+    fun theShareActionAppearsNowhereOutsideTheLobby() {
+        mount()
+
+        assertTextCount(R.string.share_app, 0)
+        enterLobby()
+        awaitLobbyShown()
+        composeRule.onNodeWithTag(OnlineLobbyTags.SHARE_APP).assertIsDisplayed()
+        composeRule.onNodeWithText(context.getString(R.string.lobby_create_game)).performClick()
+        awaitWaitingShown()
+
+        assertTextCount(R.string.share_app, 0)
     }
 
     private fun availableIds(): List<String> =

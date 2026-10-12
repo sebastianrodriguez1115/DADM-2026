@@ -1,8 +1,23 @@
+import com.android.build.api.variant.BuildConfigField
+import java.io.StringReader
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.services)
 }
+
+// The install link shown as a QR code. It comes from the key `share.url` of local.properties, which
+// is not versioned, and only ends up inside the APK. Reading it through a file-contents provider
+// makes the file a tracked input of the configuration cache; a missing file or key means "no link".
+val shareUrl: Provider<String> = providers
+    .fileContents(rootProject.layout.projectDirectory.file("local.properties"))
+    .asText
+    .map { text ->
+        Properties().apply { load(StringReader(text)) }.getProperty("share.url").orEmpty().trim()
+    }
+    .orElse("")
 
 android {
     namespace = "com.edu.unal.tictactoe"
@@ -33,6 +48,19 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+}
+
+androidComponents {
+    onVariants { variant ->
+        variant.buildConfigFields?.put(
+            "SHARE_URL",
+            shareUrl.map { url ->
+                val escaped = url.replace("\\", "\\\\").replace("\"", "\\\"")
+                BuildConfigField("String", "\"$escaped\"", "install link shown as a QR code")
+            },
+        )
     }
 }
 
@@ -50,6 +78,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
+    implementation(libs.zxing.core)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(platform(libs.androidx.compose.bom))

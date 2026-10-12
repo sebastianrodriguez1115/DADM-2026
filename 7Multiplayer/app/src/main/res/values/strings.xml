@@ -59,6 +59,10 @@
     <string name="lobby_waiting_for_opponent">Esperando rival…</string>
     <string name="lobby_game_unavailable">Este juego ya no está disponible</string>
     <string name="lobby_create_failed">No se pudo crear el juego</string>
+    <string name="share_app">Compartir app</string>
+    <string name="share_app_scan">Escanea para instalar el Triqui</string>
+    <string name="share_app_close">Cerrar</string>
+    <string name="share_app_qr_description">Código QR para instalar la app</string>
 
     <string name="match_mark_x">Juegas con X</string>
     <string name="match_mark_o">Juegas con O</string>

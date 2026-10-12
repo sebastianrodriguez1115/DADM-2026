@@ -56,6 +56,7 @@ internal object OnlineLobbyTags {
     const val NO_GAMES = "lobby_no_games"
     const val CREATE = "lobby_create_game"
     const val CHANGE_NICKNAME = "lobby_change_nickname"
+    const val SHARE_APP = "lobby_share_app"
     const val BACK_TO_START = "lobby_back_to_start"
 
     fun game(id: String): String = "lobby_game_$id"
@@ -72,8 +73,9 @@ private val ActionsPaneWidth = 240.dp
  * What it shows depends on [connection]: only "connecting" while it is pending; only the failure
  * and [onRetry] when the identity could not be established; otherwise the "available games"
  * header with one item per entry of [games] (or the empty notice), [onCreateGame] and
- * [onChangeNickname]. While offline it adds the offline notice and disables creating and joining
- * ([onJoinGame]), exposing that state to assistive technologies.
+ * [onChangeNickname] and, only when [onShareApp] is not null, "share app" right below the latter
+ * with the same emphasis. While offline it adds the offline notice and disables creating and
+ * joining ([onJoinGame]), exposing that state to assistive technologies.
  *
  * In every state it offers [onBackToStart], a low-emphasis text button that is always enabled
  * because it does not need the service: after the "connecting" text, after "retry", and below
@@ -97,6 +99,7 @@ fun OnlineLobbyScreen(
     onCreateGame: () -> Unit,
     onJoinGame: (String) -> Unit,
     onChangeNickname: () -> Unit,
+    onShareApp: (() -> Unit)?,
     onBackToStart: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -157,6 +160,7 @@ fun OnlineLobbyScreen(
                     onCreateGame = onCreateGame,
                     onJoinGame = onJoinGame,
                     onChangeNickname = onChangeNickname,
+                    onShareApp = onShareApp,
                     onBackToStart = onBackToStart,
                 )
             }
@@ -184,6 +188,7 @@ private fun GamesContent(
     onCreateGame: () -> Unit,
     onJoinGame: (String) -> Unit,
     onChangeNickname: () -> Unit,
+    onShareApp: (() -> Unit)?,
     onBackToStart: () -> Unit,
 ) {
     BoxWithConstraints(Modifier.fillMaxSize()) {
@@ -201,6 +206,7 @@ private fun GamesContent(
                 createEnabled = online,
                 onCreateGame = onCreateGame,
                 onChangeNickname = onChangeNickname,
+                onShareApp = onShareApp,
                 onBackToStart = onBackToStart,
             )
         }
@@ -297,6 +303,7 @@ private fun LobbyActions(
     createEnabled: Boolean,
     onCreateGame: () -> Unit,
     onChangeNickname: () -> Unit,
+    onShareApp: (() -> Unit)?,
     onBackToStart: () -> Unit,
 ) {
     Button(
@@ -317,6 +324,17 @@ private fun LobbyActions(
             .testTag(OnlineLobbyTags.CHANGE_NICKNAME),
     ) {
         Text(text = stringResource(R.string.nickname_change))
+    }
+    if (onShareApp != null) {
+        OutlinedButton(
+            onClick = onShareApp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = MinActionHeight)
+                .testTag(OnlineLobbyTags.SHARE_APP),
+        ) {
+            Text(text = stringResource(R.string.share_app))
+        }
     }
     BackToStartButton(onClick = onBackToStart, modifier = Modifier.fillMaxWidth())
 }

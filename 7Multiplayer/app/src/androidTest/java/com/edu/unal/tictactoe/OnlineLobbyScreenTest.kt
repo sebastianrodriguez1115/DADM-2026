@@ -49,12 +49,14 @@ class OnlineLobbyScreenTest {
     private var retries = 0
     private var creations = 0
     private var nicknameChanges = 0
+    private var shares = 0
     private var backToStarts = 0
     private val joined = mutableListOf<String>()
     private var shown = 0
     private var currentMessage by mutableStateOf<LobbyMessage?>(null)
     private var currentConnection by mutableStateOf(LobbyConnection.Connected)
     private var currentGames by mutableStateOf<List<LobbyGame>>(emptyList())
+    private var currentShareable by mutableStateOf(true)
     private var hosted = false
 
     private val twoGames = listOf(LobbyGame("g1", "Ana"), LobbyGame("g2", "Luis"))
@@ -63,6 +65,7 @@ class OnlineLobbyScreenTest {
         connection: LobbyConnection = LobbyConnection.Connected,
         games: List<LobbyGame> = emptyList(),
         message: LobbyMessage? = null,
+        shareable: Boolean = true,
         width: Int = 360,
         height: Int = 640,
         fontScale: Float = 1f,
@@ -70,6 +73,7 @@ class OnlineLobbyScreenTest {
         currentMessage = message
         currentConnection = connection
         currentGames = games
+        currentShareable = shareable
         if (hosted) {
             viewport.show(width, height, fontScale)
             return
@@ -86,6 +90,7 @@ class OnlineLobbyScreenTest {
                     onCreateGame = { creations++ },
                     onJoinGame = { joined += it },
                     onChangeNickname = { nicknameChanges++ },
+                    onShareApp = if (currentShareable) ({ shares++ }) else null,
                     onBackToStart = { backToStarts++ },
                 )
             }
@@ -375,6 +380,80 @@ class OnlineLobbyScreenTest {
                     fits || bounds.top >= 0.dp,
                 )
             }
+        }
+    }
+
+    @Test
+    fun shareAppSitsBetweenChangeNicknameAndBackToStartOfflineAndConnected() {
+        assertEquals("Compartir app", text(R.string.share_app))
+        listOf(LobbyConnection.Offline, LobbyConnection.Connected).forEach { connection ->
+            show(connection = connection, games = twoGames)
+
+            composeTestRule.onNodeWithText(text(R.string.share_app)).assertIsDisplayed()
+            val nickname = composeTestRule.onNodeWithTag(OnlineLobbyTags.CHANGE_NICKNAME).getUnclippedBoundsInRoot()
+            val share = composeTestRule.onNodeWithTag(OnlineLobbyTags.SHARE_APP).getUnclippedBoundsInRoot()
+            val back = composeTestRule.onNodeWithTag(OnlineLobbyTags.BACK_TO_START).getUnclippedBoundsInRoot()
+            assertTrue("$connection: below change nickname", nickname.bottom <= share.top)
+            assertTrue("$connection: above back to start", share.bottom <= back.top)
+        }
+    }
+
+    @Test
+    fun shareAppIsAlwaysEnabledMeasuresAtLeast48DpAndInvokesOnlyItsCallback() {
+        listOf(LobbyConnection.Offline, LobbyConnection.Connected).forEach { connection ->
+            show(connection = connection, games = twoGames)
+
+            val share = composeTestRule.onNodeWithTag(OnlineLobbyTags.SHARE_APP)
+            share.assertIsEnabled().assertHasClickAction()
+            val bounds = share.getUnclippedBoundsInRoot()
+            assertTrue("$connection: shorter than 48 dp", bounds.bottom - bounds.top >= 48.dp)
+            assertTrue("$connection: narrower than 48 dp", bounds.right - bounds.left >= 48.dp)
+        }
+
+        composeTestRule.onNodeWithTag(OnlineLobbyTags.SHARE_APP).performClick()
+
+        assertEquals(1, shares)
+        assertEquals(0, creations)
+        assertEquals(0, nicknameChanges)
+        assertEquals(0, backToStarts)
+        assertTrue(joined.isEmpty())
+    }
+
+    @Test
+    fun shareAppIsAbsentWhileConnectingAndAfterTheIdentityFailure() {
+        listOf(LobbyConnection.Connecting, LobbyConnection.IdentityFailed).forEach { connection ->
+            show(connection = connection, games = twoGames)
+
+            assertNoneOf(OnlineLobbyTags.SHARE_APP)
+            composeTestRule.onAllNodesWithText(text(R.string.share_app)).assertCountEquals(0)
+        }
+    }
+
+    @Test
+    fun withoutALinkThereIsNoShareAppAndTheRestOfTheLobbyIsUnchanged() {
+        listOf(LobbyConnection.Offline, LobbyConnection.Connected).forEach { connection ->
+            show(connection = connection, games = twoGames, shareable = false)
+
+            assertNoneOf(OnlineLobbyTags.SHARE_APP)
+            composeTestRule.onAllNodesWithText(text(R.string.share_app)).assertCountEquals(0)
+            val create = composeTestRule.onNodeWithTag(OnlineLobbyTags.CREATE).getUnclippedBoundsInRoot()
+            val nickname = composeTestRule.onNodeWithTag(OnlineLobbyTags.CHANGE_NICKNAME).getUnclippedBoundsInRoot()
+            val back = composeTestRule.onNodeWithTag(OnlineLobbyTags.BACK_TO_START).getUnclippedBoundsInRoot()
+            assertTrue(create.bottom <= nickname.top)
+            // With no share action the back button follows change nickname at the same spacing as before.
+            assertEquals(16f, back.top.value - nickname.bottom.value, 0.5f)
+        }
+    }
+
+    @Test
+    fun shareAppStaysReachableInPortraitAndLandscapeWithLargeFont() {
+        listOf(320 to 480, 640 to 360).forEach { (width, height) ->
+            show(games = twoGames, width = width, height = height, fontScale = 2f)
+
+            val share = composeTestRule.onNodeWithTag(OnlineLobbyTags.SHARE_APP)
+            val fits = share.getUnclippedBoundsInRoot().let { it.bottom <= height.dp && it.right <= width.dp }
+            if (!fits) share.performScrollTo()
+            share.assertIsDisplayed()
         }
     }
 

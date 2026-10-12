@@ -77,6 +77,7 @@ class MainActivity : ComponentActivity() {
                     lobbyViewModel = lobbyViewModel,
                     matchViewModel = matchViewModel,
                     onlineMoveSound = onlineMoveSound,
+                    shareLink = BuildConfig.SHARE_URL,
                 )
             }
         }

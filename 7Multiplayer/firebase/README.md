@@ -15,6 +15,19 @@ Para entender qué hace cada regla y por qué existe, véase [RULES.md](RULES.md
 2. **Publicar las reglas.** Consola de Firebase, Compilación (Build), Realtime Database, pestaña Reglas (Rules): reemplazar todo el contenido por el de `firebase/database.rules.json` y pulsar Publicar. Sin las reglas publicadas la app no puede leer ni escribir: la base se crea bloqueada y las reglas de prueba caducan.
 3. Opcional: probar las reglas en el simulador de la misma pestaña (Rules Playground) antes de usar la app.
 
+## Enlace de instalación para «Compartir app»
+
+El lobby en línea puede mostrar «Compartir app», que abre un código QR con el enlace para instalar la app. El enlace se configura en la clave `share.url` de `local.properties` (el archivo de la raíz del proyecto, junto a `sdk.dir`):
+
+```properties
+share.url=https://example.com/invitacion
+```
+
+- Use un **enlace de invitación** de Firebase App Distribution (Consola de Firebase, App Distribution, Testers y grupos, grupo, «Enlace de invitación»), no el enlace de una versión concreta. El de una versión solo lo abren testers que ya tienen acceso y apunta a una única versión, así que quien escanee el QR no podría instalar nada.
+- El valor **no se versiona**: `local.properties` está ignorado por git y el enlace solo queda dentro del APK compilado. No lo copie en archivos del repositorio, issues ni capturas.
+- Las versiones subidas a App Distribution **caducan a los 150 días**: pasado ese plazo hay que subir una versión nueva para que el enlace siga sirviendo una instalación.
+- Sin la clave, o con ella vacía, la acción «Compartir app» no aparece. Tras cambiar el valor, vuelva a compilar: el build lo lee de nuevo solo.
+
 ## Qué se ve en la app si falta un paso
 
 - Falta el inicio de sesión anónimo: «No se pudo conectar con el servicio» en el lobby, con «Reintentar».

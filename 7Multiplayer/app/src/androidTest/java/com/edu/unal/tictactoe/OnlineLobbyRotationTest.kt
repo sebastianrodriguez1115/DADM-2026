@@ -6,7 +6,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
+import androidx.compose.ui.test.getUnclippedBoundsInRoot
 import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -19,13 +23,16 @@ import com.edu.unal.tictactoe.ui.game.GameViewModel
 import com.edu.unal.tictactoe.ui.navigation.AppNavigation
 import com.edu.unal.tictactoe.ui.navigation.AppScreen
 import com.edu.unal.tictactoe.ui.navigation.NavigationViewModel
+import com.edu.unal.tictactoe.ui.online.lobby.OnlineLobbyTags
 import com.edu.unal.tictactoe.ui.online.lobby.OnlineLobbyViewModel
+import com.edu.unal.tictactoe.ui.share.ShareAppDialogTags
 import com.edu.unal.tictactoe.ui.online.match.OnlineMatchViewModel
 import com.edu.unal.tictactoe.ui.theme.TicTacToeTheme
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -33,6 +40,7 @@ import org.junit.runner.RunWith
 
 private const val BOARD_TAG = "tic_tac_toe_board"
 private const val WAIT_MILLIS = 10_000L
+private const val EXAMPLE_LINK = "https://example.com/invitacion"
 
 /**
  * Rotating the device (a real configuration change, forced per Activity without touching the
@@ -118,13 +126,47 @@ class OnlineLobbyRotationTest {
         assertEquals(1, availableCount())
     }
 
+    @Test
+    fun rotatingWithTheShareDialogOpenKeepsItOpenAndTheQrReachable() {
+        enterLobby()
+        awaitText(R.string.lobby_games_header)
+        composeRule.onNodeWithTag(OnlineLobbyTags.SHARE_APP).performClick()
+        composeRule.onNodeWithTag(ShareAppDialogTags.DIALOG).assertIsDisplayed()
+
+        rotate(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE, Configuration.ORIENTATION_LANDSCAPE) {
+            assertShareDialogShown()
+        }
+        rotate(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, Configuration.ORIENTATION_PORTRAIT) {
+            assertShareDialogShown()
+        }
+
+        composeRule.onNodeWithTag(ShareAppDialogTags.CLOSE).performClick()
+        composeRule.waitForIdle()
+        assertEquals(0, composeRule.onAllNodesWithTag(ShareAppDialogTags.DIALOG).fetchSemanticsNodes().size)
+        assertEquals(AppScreen.Lobby, navigation.currentScreen.value)
+        assertEquals(0, backend.createCount)
+        assertEquals(0, backend.cancelCount)
+    }
+
+    private fun assertShareDialogShown() {
+        composeRule.waitUntil(WAIT_MILLIS) {
+            composeRule.onAllNodesWithTag(ShareAppDialogTags.DIALOG).fetchSemanticsNodes().isNotEmpty()
+        }
+        val qr = composeRule.onNodeWithTag(ShareAppDialogTags.QR)
+        qr.performScrollTo().assertIsDisplayed()
+        val bounds = qr.getUnclippedBoundsInRoot()
+        assertTrue("QR width ${bounds.right - bounds.left}", bounds.right - bounds.left >= 200.dp)
+        assertTrue("QR is not square", kotlin.math.abs((bounds.right - bounds.left - (bounds.bottom - bounds.top)).value) < 1f)
+        composeRule.onNodeWithTag(ShareAppDialogTags.CLOSE).assertIsDisplayed()
+    }
+
     private fun availableCount(): Int = runBlocking { rival.observeAvailableGames().first().size }
 
     private fun mountContent() {
         scenario.onActivity { activity ->
             activity.setContent {
                 TicTacToeTheme(dynamicColor = false) {
-                    AppNavigation(navigationViewModel = navigation, gameViewModel = game, lobbyViewModel = lobby, matchViewModel = match, onlineMoveSound = NoMoveSound)
+                    AppNavigation(navigationViewModel = navigation, gameViewModel = game, lobbyViewModel = lobby, matchViewModel = match, onlineMoveSound = NoMoveSound, shareLink = EXAMPLE_LINK)
                 }
             }
         }
