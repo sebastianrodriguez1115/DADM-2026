@@ -36,19 +36,19 @@ Estado actual:
 
 ### D4. Diálogo con el QR
 
-- **Decidido por el orquestador:** diálogo «Compartir app» con el QR, «Escanea para instalar el Triqui» y «Cerrar»; se cierra con «Cerrar», Back o tocando fuera; sobrevive a la rotación (estado guardado con el mismo mecanismo con que el lobby conserva sus diálogos, a elegir por la implementación mirando cómo lo hace hoy el diálogo de apodo).
+- **Decidido por el orquestador:** diálogo «Compartir app» con el QR, «Escanea para instalar el Triqui» y «Cerrar»; se cierra con «Cerrar», Back o tocando fuera; sobrevive a la rotación (bandera con `rememberSaveable` en la navegación).
 - Back con el diálogo abierto lo cierra: lo cubre «Back descarta primero un menú o diálogo» de `game-mode-selection`; `online-lobby` ya limita «Volver al inicio con Back» al lobby sin diálogo abierto. Por eso no hay delta MODIFIED.
 - El diálogo no tiene estado de ViewModel de dominio: es una bandera de interfaz.
 
 ### D5. Dibujo del QR
 
-- **Decidido por el orquestador:** el QR codifica exactamente el enlace y se dibuja siempre con módulos oscuros sobre fondo blanco con margen de silencio (zona silenciosa de al menos 4 módulos, que es lo que recomienda la norma del QR), también con tema oscuro, porque los lectores esperan oscuro sobre claro. Cuadrado, de al menos 200 dp de lado cuando hay espacio, sin recorte en horizontal ni con fuente grande (el contenido del diálogo se desplaza o el lado se reduce). Descripción de accesibilidad «Código QR para instalar la app».
+- **Decidido por el orquestador:** el QR codifica exactamente el enlace y se dibuja siempre con módulos oscuros sobre fondo blanco con margen de silencio (zona silenciosa de al menos 4 módulos, que es lo que recomienda la norma del QR), también con tema oscuro, porque los lectores esperan oscuro sobre claro. Cuadrado, de al menos 200 dp de lado cuando hay espacio y de hasta 280 dp como máximo, sin recorte en horizontal ni con fuente grande (el contenido del diálogo se desplaza o el lado se reduce). Descripción de accesibilidad «Código QR para instalar la app».
 - Los colores del QR son constantes propias, no del tema Material. La corrección de errores y la versión del QR las decide el codificador; el nivel de corrección de errores se fija en una constante (se recomienda M) y no es observable salvo por la decodificación de ida y vuelta.
-- Se dibuja como mapa de bits o con un `Canvas` a partir de una matriz de módulos; la técnica la elige la implementación. La matriz se calcula fuera de la composición (o se recuerda con `remember(enlace)`) para no recalcularla en cada recomposición.
+- Implementado: `encodeQr` (función pura, `ui/share/QrCode.kt`) usa `QRCodeWriter` con UTF-8, corrección M y margen de 4 módulos incluido en la matriz `QrMatrix`; devuelve nulo si el texto está vacío o no cabe. El diálogo dibuja la matriz con un `Canvas`, negro sobre blanco fijos, y la recuerda con `remember(enlace)`. Si el enlace no se puede codificar, el diálogo omite el QR.
 
 ### D6. Generación con ZXing
 
-- **Decidido por el orquestador:** `com.google.zxing:core` (Apache 2.0), declarada en `gradle/libs.versions.toml` como library y usada con `implementation`. La versión se determina en la tarea 1.1 consultando el repositorio de artefactos; no se fija aquí. Solo se necesita `core`, no `android-core` ni el escáner.
+- **Decidido por el orquestador:** `com.google.zxing:core` (Apache 2.0), declarada en `gradle/libs.versions.toml` como library y usada con `implementation`. Versión elegida: 3.5.4, la última estable según los metadatos de Maven Central (`zxing` en el catálogo). Solo se necesita `core`, no `android-core` ni el escáner.
 - Alternativa descartada: imagen fija del QR en los recursos; habría que regenerarla a mano con cada enlace nuevo y versionaría el enlace, contra la decisión U2.
 - Alternativa descartada: codificador de QR propio; es código delicado (Reed-Solomon, máscaras) que una librería probada ya resuelve.
 - La prueba de ida y vuelta de JVM puede decodificar con las clases `core` (`QRCodeReader` sobre un `BinaryBitmap` construido desde la matriz de bits), sin dependencia de pruebas adicional.
@@ -56,7 +56,8 @@ Estado actual:
 ### D7. Cómo llega el enlace de `local.properties` al APK sin versionarse
 
 - **Decidido por el usuario:** el enlace no se versiona y solo está en el APK compilado. **Decidido por el orquestador:** clave `share.url` en `local.properties`.
-- Requisitos de la solución (la técnica concreta de Gradle la elige la implementación; por ejemplo un campo de `BuildConfig` o un recurso generado):
+- Técnica elegida: en `app/build.gradle.kts`, un proveedor de contenido de archivo (`providers.fileContents`) lee `local.properties` como entrada rastreada de la caché de configuración, extrae `share.url`, recorta espacios y usa vacío si falta el archivo o la clave; `androidComponents.onVariants` lo inyecta como campo `SHARE_URL` de `BuildConfig` (con `buildFeatures.buildConfig = true`), escapando comillas y barras. Solo `MainActivity` lee `BuildConfig.SHARE_URL`.
+- Requisitos que debe cumplir la solución:
   1. Se lee `local.properties` con un mecanismo compatible con la caché de configuración de Gradle (por ejemplo un proveedor de propiedades, `providers.fileContents` o equivalente, de modo que el cambio del archivo invalide la caché). No se lee el archivo con `java.io` suelto durante la configuración si eso rompe la reutilización o deja un valor viejo en la caché.
   2. Con la clave ausente, `./gradlew assembleDebug` pasa y el APK no contiene enlace (la acción no aparece). Con la clave definida, pasa y el APK sí.
   3. Cambiar el valor de la clave y recompilar produce un APK con el valor nuevo; la segunda corrida seguida con el mismo valor reutiliza la caché.
@@ -67,9 +68,9 @@ Estado actual:
 
 ### D8. Cómo se prueba sin el enlace real
 
-- **Decidido por el orquestador:** la pantalla del lobby y el diálogo reciben el enlace como parámetro (nulo o vacío significa «sin enlace»); `MainActivity` o el punto de composición raíz lo toma de la configuración de compilación. Las pruebas del lobby y del diálogo pasan `https://example.com/invitacion`; las pruebas sin enlace pasan nulo. Ninguna prueba lee `local.properties` ni el enlace real.
+- **Decidido por el orquestador, ajustado en la implementación:** `MainActivity` toma el enlace de `BuildConfig.SHARE_URL` y lo pasa a la capa de navegación (`shareLink`; en blanco significa «sin enlace»). El diálogo `ShareAppDialog` recibe el enlace como parámetro. La pantalla del lobby no recibe el enlace sino una acción opcional `onShareApp` (nula significa «sin enlace» y no compone el botón). La navegación guarda la bandera de diálogo abierto con `rememberSaveable` en el destino del lobby y no muestra acción ni diálogo con el enlace en blanco. Las pruebas pasan `https://example.com/invitacion`; las pruebas sin enlace pasan una acción nula o un enlace en blanco. Ninguna prueba lee `local.properties` ni el enlace real.
 - El codificador recibe una cadena y devuelve una matriz de módulos, sin dependencias de Android, para probarse con JVM.
-- Pruebas instrumentadas existentes del lobby: se mantienen verdes sin enlace, porque los valores por defecto de los parámetros nuevos hacen que la acción no aparezca.
+- Pruebas instrumentadas existentes del lobby: se mantienen verdes sin enlace, porque el valor por defecto de `onShareApp` es nulo y la acción no aparece.
 
 ### D9. Textos y accesibilidad
 
@@ -101,4 +102,4 @@ Rollback: revertir el cambio (dependencia, lectura de la configuración, acción
 
 ## Open Questions
 
-Ninguna. La técnica concreta de Gradle para D7 se deja a la implementación bajo los requisitos de D7.
+Ninguna. Reserva conocida: el cierre tocando fuera no tiene prueba propia (comparte camino con Back).

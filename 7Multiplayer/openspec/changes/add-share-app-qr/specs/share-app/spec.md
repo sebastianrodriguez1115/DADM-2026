@@ -1,3 +1,9 @@
+# share-app Specification
+
+## Purpose
+
+Define la acción «Compartir app» del lobby en línea, que muestra en un diálogo el código QR del enlace de instalación de la app, y la configuración de ese enlace fuera del repositorio.
+
 ## ADDED Requirements
 
 ### Requirement: Acción «Compartir app» en el lobby
@@ -86,7 +92,7 @@ Al pulsar «Compartir app», la aplicación SHALL abrir un diálogo con el títu
 
 ### Requirement: Contenido y dibujo del código QR
 
-El código QR SHALL codificar exactamente el enlace de instalación configurado, sin añadir ni quitar caracteres. Se SHALL dibujar siempre con módulos oscuros sobre fondo blanco y con su margen de silencio, también con el tema oscuro del sistema activo. El QR SHALL ser cuadrado y medir al menos 200 dp de lado cuando el espacio lo permita, y MUST NOT recortarse en landscape ni con fuentes escaladas (con desplazamiento o reducción del lado si hace falta). El QR SHALL exponer a las tecnologías de asistencia la descripción «Código QR para instalar la app».
+El código QR SHALL codificar exactamente el enlace de instalación configurado, sin añadir ni quitar caracteres. Se SHALL dibujar siempre con módulos oscuros sobre fondo blanco y con su margen de silencio, también con el tema oscuro del sistema activo. El QR SHALL ser cuadrado y medir al menos 200 dp de lado cuando el espacio lo permita (y no más de 280 dp), y MUST NOT recortarse en landscape ni con fuentes escaladas (con desplazamiento o reducción del lado si hace falta). El QR SHALL exponer a las tecnologías de asistencia la descripción «Código QR para instalar la app».
 
 #### Scenario: El QR codifica el enlace
 
