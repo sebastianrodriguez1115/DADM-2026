@@ -1,3 +1,59 @@
 <resources>
     <string name="app_name">Directorio de empresas</string>
+
+    <!-- Classifications (shared by list, detail and form) -->
+    <string name="classification_consulting">Consultoría</string>
+    <string name="classification_custom_development">Desarrollo a la medida</string>
+    <string name="classification_software_factory">Fábrica de software</string>
+
+    <!-- Company list -->
+    <string name="list_title">Directorio de empresas</string>
+    <string name="list_search_label">Buscar por nombre</string>
+    <string name="list_search_clear_description">Borrar búsqueda</string>
+    <string name="list_add_description">Agregar empresa</string>
+    <string name="list_empty_title">Aún no hay empresas registradas</string>
+    <string name="list_empty_hint">Toca + para agregar la primera.</string>
+    <string name="list_no_matches">Ninguna empresa coincide con la búsqueda</string>
+
+    <!-- Company detail -->
+    <string name="detail_title">Detalle de empresa</string>
+    <string name="detail_back_description">Volver</string>
+    <string name="detail_label_classification">Clasificación</string>
+    <string name="detail_label_email">Correo electrónico</string>
+    <string name="detail_label_website">Sitio web</string>
+    <string name="detail_label_phone">Teléfono</string>
+    <string name="detail_label_products">Productos y servicios</string>
+    <string name="detail_not_provided">No indicado</string>
+    <string name="detail_edit">Editar</string>
+    <string name="detail_delete">Eliminar</string>
+    <string name="detail_delete_failed">No se pudo eliminar la empresa. Inténtalo de nuevo.</string>
+
+    <!-- Delete dialog -->
+    <string name="delete_dialog_title">¿Eliminar empresa?</string>
+    <string name="delete_dialog_message">Se eliminará «%1$s» de forma permanente.</string>
+    <string name="delete_dialog_confirm">Eliminar</string>
+    <string name="delete_dialog_cancel">Cancelar</string>
+
+    <!-- Company form -->
+    <string name="form_title_create">Nueva empresa</string>
+    <string name="form_title_edit">Editar empresa</string>
+    <string name="form_label_name">Nombre de la empresa</string>
+    <string name="form_label_email">Correo electrónico</string>
+    <string name="form_label_website">Sitio web (opcional)</string>
+    <string name="form_label_phone">Teléfono (opcional)</string>
+    <string name="form_label_products">Productos y servicios (opcional)</string>
+    <string name="form_section_classification">Clasificación</string>
+    <string name="form_save">Guardar</string>
+    <string name="form_cancel">Cancelar</string>
+    <string name="form_error_name_empty">Escribe el nombre de la empresa</string>
+    <string name="form_error_name_too_long">El nombre admite hasta 100 caracteres</string>
+    <string name="form_error_name_taken">Ya existe una empresa con ese nombre</string>
+    <string name="form_error_email_empty">Escribe el correo electrónico</string>
+    <string name="form_error_email_invalid">Escribe un correo electrónico válido</string>
+    <string name="form_error_email_taken">Ya existe una empresa con ese correo electrónico</string>
+    <string name="form_error_website_invalid">Escribe una dirección web válida, por ejemplo https://ejemplo.com</string>
+    <string name="form_error_phone_invalid">Escribe un teléfono válido, de 7 a 15 dígitos</string>
+    <string name="form_error_products_too_long">Los productos y servicios admiten hasta 1000 caracteres</string>
+    <string name="form_error_classification_required">Selecciona al menos una clasificación</string>
+    <string name="form_save_failed">No se pudo guardar la empresa. Inténtalo de nuevo.</string>
 </resources>
