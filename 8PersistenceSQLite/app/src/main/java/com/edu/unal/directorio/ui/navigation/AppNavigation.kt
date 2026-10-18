@@ -8,12 +8,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.edu.unal.directorio.ui.companyViewModelFactory
+import com.edu.unal.directorio.ui.form.CompanyFormEvent
+import com.edu.unal.directorio.ui.form.CompanyFormScreen
+import com.edu.unal.directorio.ui.form.CompanyFormViewModel
 import com.edu.unal.directorio.ui.list.CompanyListScreen
 import com.edu.unal.directorio.ui.list.CompanyListUiState
 import com.edu.unal.directorio.ui.list.CompanyListViewModel
@@ -38,6 +43,10 @@ fun AppNavigation(navigation: NavigationViewModel = viewModel()) {
         ListRoute(navigation)
         return
     }
+    if (current is Screen.Form) {
+        FormRoute(current, navigation)
+        return
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding).padding(16.dp)) {
@@ -48,11 +57,7 @@ fun AppNavigation(navigation: NavigationViewModel = viewModel()) {
                     Button(onClick = { navigation.openEdit(current.id) }) { Text("PROVISIONAL edit") }
                     Button(onClick = { navigation.onDeleted() }) { Text("PROVISIONAL delete") }
                 }
-                is Screen.Form -> {
-                    Text("PROVISIONAL form ${current.id ?: "new"}")
-                    Button(onClick = { navigation.onSaved() }) { Text("PROVISIONAL save") }
-                    Button(onClick = { navigation.back() }) { Text("PROVISIONAL cancel") }
-                }
+                is Screen.Form -> Unit
             }
         }
     }
@@ -72,5 +77,41 @@ private fun ListRoute(navigation: NavigationViewModel) {
         onToggleClassification = viewModel::toggleClassification,
         onCompanyClick = navigation::openDetail,
         onAddClick = navigation::openCreate,
+    )
+}
+
+/**
+ * Connects the form with its Activity-scoped ViewModel. `open` runs once per entry to the form
+ * (also when the same id is opened again later); the `rememberSaveable` flag keeps a rotation
+ * from calling it again and wiping what was typed. Events are consumed once: saved goes to
+ * `onSaved()` and a missing company to `onDeleted()`.
+ */
+@Composable
+private fun FormRoute(screen: Screen.Form, navigation: NavigationViewModel) {
+    val viewModel: CompanyFormViewModel =
+        viewModel(factory = companyViewModelFactory { CompanyFormViewModel(it) })
+    // The calculation lambda runs only on the first composition of this entry (before the first
+    // frame), not after a rotation restores the saved value, and it writes no Compose state.
+    // Leaving the form discards the saved value, so the next entry opens (and resets) again.
+    rememberSaveable { viewModel.open(screen.id); true }
+    val state by viewModel.state.collectAsState()
+    LaunchedEffect(viewModel) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is CompanyFormEvent.Saved -> navigation.onSaved()
+                CompanyFormEvent.CompanyNotFound -> navigation.onDeleted()
+            }
+        }
+    }
+    CompanyFormScreen(
+        state = state,
+        onNameChange = viewModel::onNameChange,
+        onEmailChange = viewModel::onEmailChange,
+        onUrlChange = viewModel::onUrlChange,
+        onPhoneChange = viewModel::onPhoneChange,
+        onProductsChange = viewModel::onProductsChange,
+        onToggleClassification = viewModel::onToggleClassification,
+        onSave = viewModel::save,
+        onCancel = navigation::back,
     )
 }
