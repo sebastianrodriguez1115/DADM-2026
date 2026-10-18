@@ -1,21 +1,16 @@
 package com.edu.unal.directorio.ui.navigation
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.edu.unal.directorio.ui.companyViewModelFactory
+import com.edu.unal.directorio.ui.detail.CompanyDetailEvent
+import com.edu.unal.directorio.ui.detail.CompanyDetailScreen
+import com.edu.unal.directorio.ui.detail.CompanyDetailViewModel
 import com.edu.unal.directorio.ui.form.CompanyFormEvent
 import com.edu.unal.directorio.ui.form.CompanyFormScreen
 import com.edu.unal.directorio.ui.form.CompanyFormViewModel
@@ -26,7 +21,6 @@ import com.edu.unal.directorio.ui.list.CompanyListViewModel
 /**
  * Draws the current screen. The ViewModel is Activity-scoped.
  *
- * PROVISIONAL: the content of each screen is a placeholder that groups 5 to 7 replace.
  * Back is intercepted only on detail and form; on the list the system handles it.
  */
 @Composable
@@ -38,28 +32,10 @@ fun AppNavigation(navigation: NavigationViewModel = viewModel()) {
         is Screen.Detail, is Screen.Form -> BackHandler { navigation.back() }
     }
 
-    val current = screen
-    if (current is Screen.List) {
-        ListRoute(navigation)
-        return
-    }
-    if (current is Screen.Form) {
-        FormRoute(current, navigation)
-        return
-    }
-
-    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding).padding(16.dp)) {
-            when (current) {
-                Screen.List -> Unit
-                is Screen.Detail -> {
-                    Text("PROVISIONAL detail ${current.id}")
-                    Button(onClick = { navigation.openEdit(current.id) }) { Text("PROVISIONAL edit") }
-                    Button(onClick = { navigation.onDeleted() }) { Text("PROVISIONAL delete") }
-                }
-                is Screen.Form -> Unit
-            }
-        }
+    when (val current = screen) {
+        Screen.List -> ListRoute(navigation)
+        is Screen.Detail -> DetailRoute(current, navigation)
+        is Screen.Form -> FormRoute(current, navigation)
     }
 }
 
@@ -113,5 +89,33 @@ private fun FormRoute(screen: Screen.Form, navigation: NavigationViewModel) {
         onToggleClassification = viewModel::onToggleClassification,
         onSave = viewModel::save,
         onCancel = navigation::back,
+    )
+}
+
+/**
+ * Connects the detail with its Activity-scoped ViewModel. `open` runs once per entry (same
+ * `rememberSaveable` pattern as [FormRoute]). The back-to-list signal, sent after deleting or
+ * when the company does not exist, is consumed once and goes to `onDeleted()`.
+ */
+@Composable
+private fun DetailRoute(screen: Screen.Detail, navigation: NavigationViewModel) {
+    val viewModel: CompanyDetailViewModel =
+        viewModel(factory = companyViewModelFactory { CompanyDetailViewModel(it) })
+    rememberSaveable { viewModel.open(screen.id); true }
+    val state by viewModel.state.collectAsState()
+    LaunchedEffect(viewModel) {
+        viewModel.events.collect { event ->
+            when (event) {
+                CompanyDetailEvent.BackToList -> navigation.onDeleted()
+            }
+        }
+    }
+    CompanyDetailScreen(
+        state = state,
+        onBack = navigation::back,
+        onEdit = { navigation.openEdit(screen.id) },
+        onDelete = viewModel::requestDelete,
+        onConfirmDelete = viewModel::confirmDelete,
+        onDismissDelete = viewModel::dismissDelete,
     )
 }

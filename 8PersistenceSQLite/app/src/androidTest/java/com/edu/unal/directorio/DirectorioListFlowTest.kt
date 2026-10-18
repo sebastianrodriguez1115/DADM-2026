@@ -78,7 +78,7 @@ class DirectorioListFlowTest {
         assertTrue(before.isNotEmpty() && before.size < 8)
 
         rule.onNodeWithText(before.first()).performClick()
-        rule.waitUntil(5_000) { rule.onAllNodesWithText("PROVISIONAL detail", substring = true).fetchSemanticsNodes().isNotEmpty() }
+        rule.waitUntil(5_000) { rule.onAllNodesWithText("Detalle de empresa").fetchSemanticsNodes().isNotEmpty() }
         Espresso.pressBack()
 
         rule.waitUntil(5_000) { rule.onAllNodesWithTag(SEARCH_FIELD_TAG).fetchSemanticsNodes().isNotEmpty() }
