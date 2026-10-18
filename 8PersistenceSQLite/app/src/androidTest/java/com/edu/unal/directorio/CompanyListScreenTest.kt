@@ -48,13 +48,13 @@ class CompanyListScreenTest {
     @get:Rule
     val rule = createComposeRule()
 
-    private fun company(id: Long, name: String, vararg c: Classification) = Company(
+    private fun company(id: Long, name: String, c: Classification) = Company(
         id = id, name = name, email = "e$id@x.com", url = "", phone = "", products = "",
-        classifications = c.toSet(),
+        classification = c,
     )
 
     private val companies = listOf(
-        company(1, "Acme Software", Classification.Consulting, Classification.SoftwareFactory),
+        company(1, "Acme Software", Classification.SoftwareFactory),
         company(2, "Beta Labs", Classification.CustomDevelopment),
     )
 
@@ -69,7 +69,7 @@ class CompanyListScreenTest {
                     state = state,
                     onQueryChange = { events += "query:$it"; state = state.copy(query = it) },
                     onClearQuery = { events += "clear"; state = state.copy(query = "") },
-                    onToggleClassification = {
+                    onFilterToggled = {
                         events += "toggle:${it.code}"
                         state = state.copy(
                             selected = if (it in state.selected) state.selected - it else state.selected + it,
@@ -94,8 +94,10 @@ class CompanyListScreenTest {
         Classification.entries.forEach { rule.onNodeWithTag(chipTag(it)).assertIsDisplayed() }
         rule.onNodeWithTag(companyItemTag(1)).assertIsDisplayed()
         rule.onNodeWithText("Acme Software").assertIsDisplayed()
-        rule.onNodeWithText("Consultoría, Fábrica de software").assertIsDisplayed()
+        // Each item shows its single classification, with no comma-separated list.
+        rule.onNodeWithTag(companyItemTag(1)).assertTextContains("Fábrica de software")
         rule.onNodeWithTag(companyItemTag(2)).assertTextContains("Desarrollo a la medida")
+        rule.onAllNodesWithText(",", substring = true).assertCountEquals(0)
         rule.onNodeWithContentDescription("Agregar empresa").assertIsDisplayed()
     }
 
@@ -125,6 +127,19 @@ class CompanyListScreenTest {
         assertEquals("clear", events.last())
         rule.onNodeWithContentDescription("Borrar búsqueda").assertDoesNotExist()
         assertEquals("", state.query)
+    }
+
+    @Test
+    fun chipsAreMultiSelect() {
+        show(withCompanies())
+        val consulting = rule.onNodeWithTag(chipTag(Classification.Consulting))
+        val factory = rule.onNodeWithTag(chipTag(Classification.SoftwareFactory))
+        consulting.performClick()
+        factory.performClick()
+        consulting.assertIsSelected()
+        factory.assertIsSelected()
+        rule.onNodeWithTag(chipTag(Classification.CustomDevelopment)).assertIsNotSelected()
+        assertEquals(setOf(Classification.Consulting, Classification.SoftwareFactory), state.selected)
     }
 
     @Test

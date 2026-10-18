@@ -81,7 +81,7 @@ object CompanyValidator {
             phone = phoneError(trimmed.phone),
             products = if (trimmed.products.length > PRODUCTS_MAX) ProductsError.TooLong else null,
             classification =
-                if (trimmed.classifications.isEmpty()) ClassificationError.NoneSelected else null,
+                if (trimmed.classification == null) ClassificationError.NoneSelected else null,
         )
         return ValidationResult(trimmed, errors)
     }

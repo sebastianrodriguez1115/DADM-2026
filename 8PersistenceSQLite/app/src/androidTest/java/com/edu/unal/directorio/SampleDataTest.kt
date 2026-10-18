@@ -5,6 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.edu.unal.directorio.data.RoomCompanyRepository
 import com.edu.unal.directorio.data.db.DirectorioDatabase
+import com.edu.unal.directorio.domain.Classification
 import com.edu.unal.directorio.domain.Classification.Consulting
 import com.edu.unal.directorio.domain.CompanyDraft
 import com.edu.unal.directorio.domain.CompanyFilter
@@ -47,9 +48,18 @@ class SampleDataTest {
 
     private fun RoomCompanyRepository.all() = runBlocking { observeCompanies(CompanyFilter()).first() }
 
+    private fun catalog() = runBlocking { db!!.companyDao().getClassifications().map { it.id to it.code } }
+
+    private val expectedCatalog =
+        listOf(1 to "CONSULTING", 2 to "CUSTOM_DEVELOPMENT", 3 to "SOFTWARE_FACTORY")
+
     @Test
-    fun firstCreation_loadsEightCompanies() {
-        assertEquals(8, open().all().size)
+    fun firstCreation_loadsEightCompaniesAndTheThreeRowCatalog() {
+        val companies = open().all()
+        assertEquals(8, companies.size)
+        assertEquals(expectedCatalog, catalog())
+        // Each sample has exactly one classification, and the three are all used.
+        assertEquals(Classification.entries.toSet(), companies.map { it.classification }.toSet())
     }
 
     @Test
@@ -59,6 +69,7 @@ class SampleDataTest {
         assertEquals(0, repo.all().size)
         repo = open()
         assertEquals(0, repo.all().size)
+        assertEquals(expectedCatalog, catalog())
     }
 
     @Test
@@ -70,12 +81,13 @@ class SampleDataTest {
                 CompanyDraft(
                     name = "Mi Empresa",
                     email = "mia@example.com",
-                    classifications = setOf(Consulting),
+                    classification = Consulting,
                 ),
                 editingId = null,
             )
         }
         repo = open()
         assertEquals(listOf("Mi Empresa"), repo.all().map { it.name })
+        assertEquals(expectedCatalog, catalog())
     }
 }

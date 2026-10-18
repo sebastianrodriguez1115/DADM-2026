@@ -42,7 +42,7 @@
     <string name="form_label_website">Sitio web (opcional)</string>
     <string name="form_label_phone">Teléfono (opcional)</string>
     <string name="form_label_products">Productos y servicios (opcional)</string>
-    <string name="form_section_classification">Clasificación</string>
+    <string name="form_label_classification">Clasificación</string>
     <string name="form_save">Guardar</string>
     <string name="form_cancel">Cancelar</string>
     <string name="form_error_name_empty">Escribe el nombre de la empresa</string>
@@ -54,6 +54,6 @@
     <string name="form_error_website_invalid">Escribe una dirección web válida, por ejemplo https://ejemplo.com</string>
     <string name="form_error_phone_invalid">Escribe un teléfono válido, de 7 a 15 dígitos</string>
     <string name="form_error_products_too_long">Los productos y servicios admiten hasta 1000 caracteres</string>
-    <string name="form_error_classification_required">Selecciona al menos una clasificación</string>
+    <string name="form_error_classification_required">Selecciona una clasificación</string>
     <string name="form_save_failed">No se pudo guardar la empresa. Inténtalo de nuevo.</string>
 </resources>

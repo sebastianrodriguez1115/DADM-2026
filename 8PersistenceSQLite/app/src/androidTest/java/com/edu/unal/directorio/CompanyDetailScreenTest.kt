@@ -49,7 +49,7 @@ class CompanyDetailScreenTest {
         url = "https://acme.example.com",
         phone = "601 555 0123",
         products = "Linea uno\nLinea dos\nLinea tres",
-        classifications = setOf(Classification.Consulting, Classification.SoftwareFactory),
+        classification = Classification.SoftwareFactory,
     )
 
     /** The screen owns the dialog flag like the ViewModel would; [deletes] counts real deletions. */
@@ -83,7 +83,10 @@ class CompanyDetailScreenTest {
         rule.onNodeWithContentDescription("Volver").assertIsDisplayed()
         rule.onNodeWithText("Acme Software").assertIsDisplayed()
         rule.onNodeWithText("Clasificación").assertIsDisplayed()
-        rule.onNodeWithText("Consultoría, Fábrica de software").assertIsDisplayed()
+        // Only the single classification is visible, with no comma-separated list.
+        rule.onNodeWithText("Fábrica de software").assertIsDisplayed()
+        rule.onNodeWithText("Consultoría").assertDoesNotExist()
+        rule.onAllNodesWithText(",", substring = true).assertCountEquals(0)
         rule.onNodeWithText("Correo electrónico").assertIsDisplayed()
         rule.onNodeWithText("ventas@acme.example.com").assertIsDisplayed()
         rule.onNodeWithText("Sitio web").assertIsDisplayed()

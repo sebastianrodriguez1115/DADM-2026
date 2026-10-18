@@ -69,13 +69,25 @@ class DirectorioListFlowTest {
     }
 
     @Test
+    fun everySampleShowsItsSingleClassification() {
+        rule.waitUntil(5_000) { rule.onAllNodesWithText(samples[0]).fetchSemanticsNodes().isNotEmpty() }
+        // Each label appears once as a filter chip plus once per company that has it (2, 3 and 3
+        // samples); a company with several classifications would add more matches.
+        rule.onAllNodesWithText("Consultoría").assertCountEquals(1 + 2)
+        rule.onAllNodesWithText("Desarrollo a la medida").assertCountEquals(1 + 3)
+        rule.onAllNodesWithText("Fábrica de software").assertCountEquals(1 + 3)
+        rule.onAllNodesWithText(",", substring = true).assertCountEquals(0)
+    }
+
+    @Test
     fun filterIsKeptAfterOpeningTheDetailAndGoingBack() {
         rule.waitUntil(5_000) { rule.onAllNodesWithText(samples[0]).fetchSemanticsNodes().isNotEmpty() }
         rule.onNodeWithTag(SEARCH_FIELD_TAG).performTextInput("a")
         rule.onNodeWithTag(chipTag(Classification.Consulting)).performClick()
         rule.waitForIdle()
         val before = visibleNames()
-        assertTrue(before.isNotEmpty() && before.size < 8)
+        // Consulting is the single classification of Andes Consultores and Horizonte Ágil.
+        assertEquals(listOf("Andes Consultores", "Horizonte Ágil"), before)
 
         rule.onNodeWithText(before.first()).performClick()
         rule.waitUntil(5_000) { rule.onAllNodesWithText("Detalle de empresa").fetchSemanticsNodes().isNotEmpty() }

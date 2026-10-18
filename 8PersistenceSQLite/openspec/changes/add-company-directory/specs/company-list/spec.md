@@ -8,7 +8,7 @@ Define el listado de empresas, su orden, los mensajes cuando no hay nada que mos
 
 ### Requirement: Listado ordenado de empresas
 
-La pantalla inicial SHALL mostrar el título «Directorio de empresas» y la lista de todas las empresas, ordenada alfabéticamente por nombre sin distinguir mayúsculas ni tildes. Cada elemento SHALL mostrar el nombre de la empresa y sus clasificaciones. La lista SHALL actualizarse sola cuando se crea, modifica o elimina una empresa.
+La pantalla inicial SHALL mostrar el título «Directorio de empresas» y la lista de todas las empresas, ordenada alfabéticamente por nombre sin distinguir mayúsculas ni tildes. Cada elemento SHALL mostrar el nombre de la empresa y su clasificación. La lista SHALL actualizarse sola cuando se crea, modifica o elimina una empresa.
 
 #### Scenario: Orden alfabético
 
@@ -16,11 +16,11 @@ La pantalla inicial SHALL mostrar el título «Directorio de empresas» y la lis
 - **WHEN** se abre el listado
 - **THEN** se muestran en el orden «Álamo Tech», «beta Labs», «Cobalto»
 
-#### Scenario: Cada elemento muestra sus clasificaciones
+#### Scenario: Cada elemento muestra su clasificación
 
-- **GIVEN** una empresa con las clasificaciones «Consultoría» y «Fábrica de software»
+- **GIVEN** una empresa con la clasificación «Fábrica de software»
 - **WHEN** aparece en el listado
-- **THEN** su elemento muestra el nombre y los textos «Consultoría» y «Fábrica de software»
+- **THEN** su elemento muestra el nombre y el texto «Fábrica de software»
 
 #### Scenario: El listado refleja una nueva empresa
 
@@ -74,19 +74,19 @@ El listado SHALL ofrecer un campo de búsqueda con la etiqueta «Buscar por nomb
 
 ### Requirement: Filtro por clasificación
 
-Debajo de la búsqueda SHALL haber un chip por clasificación, «Consultoría», «Desarrollo a la medida» y «Fábrica de software», de selección múltiple e independiente. Con uno o más chips marcados, el listado SHALL mostrar las empresas que tengan al menos una de las clasificaciones marcadas. Sin ningún chip marcado, no se filtra por clasificación. Una empresa con varias clasificaciones SHALL aparecer una sola vez.
+Debajo de la búsqueda SHALL haber un chip por clasificación, «Consultoría», «Desarrollo a la medida» y «Fábrica de software», de selección múltiple e independiente. Cada empresa tiene una sola clasificación. Con uno o más chips marcados, el listado SHALL mostrar las empresas cuya clasificación esté entre las marcadas. Sin ningún chip marcado, no se filtra por clasificación.
 
 #### Scenario: Un chip
 
-- **GIVEN** empresas con clasificaciones: A {Consultoría}, B {Desarrollo a la medida}, C {Consultoría, Fábrica de software}
+- **GIVEN** empresas con clasificación: A {Consultoría}, B {Desarrollo a la medida}, C {Fábrica de software}
 - **WHEN** se marca «Consultoría»
-- **THEN** se muestran A y C
+- **THEN** se muestra solo A
 
 #### Scenario: Varios chips son una unión
 
 - **GIVEN** las mismas empresas A, B y C
-- **WHEN** se marcan «Consultoría» y «Desarrollo a la medida»
-- **THEN** se muestran A, B y C, y C aparece una sola vez
+- **WHEN** se marcan «Consultoría» y «Fábrica de software»
+- **THEN** se muestran A y C, y no B
 
 #### Scenario: Desmarcar todos los chips
 

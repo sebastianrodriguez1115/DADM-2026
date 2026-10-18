@@ -8,19 +8,25 @@ Define el formulario único para crear y editar empresas: sus campos, las reglas
 
 ### Requirement: Un formulario para crear y editar
 
-La aplicación SHALL usar el mismo formulario para crear y para editar. Al crear SHALL titularse «Nueva empresa» y mostrar los campos vacíos; al editar SHALL titularse «Editar empresa» y mostrar los valores actuales. Los campos SHALL ser: «Nombre de la empresa», «Correo electrónico», «Sitio web (opcional)», «Teléfono (opcional)», «Productos y servicios (opcional)» (de varias líneas) y la sección «Clasificación» con una casilla por cada una de «Consultoría», «Desarrollo a la medida» y «Fábrica de software». El formulario SHALL tener los botones «Guardar» y «Cancelar».
+La aplicación SHALL usar el mismo formulario para crear y para editar. Al crear SHALL titularse «Nueva empresa» y mostrar los campos vacíos; al editar SHALL titularse «Editar empresa» y mostrar los valores actuales. Los campos SHALL ser: «Nombre de la empresa», «Correo electrónico», «Sitio web (opcional)», «Teléfono (opcional)», «Productos y servicios (opcional)» (de varias líneas) y un menú desplegable de selección única con la etiqueta «Clasificación» y las opciones «Consultoría», «Desarrollo a la medida» y «Fábrica de software». El formulario SHALL tener los botones «Guardar» y «Cancelar».
 
 #### Scenario: Formulario de alta
 
 - **GIVEN** el listado
 - **WHEN** se pulsa «Agregar empresa»
-- **THEN** se muestra «Nueva empresa» con los campos de texto vacíos y ninguna clasificación marcada
+- **THEN** se muestra «Nueva empresa» con los campos de texto vacíos y el menú «Clasificación» sin ninguna opción seleccionada
 
 #### Scenario: Formulario de edición
 
-- **GIVEN** una empresa con clasificaciones «Consultoría» y «Fábrica de software»
+- **GIVEN** una empresa con la clasificación «Fábrica de software»
 - **WHEN** se abre su edición
-- **THEN** los campos muestran sus valores y están marcadas solo esas dos casillas
+- **THEN** los campos muestran sus valores y el menú «Clasificación» muestra «Fábrica de software»
+
+#### Scenario: Elegir una clasificación
+
+- **GIVEN** el formulario con el menú «Clasificación» sin selección
+- **WHEN** se abre el menú y se elige «Consultoría»
+- **THEN** el menú se cierra, muestra «Consultoría» y ofrece cambiar a otra de las tres opciones, sin permitir escribir un texto libre
 
 ### Requirement: Validación del nombre
 
@@ -128,19 +134,25 @@ Los productos y servicios SHALL ser opcionales, de texto libre con saltos de lí
 
 ### Requirement: Clasificación obligatoria
 
-El formulario SHALL exigir al menos una clasificación marcada. Si no hay ninguna al pulsar «Guardar», SHALL mostrarse «Selecciona al menos una clasificación» bajo la sección y no se guarda. Cualquier combinación de una a tres clasificaciones es válida.
+El formulario SHALL exigir exactamente una clasificación elegida en el menú «Clasificación». Si no hay ninguna al pulsar «Guardar», SHALL mostrarse «Selecciona una clasificación» bajo el menú y no se guarda. Cada una de las tres opciones es válida.
 
 #### Scenario: Ninguna clasificación
 
-- **GIVEN** el formulario con nombre y correo válidos y ninguna casilla marcada
+- **GIVEN** el formulario con nombre y correo válidos y el menú «Clasificación» sin selección
 - **WHEN** se pulsa «Guardar»
-- **THEN** aparece «Selecciona al menos una clasificación» y no se guarda
+- **THEN** aparece «Selecciona una clasificación» bajo el menú y no se guarda
 
-#### Scenario: Las tres clasificaciones
+#### Scenario: Cada clasificación es válida
 
 - **GIVEN** el formulario con nombre y correo válidos
-- **WHEN** se marcan las tres casillas y se pulsa «Guardar»
-- **THEN** la empresa se guarda con las tres clasificaciones
+- **WHEN** se elige «Desarrollo a la medida» y se pulsa «Guardar»
+- **THEN** la empresa se guarda con esa única clasificación
+
+#### Scenario: El error se limpia al elegir
+
+- **GIVEN** el error «Selecciona una clasificación» visible
+- **WHEN** se elige una opción del menú
+- **THEN** el error desaparece
 
 ### Requirement: Errores por campo
 
@@ -150,7 +162,7 @@ Todos los errores de validación SHALL mostrarse en el campo correspondiente y a
 
 - **GIVEN** el formulario de alta vacío
 - **WHEN** se pulsa «Guardar»
-- **THEN** aparecen a la vez «Escribe el nombre de la empresa», «Escribe el correo electrónico» y «Selecciona al menos una clasificación»
+- **THEN** aparecen a la vez «Escribe el nombre de la empresa», «Escribe el correo electrónico» y «Selecciona una clasificación»
 
 #### Scenario: El error se limpia al editar
 
@@ -206,4 +218,4 @@ El formulario SHALL poder desplazarse y SHALL poder completarse con el teclado e
 
 - **GIVEN** el formulario con el teclado abierto sobre «Productos y servicios (opcional)»
 - **WHEN** se desplaza el formulario
-- **THEN** se puede llegar a la sección «Clasificación» y a «Guardar»
+- **THEN** se puede llegar al menú «Clasificación» y a «Guardar»

@@ -6,17 +6,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -24,11 +25,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -51,8 +55,10 @@ const val FORM_PRODUCTS_TAG = "form_products"
 const val FORM_SAVE_TAG = "form_save"
 const val FORM_CANCEL_TAG = "form_cancel"
 
-/** Test tag of the checkbox row of [classification]. */
-fun formClassificationTag(classification: Classification) = "form_class_${classification.code}"
+const val FORM_CLASSIFICATION_TAG = "form_classification"
+
+/** Test tag of the menu option of [classification]. */
+fun formClassificationTag(classification: Classification) = "form_class_option_${classification.code}"
 
 // The single place where error codes become text (every code maps to a string resource).
 @StringRes
@@ -104,7 +110,7 @@ fun CompanyFormScreen(
     onUrlChange: (String) -> Unit,
     onPhoneChange: (String) -> Unit,
     onProductsChange: (String) -> Unit,
-    onToggleClassification: (Classification) -> Unit,
+    onClassificationChosen: (Classification) -> Unit,
     onSave: () -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
@@ -192,40 +198,11 @@ fun CompanyFormScreen(
                 ),
             )
 
-            Text(
-                stringResource(R.string.form_section_classification),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(top = 8.dp),
+            ClassificationDropdown(
+                selected = state.classification,
+                error = errors.classificationRes(),
+                onChosen = onClassificationChosen,
             )
-            Classification.entries.forEach { classification ->
-                val checked = classification in state.classifications
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 48.dp)
-                        .toggleable(
-                            value = checked,
-                            role = Role.Checkbox,
-                            onValueChange = { onToggleClassification(classification) },
-                        )
-                        .testTag(formClassificationTag(classification)),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Checkbox(checked = checked, onCheckedChange = null)
-                    Text(
-                        stringResource(classification.labelRes()),
-                        modifier = Modifier.padding(start = 12.dp),
-                    )
-                }
-            }
-            errors.classificationRes()?.let {
-                Text(
-                    stringResource(it),
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(start = 16.dp),
-                )
-            }
 
             if (state.saveFailed) {
                 Text(
@@ -278,4 +255,49 @@ private fun FormField(
         keyboardOptions = keyboardOptions,
         modifier = Modifier.fillMaxWidth().testTag(tag),
     )
+}
+
+/**
+ * Single-choice "Clasificación" menu (design D9): a read-only field (no free text) that anchors an
+ * [ExposedDropdownMenuBox] with the three options. With no selection the field is empty; the
+ * error goes in `supportingText`. The anchor is a primary, non-editable one, so screen readers
+ * announce a dropdown list and the keyboard never opens for it.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ClassificationDropdown(
+    selected: Classification?,
+    @StringRes error: Int?,
+    onChosen: (Classification) -> Unit,
+) {
+    var expanded by remember { mutableStateOf(false) }
+    ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
+        OutlinedTextField(
+            value = selected?.let { stringResource(it.labelRes()) }.orEmpty(),
+            onValueChange = {},
+            readOnly = true,
+            singleLine = true,
+            label = { Text(stringResource(R.string.form_label_classification)) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            isError = error != null,
+            supportingText = error?.let { { Text(stringResource(it)) } },
+            modifier = Modifier
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                .fillMaxWidth()
+                .testTag(FORM_CLASSIFICATION_TAG),
+        )
+        ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            Classification.entries.forEach { classification ->
+                DropdownMenuItem(
+                    text = { Text(stringResource(classification.labelRes())) },
+                    onClick = {
+                        onChosen(classification)
+                        expanded = false
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                    modifier = Modifier.testTag(formClassificationTag(classification)),
+                )
+            }
+        }
+    }
 }

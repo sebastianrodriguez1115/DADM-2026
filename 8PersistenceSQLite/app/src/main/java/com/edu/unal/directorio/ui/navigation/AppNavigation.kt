@@ -50,7 +50,7 @@ private fun ListRoute(navigation: NavigationViewModel) {
         state = CompanyListUiState(filter.query, filter.classifications, results),
         onQueryChange = viewModel::onQueryChange,
         onClearQuery = viewModel::clearQuery,
-        onToggleClassification = viewModel::toggleClassification,
+        onFilterToggled = viewModel::toggleClassification,
         onCompanyClick = navigation::openDetail,
         onAddClick = navigation::openCreate,
     )
@@ -86,7 +86,7 @@ private fun FormRoute(screen: Screen.Form, navigation: NavigationViewModel) {
         onUrlChange = viewModel::onUrlChange,
         onPhoneChange = viewModel::onPhoneChange,
         onProductsChange = viewModel::onProductsChange,
-        onToggleClassification = viewModel::onToggleClassification,
+        onClassificationChosen = viewModel::onClassificationChosen,
         onSave = viewModel::save,
         onCancel = navigation::back,
     )

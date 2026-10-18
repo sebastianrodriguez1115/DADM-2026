@@ -11,8 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.assertIsOff
-import androidx.compose.ui.test.assertIsOn
+import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.isToggleable
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -31,6 +34,7 @@ import com.edu.unal.directorio.ui.form.CompanyFormErrors
 import com.edu.unal.directorio.ui.form.CompanyFormScreen
 import com.edu.unal.directorio.ui.form.CompanyFormUiState
 import com.edu.unal.directorio.ui.form.FORM_CANCEL_TAG
+import com.edu.unal.directorio.ui.form.FORM_CLASSIFICATION_TAG
 import com.edu.unal.directorio.ui.form.FORM_EMAIL_TAG
 import com.edu.unal.directorio.ui.form.FORM_NAME_TAG
 import com.edu.unal.directorio.ui.form.FORM_PRODUCTS_TAG
@@ -64,15 +68,7 @@ class CompanyFormScreenTest {
                         onUrlChange = { state = state.copy(url = it) },
                         onPhoneChange = { state = state.copy(phone = it) },
                         onProductsChange = { state = state.copy(products = it) },
-                        onToggleClassification = { c ->
-                            state = state.copy(
-                                classifications = if (c in state.classifications) {
-                                    state.classifications - c
-                                } else {
-                                    state.classifications + c
-                                },
-                            )
-                        },
+                        onClassificationChosen = { c -> state = state.copy(classification = c) },
                         onSave = { saves++ },
                         onCancel = { cancels++ },
                     )
@@ -98,14 +94,23 @@ class CompanyFormScreenTest {
             CompanyFormUiState(
                 isEditing = true,
                 name = "Acme Software",
-                classifications = setOf(Classification.Consulting, Classification.SoftwareFactory),
+                classification = Classification.SoftwareFactory,
             ),
         )
         rule.onNodeWithText("Editar empresa").assertIsDisplayed()
         rule.onNodeWithTag(FORM_NAME_TAG).assertTextContains("Acme Software")
-        rule.onNodeWithTag(formClassificationTag(Classification.Consulting)).assertIsOn()
-        rule.onNodeWithTag(formClassificationTag(Classification.CustomDevelopment)).assertIsOff()
-        rule.onNodeWithTag(formClassificationTag(Classification.SoftwareFactory)).assertIsOn()
+        rule.onNodeWithTag(FORM_CLASSIFICATION_TAG).performScrollTo().assertTextContains("Fábrica de software")
+    }
+
+    @Test
+    fun createFormHasNoClassificationSelected() {
+        show(CompanyFormUiState())
+        val field = rule.onNodeWithTag(FORM_CLASSIFICATION_TAG).performScrollTo()
+        field.assertIsDisplayed().assertTextContains("Clasificación")
+        // Empty value: none of the three labels is shown while the menu is closed.
+        listOf("Consultoría", "Desarrollo a la medida", "Fábrica de software").forEach {
+            rule.onNodeWithText(it).assertDoesNotExist()
+        }
     }
 
     @Test
@@ -115,9 +120,18 @@ class CompanyFormScreenTest {
             "Nombre de la empresa", "Correo electrónico", "Sitio web (opcional)",
             "Teléfono (opcional)", "Productos y servicios (opcional)",
         ).forEach { rule.onNodeWithText(it).assertExists() }
-        rule.onNodeWithText("Clasificación").performScrollTo().assertIsDisplayed()
+        rule.onNodeWithTag(FORM_CLASSIFICATION_TAG).performScrollTo().assertIsDisplayed()
+    }
+
+    @Test
+    fun menuOffersTheThreeOptions() {
+        show(CompanyFormUiState())
+        rule.onNodeWithTag(FORM_CLASSIFICATION_TAG).performScrollTo().performClick()
         listOf("Consultoría", "Desarrollo a la medida", "Fábrica de software").forEach {
-            rule.onNodeWithText(it).performScrollTo().assertIsDisplayed()
+            rule.onNodeWithText(it).assertIsDisplayed()
+        }
+        Classification.entries.forEach {
+            rule.onNodeWithTag(formClassificationTag(it)).assertIsDisplayed()
         }
     }
 
@@ -140,7 +154,11 @@ class CompanyFormScreenTest {
         val emailError = rule.onNodeWithText("Escribe el correo electrónico").fetchSemanticsNode().boundsInRoot
         assertTrue(nameError.top >= nameBounds.top && nameError.bottom <= emailBounds.top + 1f)
         assertTrue(emailError.top >= emailBounds.top && emailError.top < emailBounds.bottom + 1f)
-        rule.onNodeWithText("Selecciona al menos una clasificación").performScrollTo().assertIsDisplayed()
+        rule.onNodeWithText("Selecciona una clasificación").performScrollTo().assertIsDisplayed()
+        // The error is under the menu field.
+        val menuBounds = rule.onNodeWithTag(FORM_CLASSIFICATION_TAG).fetchSemanticsNode().boundsInRoot
+        val classError = rule.onNodeWithText("Selecciona una clasificación").fetchSemanticsNode().boundsInRoot
+        assertTrue(classError.top >= menuBounds.top && classError.top < menuBounds.bottom + 1f)
     }
 
     @Test
@@ -151,12 +169,32 @@ class CompanyFormScreenTest {
     }
 
     @Test
-    fun checkboxesCheckAndUncheck() {
+    fun choosingAnOptionClosesTheMenuAndShowsIt() {
         show(CompanyFormUiState())
-        val tag = formClassificationTag(Classification.CustomDevelopment)
-        rule.onNodeWithTag(tag).performScrollTo().assertIsOff().performClick()
-        rule.onNodeWithTag(tag).assertIsOn().performClick()
-        rule.onNodeWithTag(tag).assertIsOff()
+        rule.onNodeWithTag(FORM_CLASSIFICATION_TAG).performScrollTo().performClick()
+        rule.onNodeWithTag(formClassificationTag(Classification.Consulting)).performClick()
+
+        // The menu closed: the other options are gone and the field shows the choice.
+        rule.onNodeWithTag(formClassificationTag(Classification.CustomDevelopment)).assertDoesNotExist()
+        rule.onNodeWithTag(FORM_CLASSIFICATION_TAG).assertTextContains("Consultoría")
+
+        // It can be changed to another of the three options.
+        rule.onNodeWithTag(FORM_CLASSIFICATION_TAG).performClick()
+        rule.onNodeWithTag(formClassificationTag(Classification.CustomDevelopment)).performClick()
+        rule.onNodeWithTag(FORM_CLASSIFICATION_TAG).assertTextContains("Desarrollo a la medida")
+    }
+
+    @Test
+    fun classificationFieldAcceptsNoFreeText() {
+        show(CompanyFormUiState())
+        rule.onNodeWithTag(FORM_CLASSIFICATION_TAG).performScrollTo()
+            .assert(SemanticsMatcher.keyNotDefined(SemanticsActions.SetText))
+    }
+
+    @Test
+    fun thereAreNoCheckboxes() {
+        show(CompanyFormUiState())
+        rule.onAllNodes(isToggleable()).assertCountEquals(0)
     }
 
     @Test

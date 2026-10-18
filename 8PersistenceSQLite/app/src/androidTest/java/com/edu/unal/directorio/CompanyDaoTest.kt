@@ -1,7 +1,7 @@
 package com.edu.unal.directorio
 
 import android.database.sqlite.SQLiteConstraintException
-import androidx.room3.useReaderConnection
+import androidx.room3.useWriterConnection
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.edu.unal.directorio.data.db.CompanyDao
@@ -26,7 +26,10 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** DAO tests on an empty in-memory database, without the sample-data callback (task 3.3). */
+/**
+ * DAO tests on an in-memory database with the classification catalog and no companies, without
+ * the sample data (tasks 3.3 and 9.2).
+ */
 @RunWith(AndroidJUnit4::class)
 class CompanyDaoTest {
     private lateinit var db: DirectorioDatabase
@@ -47,52 +50,85 @@ class CompanyDaoTest {
     /** Inserts a company the way the repository will: keys computed with [normalizeKey]. */
     private suspend fun add(
         name: String,
-        vararg classifications: Classification,
+        classification: Classification = Consulting,
         email: String = "contact@${normalizeKey(name).filter { it.isLetterOrDigit() }}.example.com",
-    ): Long {
-        val id = dao.insert(
-            CompanyEntity(
-                name = name,
-                nameKey = normalizeKey(name),
-                email = email,
-                emailKey = normalizeKey(email),
-            ),
-        )
-        dao.replaceClassifications(id, classifications.map { it.code }.toSet())
-        return id
-    }
+    ): Long = dao.insert(
+        CompanyEntity(
+            name = name,
+            nameKey = normalizeKey(name),
+            email = email,
+            emailKey = normalizeKey(email),
+            classificationId = classification.id,
+        ),
+    )
 
     /** Runs the filter the way a caller must: normalized, escaped text and optional chips. */
     private suspend fun list(text: String = "", vararg chips: Classification): List<String> =
         dao.observeFiltered(
             query = escapeLike(normalizeKey(text)),
             noClassFilter = if (chips.isEmpty()) 1 else 0,
-            classifications = chips.map { it.code },
-        ).first().map { it.company.name }
+            classificationIds = chips.map { it.id },
+        ).first().map { it.name }
 
-    /** Counts rows of `company_classification` directly, to detect orphans. */
-    private suspend fun countClassificationRows(): Long =
-        db.useReaderConnection { connection ->
-            connection.usePrepared("SELECT COUNT(*) FROM company_classification") { statement ->
-                statement.step()
-                statement.getLong(0)
-            }
+    // --- Catalog ---
+
+    @Test
+    fun newDatabaseHasTheThreeCatalogRowsAndNoCompanies() = runBlocking {
+        val rows = dao.getClassifications()
+
+        assertEquals(
+            listOf(1 to "CONSULTING", 2 to "CUSTOM_DEVELOPMENT", 3 to "SOFTWARE_FACTORY"),
+            rows.map { it.id to it.code },
+        )
+        assertEquals(Classification.entries.map { it.id to it.code }, rows.map { it.id to it.code })
+        assertTrue(list().isEmpty())
+    }
+
+    @Test
+    fun foreignKeyRejectsAnUnknownClassification() = runBlocking {
+        try {
+            dao.insert(
+                CompanyEntity(
+                    name = "Acme Software",
+                    nameKey = "acme software",
+                    email = "a@example.com",
+                    emailKey = "a@example.com",
+                    classificationId = 99,
+                ),
+            )
+            fail("Expected a foreign key violation")
+        } catch (e: SQLiteConstraintException) {
+            assertTrue(e.message.orEmpty(), e.message.orEmpty().contains("FOREIGN KEY", ignoreCase = true))
         }
+        assertTrue(list().isEmpty())
+    }
+
+    @Test
+    fun classificationCodeIsUnique() = runBlocking {
+        try {
+            db.useWriterConnection { transactor ->
+                transactor.usePrepared("INSERT INTO classification (id, code) VALUES (4, 'CONSULTING')") {
+                    it.step()
+                }
+            }
+            fail("Expected a unique constraint violation on code")
+        } catch (e: SQLiteConstraintException) {
+            assertTrue(e.message.orEmpty(), e.message.orEmpty().contains("code"))
+        }
+        assertEquals(3, dao.getClassifications().size)
+    }
 
     // --- Basic CRUD ---
 
     @Test
     fun insertedCompanyIsReadBackById() = runBlocking {
-        val id = add("Acme Software", Consulting, SoftwareFactory)
+        val id = add("Acme Software", SoftwareFactory)
 
         val found = dao.observeById(id).first()
         assertNotNull(found)
-        assertEquals("Acme Software", found!!.company.name)
-        assertEquals("acme software", found.company.nameKey)
-        assertEquals(
-            setOf("CONSULTING", "SOFTWARE_FACTORY"),
-            found.classifications.map { it.classification }.toSet(),
-        )
+        assertEquals("Acme Software", found!!.name)
+        assertEquals("acme software", found.nameKey)
+        assertEquals(SoftwareFactory, Classification.fromId(found.classificationId))
     }
 
     @Test
@@ -101,24 +137,23 @@ class CompanyDaoTest {
     }
 
     @Test
-    fun updateKeepsIdentityAndReplacesClassifications() = runBlocking {
-        val id = add("Acme Software", Consulting, SoftwareFactory)
-        val before = dao.observeById(id).first()!!.company
+    fun updateKeepsIdentityAndChangesTheClassification() = runBlocking {
+        val id = add("Acme Software", SoftwareFactory)
+        val before = dao.observeById(id).first()!!
 
-        val changed = dao.update(before.copy(phone = "+57 555-0100"))
-        dao.replaceClassifications(id, setOf(CustomDevelopment.code))
+        val changed = dao.update(before.copy(phone = "+57 555-0100", classificationId = CustomDevelopment.id))
 
         assertEquals(1, changed)
         val after = dao.observeById(id).first()!!
-        assertEquals(id, after.company.id)
-        assertEquals("+57 555-0100", after.company.phone)
-        assertEquals(listOf("CUSTOM_DEVELOPMENT"), after.classifications.map { it.classification })
+        assertEquals(id, after.id)
+        assertEquals("+57 555-0100", after.phone)
+        assertEquals(CustomDevelopment.id, after.classificationId)
         assertEquals(1, list().size)
     }
 
     @Test
     fun findIdByKeysReturnsTheOwnerOrNull() = runBlocking {
-        val id = add("Acme Software", Consulting, email = "Hola@Acme.example.com")
+        val id = add("Acme Software", email = "Hola@Acme.example.com")
 
         assertEquals(id, dao.findIdByNameKey(normalizeKey("  ACME software ")))
         assertEquals(id, dao.findIdByEmailKey(normalizeKey("hola@acme.example.com")))
@@ -126,12 +161,12 @@ class CompanyDaoTest {
         assertNull(dao.findIdByEmailKey("otro@example.com"))
     }
 
-    // --- Cascade ---
+    // --- Delete ---
 
     @Test
-    fun deleteRemovesCompanyAndItsClassificationsWithoutOrphans() = runBlocking {
-        val doomed = add("Acme Software", Consulting, SoftwareFactory)
-        val kept = add("Beta Labs", CustomDevelopment)
+    fun deleteRemovesTheCompanyAndLeavesTheCatalogIntact() = runBlocking {
+        val doomed = add("Acme Software", Consulting)
+        add("Beta Labs", CustomDevelopment)
 
         assertEquals(1, dao.deleteById(doomed))
 
@@ -139,9 +174,7 @@ class CompanyDaoTest {
         assertEquals(listOf("Beta Labs"), list())
         assertEquals(listOf("Beta Labs"), list("", Consulting, SoftwareFactory, CustomDevelopment))
         assertTrue(list("", Consulting).isEmpty())
-        // Orphan check against the raw table: only the kept company's single row remains.
-        assertEquals(1, dao.observeById(kept).first()!!.classifications.size)
-        assertEquals(1L, countClassificationRows())
+        assertEquals(3, dao.getClassifications().size)
         assertEquals(0, dao.deleteById(doomed))
     }
 
@@ -149,7 +182,7 @@ class CompanyDaoTest {
 
     @Test
     fun duplicateNameKeyIsRejectedByTheDatabase() = runBlocking {
-        add("Ñandú Ágil", Consulting, email = "uno@example.com")
+        add("Ñandú Ágil", email = "uno@example.com")
         try {
             dao.insert(
                 CompanyEntity(
@@ -157,6 +190,7 @@ class CompanyDaoTest {
                     nameKey = normalizeKey("NANDU AGIL"),
                     email = "dos@example.com",
                     emailKey = "dos@example.com",
+                    classificationId = Consulting.id,
                 ),
             )
             fail("Expected a unique constraint violation on name_key")
@@ -168,7 +202,7 @@ class CompanyDaoTest {
 
     @Test
     fun duplicateEmailKeyIsRejectedByTheDatabase() = runBlocking {
-        add("Acme Software", Consulting, email = "info@example.com")
+        add("Acme Software", email = "info@example.com")
         try {
             dao.insert(
                 CompanyEntity(
@@ -176,6 +210,7 @@ class CompanyDaoTest {
                     nameKey = normalizeKey("Beta Labs"),
                     email = " INFO@example.com",
                     emailKey = normalizeKey(" INFO@example.com"),
+                    classificationId = Consulting.id,
                 ),
             )
             fail("Expected a unique constraint violation on email_key")
@@ -245,19 +280,31 @@ class CompanyDaoTest {
     fun singleChipFilter() = runBlocking {
         add("A", Consulting)
         add("B", CustomDevelopment)
-        add("C", Consulting, SoftwareFactory)
+        add("C", SoftwareFactory)
 
-        assertEquals(listOf("A", "C"), list("", Consulting))
+        assertEquals(listOf("A"), list("", Consulting))
+        assertEquals(listOf("B"), list("", CustomDevelopment))
+        assertEquals(listOf("C"), list("", SoftwareFactory))
     }
 
     @Test
-    fun severalChipsAreAUnionWithoutRepeatedCompanies() = runBlocking {
+    fun severalChipsAreTheUnionOfTheirCompanies() = runBlocking {
         add("A", Consulting)
         add("B", CustomDevelopment)
-        add("C", Consulting, SoftwareFactory)
+        add("C", SoftwareFactory)
 
-        assertEquals(listOf("A", "B", "C"), list("", Consulting, CustomDevelopment))
+        assertEquals(listOf("A", "C"), list("", Consulting, SoftwareFactory))
+        assertEquals(listOf("A", "B"), list("", Consulting, CustomDevelopment))
         assertEquals(listOf("A", "B", "C"), list("", Consulting, CustomDevelopment, SoftwareFactory))
+    }
+
+    @Test
+    fun noChipsDoesNotFilterByClassification() = runBlocking {
+        add("A", Consulting)
+        add("B", CustomDevelopment)
+        add("C", SoftwareFactory)
+
+        assertEquals(listOf("A", "B", "C"), list(""))
     }
 
     @Test
@@ -292,10 +339,10 @@ class CompanyDaoTest {
     @Test
     fun emptyChipListWithNoClassFilterReturnsEverything() = runBlocking {
         add("A", Consulting)
-        add("B")
+        add("B", SoftwareFactory)
 
         val result = dao.observeFiltered("", 1, emptyList()).first()
-        assertEquals(listOf("A", "B"), result.map { it.company.name })
+        assertEquals(listOf("A", "B"), result.map { it.name })
         assertFalse(result.isEmpty())
     }
 
@@ -304,6 +351,6 @@ class CompanyDaoTest {
         val flow = dao.observeFiltered("", 1, emptyList())
         assertTrue(flow.first().isEmpty())
         add("Acme Software", Consulting)
-        assertEquals(listOf("Acme Software"), flow.first().map { it.company.name })
+        assertEquals(listOf("Acme Software"), flow.first().map { it.name })
     }
 }

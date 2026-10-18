@@ -30,13 +30,14 @@ class CompanyListViewModelTest {
     @After
     fun tearDown() = Dispatchers.resetMain()
 
-    private fun draft(name: String, vararg c: com.edu.unal.directorio.domain.Classification) =
-        CompanyDraft(name = name, email = "${name.filter { it.isLetter() }}@x.com", classifications = c.toSet())
+    private fun draft(name: String, classification: com.edu.unal.directorio.domain.Classification) =
+        CompanyDraft(name = name, email = "${name.filter { it.isLetter() }}@x.com", classification = classification)
 
+    // One classification each: Acme Software {Consulting}, Acme Labs {CustomDevelopment}, Beta {SoftwareFactory}.
     private val abc = listOf(
         draft("Acme Software", Consulting),
         draft("Acme Labs", CustomDevelopment),
-        draft("Beta", Consulting, SoftwareFactory),
+        draft("Beta", SoftwareFactory),
     )
 
     private fun names(vm: CompanyListViewModel) = vm.results.value.companies.map { it.name }
@@ -50,7 +51,9 @@ class CompanyListViewModelTest {
     @Test
     fun listsAllCompaniesInAlphabeticalOrder() = runTest {
         val vm = CompanyListViewModel(
-            FakeCompanyRepository(listOf(draft("beta Labs"), draft("Álamo Tech"), draft("Cobalto")).map { it.copy(classifications = setOf(Consulting)) }),
+            FakeCompanyRepository(
+                listOf(draft("beta Labs", Consulting), draft("Álamo Tech", Consulting), draft("Cobalto", Consulting)),
+            ),
         )
         observe(vm)
         assertEquals(listOf("Álamo Tech", "beta Labs", "Cobalto"), names(vm))
@@ -116,17 +119,28 @@ class CompanyListViewModelTest {
         observe(vm)
         vm.toggleClassification(Consulting)
         advanceUntilIdle()
-        assertEquals(listOf("Acme Software", "Beta"), names(vm))
+        assertEquals(listOf("Acme Software"), names(vm))
     }
 
     @Test
-    fun severalChipsAreAUnionWithoutRepeatedCompanies() = runTest {
+    fun severalChipsAreTheUnionOfTheirCompanies() = runTest {
         val vm = CompanyListViewModel(FakeCompanyRepository(abc))
         observe(vm)
         vm.toggleClassification(Consulting)
         vm.toggleClassification(SoftwareFactory)
+        advanceUntilIdle()
+        // A {Consulting} and C {SoftwareFactory} appear; B {CustomDevelopment} does not.
+        assertEquals(listOf("Acme Software", "Beta"), names(vm))
         vm.toggleClassification(CustomDevelopment)
         advanceUntilIdle()
+        assertEquals(listOf("Acme Labs", "Acme Software", "Beta"), names(vm))
+    }
+
+    @Test
+    fun noChipsDoesNotFilterByClassification() = runTest {
+        val vm = CompanyListViewModel(FakeCompanyRepository(abc))
+        observe(vm)
+        assertTrue(vm.filter.value.classifications.isEmpty())
         assertEquals(listOf("Acme Labs", "Acme Software", "Beta"), names(vm))
     }
 
@@ -171,7 +185,7 @@ class CompanyListViewModelTest {
         vm.clearQuery()
         advanceUntilIdle()
         assertEquals(CompanyFilter("", setOf(Consulting)), vm.filter.value)
-        assertEquals(listOf("Acme Software", "Beta"), names(vm))
+        assertEquals(listOf("Acme Software"), names(vm))
     }
 
     @Test

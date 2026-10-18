@@ -80,10 +80,7 @@ fun CompanyDetailScreen(
                 Text(company.name, style = MaterialTheme.typography.headlineSmall)
                 DetailField(
                     R.string.detail_label_classification,
-                    // joinToString's lambda is not composable, so resolve the labels first.
-                    company.classifications.sortedBy { it.ordinal }
-                        .map { stringResource(it.labelRes()) }
-                        .joinToString(", "),
+                    stringResource(company.classification.labelRes()),
                 )
                 DetailField(R.string.detail_label_email, company.email)
                 DetailField(R.string.detail_label_website, company.url)

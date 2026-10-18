@@ -1,7 +1,6 @@
 package com.edu.unal.directorio.ui.detail
 
 import com.edu.unal.directorio.data.FakeCompanyRepository
-import com.edu.unal.directorio.domain.Classification.Consulting
 import com.edu.unal.directorio.domain.Classification.SoftwareFactory
 import com.edu.unal.directorio.domain.CompanyDraft
 import kotlinx.coroutines.CancellationException
@@ -43,7 +42,7 @@ class CompanyDetailViewModelTest {
         email = "ventas@acme.example.com",
         phone = "601 555 0123",
         products = "Uno\nDos\nTres",
-        classifications = setOf(Consulting, SoftwareFactory),
+        classification = SoftwareFactory,
     )
     private val beta = acme.copy(name = "Beta SAS", email = "beta@example.com")
 
@@ -71,7 +70,7 @@ class CompanyDetailViewModelTest {
         vm.open(1)
         advanceUntilIdle()
         assertEquals("Acme Software", loaded().name)
-        assertEquals(setOf(Consulting, SoftwareFactory), loaded().classifications)
+        assertEquals(SoftwareFactory, loaded().classification)
         assertFalse(vm.state.value.deleteDialogVisible)
         assertFalse(vm.state.value.deleteFailed)
     }

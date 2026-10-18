@@ -37,6 +37,6 @@ interface CompanyRepository {
      */
     suspend fun save(draft: CompanyDraft, editingId: Long?): SaveResult
 
-    /** Deletes the company and its classifications. Deleting a missing id does nothing. */
+    /** Deletes the company (the classification catalog is untouched). Deleting a missing id does nothing. */
     suspend fun delete(id: Long)
 }

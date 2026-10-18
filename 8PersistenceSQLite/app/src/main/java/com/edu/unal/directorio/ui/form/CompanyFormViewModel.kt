@@ -54,7 +54,8 @@ data class CompanyFormUiState(
     val url: String = "",
     val phone: String = "",
     val products: String = "",
-    val classifications: Set<Classification> = emptySet(),
+    /** The chosen classification; `null` until one is picked in the menu. */
+    val classification: Classification? = null,
     val errors: CompanyFormErrors = CompanyFormErrors(),
     /** `true` from the moment "Guardar" is accepted; the button is disabled while it is. */
     val isSaving: Boolean = false,
@@ -122,7 +123,7 @@ class CompanyFormViewModel(private val repository: CompanyRepository) : ViewMode
                     url = company.url,
                     phone = company.phone,
                     products = company.products,
-                    classifications = company.classifications,
+                    classification = company.classification,
                 )
             }
         }
@@ -148,15 +149,10 @@ class CompanyFormViewModel(private val repository: CompanyRepository) : ViewMode
         it.copy(products = value, errors = it.errors.copy(validation = it.errors.validation.copy(products = null)))
     }
 
-    /** Checks or unchecks [classification] and clears the classification error. */
-    fun onToggleClassification(classification: Classification) = _state.update {
-        val updated = if (classification in it.classifications) {
-            it.classifications - classification
-        } else {
-            it.classifications + classification
-        }
+    /** Sets the chosen [classification] and clears the classification error. */
+    fun onClassificationChosen(classification: Classification) = _state.update {
         it.copy(
-            classifications = updated,
+            classification = classification,
             errors = it.errors.copy(validation = it.errors.validation.copy(classification = null)),
         )
     }
@@ -175,7 +171,7 @@ class CompanyFormViewModel(private val repository: CompanyRepository) : ViewMode
                 url = current.url,
                 phone = current.phone,
                 products = current.products,
-                classifications = current.classifications,
+                classification = current.classification,
             ),
         )
         if (!result.isValid) {

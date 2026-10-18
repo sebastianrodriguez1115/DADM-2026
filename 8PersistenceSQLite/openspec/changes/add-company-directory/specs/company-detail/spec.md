@@ -8,13 +8,13 @@ Define el detalle de una empresa, el acceso a su edición y la eliminación con 
 
 ### Requirement: Detalle de una empresa
 
-El detalle SHALL tener el título «Detalle de empresa» y mostrar el nombre de la empresa y, con su etiqueta, «Clasificación», «Correo electrónico», «Sitio web», «Teléfono» y «Productos y servicios». Los campos opcionales vacíos SHALL mostrar «No indicado». Los productos y servicios SHALL conservar los saltos de línea. La pantalla SHALL tener una acción de volver con la descripción «Volver» y SHALL poder desplazarse cuando el contenido no cabe.
+El detalle SHALL tener el título «Detalle de empresa» y mostrar el nombre de la empresa y, con su etiqueta, «Clasificación» (la única de la empresa), «Correo electrónico», «Sitio web», «Teléfono» y «Productos y servicios». Los campos opcionales vacíos SHALL mostrar «No indicado». Los productos y servicios SHALL conservar los saltos de línea. La pantalla SHALL tener una acción de volver con la descripción «Volver» y SHALL poder desplazarse cuando el contenido no cabe.
 
 #### Scenario: Empresa completa
 
 - **GIVEN** una empresa con todos sus campos
 - **WHEN** se abre su detalle
-- **THEN** se ven el nombre, las clasificaciones, el correo, el sitio web, el teléfono y los productos y servicios, cada uno con su etiqueta
+- **THEN** se ven el nombre, la clasificación, el correo, el sitio web, el teléfono y los productos y servicios, cada uno con su etiqueta
 
 #### Scenario: Campos opcionales vacíos
 

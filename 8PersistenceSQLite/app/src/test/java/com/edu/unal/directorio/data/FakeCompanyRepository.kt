@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.map
 /**
  * In-memory [CompanyRepository] for JVM tests (design D10). It mirrors [RoomCompanyRepository]:
  * trimmed fields, uniqueness by `normalizeKey` excluding the edited company, results ordered by
- * normalized name then id, and the D7 filter (substring of the normalized name, union of the
- * checked classifications, empty set means no classification filter).
+ * normalized name then id, and the D7 filter (substring of the normalized name, classification
+ * being one of the checked ones, empty set means no classification filter).
  *
  * Failure switches: set [failNextSave] / [failNextDelete] to make the next call throw
  * [failure] once (the switch resets itself). A failed call changes nothing.
@@ -47,7 +47,7 @@ class FakeCompanyRepository(initial: List<CompanyDraft> = emptyList()) : Company
             list.filter { company ->
                 query in normalizeKey(company.name) &&
                     (filter.classifications.isEmpty() ||
-                        company.classifications.any { it in filter.classifications })
+                        company.classification in filter.classifications)
             }.sortedWith(compareBy({ normalizeKey(it.name) }, { it.id }))
         }
     }
@@ -64,7 +64,7 @@ class FakeCompanyRepository(initial: List<CompanyDraft> = emptyList()) : Company
             throw failure
         }
         saveCalls++
-        require(draft.classifications.isNotEmpty()) { "A company needs at least one classification" }
+        val classification = requireNotNull(draft.classification) { "A company needs a classification" }
         val name = draft.name.trim()
         val email = draft.email.trim()
         val list = companies.value
@@ -86,7 +86,7 @@ class FakeCompanyRepository(initial: List<CompanyDraft> = emptyList()) : Company
             url = draft.url.trim(),
             phone = draft.phone.trim(),
             products = draft.products.trim(),
-            classifications = draft.classifications,
+            classification = classification,
         )
         companies.value = list.filter { it.id != id } + company
         return SaveResult.Saved(id)

@@ -1,6 +1,7 @@
 package com.edu.unal.directorio
 
 import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onAllNodesWithTag
@@ -14,6 +15,7 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.edu.unal.directorio.domain.Classification
+import com.edu.unal.directorio.ui.form.FORM_CLASSIFICATION_TAG
 import com.edu.unal.directorio.ui.form.FORM_EMAIL_TAG
 import com.edu.unal.directorio.ui.form.FORM_NAME_TAG
 import com.edu.unal.directorio.ui.form.FORM_SAVE_TAG
@@ -58,8 +60,10 @@ class DirectorioFormFlowTest {
         openCreateForm()
         rule.onNodeWithTag(FORM_NAME_TAG).performTextInput("Nueva Empresa SAS")
         rule.onNodeWithTag(FORM_EMAIL_TAG).performTextInput("info@nueva.example.com")
-        rule.onNodeWithTag(formClassificationTag(Classification.CustomDevelopment))
-            .performScrollTo().performClick()
+        // The classification is chosen in the dropdown menu, not with checkboxes.
+        rule.onNodeWithTag(FORM_CLASSIFICATION_TAG).performScrollTo().performClick()
+        rule.onNodeWithTag(formClassificationTag(Classification.CustomDevelopment)).performClick()
+        rule.onNodeWithTag(FORM_CLASSIFICATION_TAG).assertTextContains("Desarrollo a la medida")
         rule.onNodeWithTag(FORM_SAVE_TAG).performScrollTo().performClick()
 
         rule.waitUntil(5_000) { rule.onAllNodesWithTag(SEARCH_FIELD_TAG).fetchSemanticsNodes().isNotEmpty() }

@@ -39,7 +39,7 @@ class CompanyFormViewModelTest {
         name = "Acme Software",
         email = "ventas@acme.example.com",
         phone = "601 555 0123",
-        classifications = setOf(Consulting, SoftwareFactory),
+        classification = SoftwareFactory,
     )
 
     private fun newVm(repo: FakeCompanyRepository = FakeCompanyRepository()) =
@@ -48,11 +48,11 @@ class CompanyFormViewModelTest {
     private fun CompanyFormViewModel.fill(
         name: String = "Nueva SAS",
         email: String = "info@nueva.example.com",
-        vararg c: com.edu.unal.directorio.domain.Classification = arrayOf(CustomDevelopment),
+        classification: com.edu.unal.directorio.domain.Classification? = CustomDevelopment,
     ) {
         onNameChange(name)
         onEmailChange(email)
-        c.forEach { onToggleClassification(it) }
+        classification?.let { onClassificationChosen(it) }
     }
 
     /**
@@ -156,16 +156,19 @@ class CompanyFormViewModelTest {
     }
 
     @Test
-    fun togglingAClassificationClearsItsErrorAndUnchecks() = runTest {
+    fun choosingAClassificationClearsOnlyItsErrorAndCanBeChanged() = runTest {
         val vm = newVm()
         vm.open(null)
+        assertNull(vm.state.value.classification)
         vm.save()
         assertEquals(ClassificationError.NoneSelected, vm.state.value.errors.classification)
-        vm.onToggleClassification(Consulting)
+        assertEquals(EmailError.Empty, vm.state.value.errors.email)
+        vm.onClassificationChosen(Consulting)
         assertNull(vm.state.value.errors.classification)
-        assertEquals(setOf(Consulting), vm.state.value.classifications)
-        vm.onToggleClassification(Consulting)
-        assertEquals(emptySet<com.edu.unal.directorio.domain.Classification>(), vm.state.value.classifications)
+        assertEquals(EmailError.Empty, vm.state.value.errors.email)
+        assertEquals(Consulting, vm.state.value.classification)
+        vm.onClassificationChosen(SoftwareFactory)
+        assertEquals(SoftwareFactory, vm.state.value.classification)
     }
 
     @Test
@@ -211,7 +214,7 @@ class CompanyFormViewModelTest {
         assertFalse(state.isSaving)
         assertEquals("Nueva SAS", state.name)
         assertEquals("info@nueva.example.com", state.email)
-        assertEquals(setOf(CustomDevelopment), state.classifications)
+        assertEquals(CustomDevelopment, state.classification)
         assertTrue(events.isEmpty())
         assertTrue(repo.current.isEmpty())
 
@@ -228,7 +231,7 @@ class CompanyFormViewModelTest {
         val vm = newVm(repo)
         val events = collectEvents(vm)
         vm.open(null)
-        vm.fill(name = "  Nueva SAS  ", email = " info@nueva.example.com ", Consulting, CustomDevelopment, SoftwareFactory)
+        vm.fill(name = "  Nueva SAS  ", email = " info@nueva.example.com ", classification = SoftwareFactory)
         vm.onProductsChange("  a\nb\nc  ")
         vm.save()
         advanceUntilIdle()
@@ -236,7 +239,7 @@ class CompanyFormViewModelTest {
         assertEquals("Nueva SAS", saved.name)
         assertEquals("info@nueva.example.com", saved.email)
         assertEquals("a\nb\nc", saved.products)
-        assertEquals(3, saved.classifications.size)
+        assertEquals(SoftwareFactory, saved.classification)
         assertEquals(listOf<CompanyFormEvent>(CompanyFormEvent.Saved(saved.id)), events)
     }
 
@@ -261,7 +264,7 @@ class CompanyFormViewModelTest {
     private fun repoWithAcme() = FakeCompanyRepository(listOf(acme))
 
     @Test
-    fun openLoadsCurrentValuesAndChecksClassifications() = runTest {
+    fun openLoadsCurrentValuesAndTheCurrentClassification() = runTest {
         val repo = repoWithAcme()
         val vm = newVm(repo)
         vm.open(repo.current.single().id)
@@ -273,7 +276,7 @@ class CompanyFormViewModelTest {
         assertEquals("Acme Software", s.name)
         assertEquals("ventas@acme.example.com", s.email)
         assertEquals("601 555 0123", s.phone)
-        assertEquals(setOf(Consulting, SoftwareFactory), s.classifications)
+        assertEquals(SoftwareFactory, s.classification)
     }
 
     @Test
@@ -295,6 +298,19 @@ class CompanyFormViewModelTest {
     }
 
     @Test
+    fun changingTheClassificationWhileEditingSavesTheNewOne() = runTest {
+        val repo = repoWithAcme()
+        val vm = newVm(repo)
+        vm.open(repo.current.single().id)
+        advanceUntilIdle()
+        vm.onClassificationChosen(Consulting)
+        vm.save()
+        advanceUntilIdle()
+        assertEquals(1, repo.current.size)
+        assertEquals(Consulting, repo.current.single().classification)
+    }
+
+    @Test
     fun changingOnlyTheNameCapitalizationSaves() = runTest {
         val repo = repoWithAcme()
         val vm = newVm(repo)
@@ -309,7 +325,7 @@ class CompanyFormViewModelTest {
 
     @Test
     fun editingToAnotherCompanysNameShowsError() = runTest {
-        val other = CompanyDraft(name = "Beta Labs", email = "b@beta.example.com", classifications = setOf(Consulting))
+        val other = CompanyDraft(name = "Beta Labs", email = "b@beta.example.com", classification = Consulting)
         val repo = FakeCompanyRepository(listOf(acme, other))
         val acmeId = repo.current.first { it.name == "Acme Software" }.id
         val vm = newVm(repo)

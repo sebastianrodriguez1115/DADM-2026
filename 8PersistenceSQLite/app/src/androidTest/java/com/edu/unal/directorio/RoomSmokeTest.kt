@@ -43,10 +43,11 @@ class RoomSmokeTest {
                 nameKey = "empresa de prueba",
                 email = "a@example.com",
                 emailKey = "a@example.com",
+                classificationId = 1,
             ),
         )
 
         val emitted = withTimeout(5_000) { observed.await() }
-        assertEquals(listOf("Empresa de prueba"), emitted.map { it.company.name })
+        assertEquals(listOf("Empresa de prueba"), emitted.map { it.name })
     }
 }

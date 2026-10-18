@@ -1,5 +1,6 @@
 package com.edu.unal.directorio.data
 
+import com.edu.unal.directorio.domain.Classification
 import com.edu.unal.directorio.domain.Classification.Consulting
 import com.edu.unal.directorio.domain.Classification.CustomDevelopment
 import com.edu.unal.directorio.domain.Classification.SoftwareFactory
@@ -16,8 +17,8 @@ class FakeCompanyRepositoryTest {
     private fun draft(
         name: String,
         email: String = "${name.filter { it.isLetter() }.lowercase()}@example.com",
-        vararg c: com.edu.unal.directorio.domain.Classification = arrayOf(Consulting),
-    ) = CompanyDraft(name = name, email = email, classifications = c.toSet())
+        classification: Classification = Consulting,
+    ) = CompanyDraft(name = name, email = email, classification = classification)
 
     private fun names(repo: FakeCompanyRepository, filter: CompanyFilter = CompanyFilter()) =
         runBlocking { repo.observeCompanies(filter).first().map { it.name } }
@@ -53,7 +54,7 @@ class FakeCompanyRepositoryTest {
     }
 
     @Test
-    fun editingAMissingIdThrowsAndEmptyClassificationsAreRejected() = runBlocking {
+    fun editingAMissingIdThrowsAndADraftWithoutClassificationIsRejected() = runBlocking {
         val repo = FakeCompanyRepository()
         try {
             repo.save(draft("Acme"), 99L)
@@ -68,12 +69,12 @@ class FakeCompanyRepositoryTest {
     }
 
     @Test
-    fun filterIsSubstringOfNormalizedNameAndUnionOfClassifications() = runBlocking {
+    fun filterIsSubstringOfNormalizedNameAndUnionOfChecked() = runBlocking {
         val repo = FakeCompanyRepository(
             listOf(
                 draft("Ñandú Ágil", "n@example.com", Consulting),
                 draft("Acme", "a@example.com", SoftwareFactory),
-                draft("Zeta Tecnología", "z@example.com", Consulting, CustomDevelopment),
+                draft("Zeta Tecnología", "z@example.com", CustomDevelopment),
             ),
         )
 
@@ -86,6 +87,25 @@ class FakeCompanyRepositoryTest {
             listOf("Ñandú Ágil"),
             names(repo, CompanyFilter("nandu", setOf(Consulting))),
         )
+    }
+
+    @Test
+    fun companyHasTheSingleClassificationItWasSavedWith() = runBlocking {
+        val repo = FakeCompanyRepository()
+        val id = (repo.save(draft("Acme", classification = SoftwareFactory), null) as SaveResult.Saved).id
+
+        assertEquals(SoftwareFactory, repo.observeCompany(id).first()?.classification)
+        assertEquals(SaveResult.Saved(id), repo.save(draft("Acme", classification = CustomDevelopment), id))
+        assertEquals(CustomDevelopment, repo.observeCompany(id).first()?.classification)
+        assertEquals(1, repo.current.size)
+    }
+
+    @Test
+    fun noCheckedClassificationDoesNotFilter() = runBlocking {
+        val repo = FakeCompanyRepository(
+            listOf(draft("A", "a@example.com", Consulting), draft("B", "b@example.com", SoftwareFactory)),
+        )
+        assertEquals(listOf("A", "B"), names(repo, CompanyFilter()))
     }
 
     @Test

@@ -8,5 +8,5 @@ data class Company(
     val url: String,
     val phone: String,
     val products: String,
-    val classifications: Set<Classification>,
+    val classification: Classification,
 )

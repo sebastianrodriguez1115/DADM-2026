@@ -36,13 +36,16 @@ class SampleCompaniesTest {
 
     @Test
     fun allThreeClassificationsArePresent() {
-        assertEquals(Classification.entries.toSet(), SAMPLE_COMPANIES.flatMap { it.classifications }.toSet())
+        assertEquals(Classification.entries.toSet(), SAMPLE_COMPANIES.mapNotNull { it.classification }.toSet())
     }
 
     @Test
-    fun hasOneTwoAndThreeClassificationCompanies() {
-        val sizes = SAMPLE_COMPANIES.map { it.classifications.size }.toSet()
-        assertTrue(sizes.containsAll(setOf(1, 2, 3)))
+    fun everyCompanyHasExactlyOneClassification() {
+        assertTrue(SAMPLE_COMPANIES.none { it.classification == null })
+        assertEquals(
+            mapOf(Classification.Consulting to 2, Classification.CustomDevelopment to 3, Classification.SoftwareFactory to 3),
+            SAMPLE_COMPANIES.groupingBy { it.classification }.eachCount(),
+        )
     }
 
     @Test

@@ -10,7 +10,7 @@ class CompanyValidatorTest {
     private val validDraft = CompanyDraft(
         name = "Acme Software",
         email = "ventas@acme.example.com",
-        classifications = setOf(Classification.Consulting),
+        classification = Classification.Consulting,
     )
 
     private fun validate(block: CompanyDraft.() -> CompanyDraft) =
@@ -189,20 +189,19 @@ class CompanyValidatorTest {
     // Classification
 
     @Test
-    fun noClassificationIsRejected() {
-        val result = validate { copy(classifications = emptySet()) }
+    fun nullClassificationIsRejected() {
+        val result = validate { copy(classification = null) }
         assertEquals(ClassificationError.NoneSelected, result.errors.classification)
         assertFalse(result.isValid)
     }
 
     @Test
-    fun anyCombinationOfClassificationsIsValid() {
-        val all = Classification.entries.toSet()
-        assertNull(validate { copy(classifications = all) }.errors.classification)
-        assertNull(
-            validate { copy(classifications = setOf(Classification.SoftwareFactory)) }
-                .errors.classification,
-        )
+    fun eachOfTheThreeClassificationsIsValid() {
+        Classification.entries.forEach { classification ->
+            val result = validate { copy(classification = classification) }
+            assertNull(classification.name, result.errors.classification)
+            assertTrue(classification.name, result.isValid)
+        }
     }
 
     // Combined behavior
@@ -254,7 +253,7 @@ class CompanyValidatorTest {
                 url = " acme.example.com ",
                 phone = " 601 555 0123 ",
                 products = "  Consulting  ",
-                classifications = setOf(Classification.Consulting),
+                classification = Classification.Consulting,
             ),
         )
         assertTrue(result.isValid)
@@ -263,15 +262,5 @@ class CompanyValidatorTest {
         assertEquals("acme.example.com", result.draft.url)
         assertEquals("601 555 0123", result.draft.phone)
         assertEquals("Consulting", result.draft.products)
-    }
-
-    @Test
-    fun classificationCodesAreStable() {
-        assertEquals(
-            listOf("CONSULTING", "CUSTOM_DEVELOPMENT", "SOFTWARE_FACTORY"),
-            Classification.entries.map { it.code },
-        )
-        assertEquals(Classification.CustomDevelopment, Classification.fromCode("CUSTOM_DEVELOPMENT"))
-        assertNull(Classification.fromCode("UNKNOWN"))
     }
 }

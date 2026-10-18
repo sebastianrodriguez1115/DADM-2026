@@ -4,7 +4,6 @@ import android.database.sqlite.SQLiteConstraintException
 import androidx.room3.immediateTransaction
 import androidx.room3.useWriterConnection
 import com.edu.unal.directorio.data.db.CompanyEntity
-import com.edu.unal.directorio.data.db.CompanyWithClassifications
 import com.edu.unal.directorio.data.db.DirectorioDatabase
 import com.edu.unal.directorio.domain.Classification
 import com.edu.unal.directorio.domain.Company
@@ -18,7 +17,7 @@ import kotlinx.coroutines.flow.map
 /**
  * [CompanyRepository] backed by Room (design D4, D6).
  *
- * Transaction: the uniqueness check and the writes (company row + classifications) run inside
+ * Transaction: the uniqueness check and the single company write run inside
  * `db.useWriterConnection { it.immediateTransaction { ... } }`. The DAO calls made inside join
  * that transaction, so a failure anywhere rolls back everything.
  */
@@ -29,7 +28,7 @@ class RoomCompanyRepository(private val db: DirectorioDatabase) : CompanyReposit
         dao.observeFiltered(
             query = escapeLike(normalizeKey(filter.query)),
             noClassFilter = if (filter.classifications.isEmpty()) 1 else 0,
-            classifications = filter.classifications.map { it.code },
+            classificationIds = filter.classifications.map { it.id },
         ).map { rows -> rows.map { it.toCompany() } }
 
     override fun observeCompany(id: Long): Flow<Company?> =
@@ -37,7 +36,7 @@ class RoomCompanyRepository(private val db: DirectorioDatabase) : CompanyReposit
 
     /**
      * Rules:
-     * - An empty classification set is rejected with [IllegalArgumentException] before touching
+     * - A draft without classification is rejected with [IllegalArgumentException] before touching
      *   the database (the form validator normally prevents it; this is the storage-level guard).
      * - Editing an [editingId] that no longer exists throws [NoSuchElementException] and rolls
      *   back; the form shows its generic "could not save" message.
@@ -46,12 +45,11 @@ class RoomCompanyRepository(private val db: DirectorioDatabase) : CompanyReposit
      *   Any other exception propagates.
      */
     override suspend fun save(draft: CompanyDraft, editingId: Long?): SaveResult {
-        require(draft.classifications.isNotEmpty()) { "A company needs at least one classification" }
+        val classification = requireNotNull(draft.classification) { "A company needs a classification" }
         val name = draft.name.trim()
         val email = draft.email.trim()
         val nameKey = normalizeKey(name)
         val emailKey = normalizeKey(email)
-        val codes = draft.classifications.map { it.code }.toSet()
 
         return try {
             db.useWriterConnection { transactor ->
@@ -74,6 +72,7 @@ class RoomCompanyRepository(private val db: DirectorioDatabase) : CompanyReposit
                                 url = draft.url.trim(),
                                 phone = draft.phone.trim(),
                                 products = draft.products.trim(),
+                                classificationId = classification.id,
                             )
                             val id = if (editingId == null) {
                                 dao.insert(entity)
@@ -83,7 +82,6 @@ class RoomCompanyRepository(private val db: DirectorioDatabase) : CompanyReposit
                                 }
                                 editingId
                             }
-                            dao.replaceClassifications(id, codes)
                             SaveResult.Saved(id)
                         }
                     }
@@ -116,16 +114,13 @@ internal fun toSaveResult(e: SQLiteConstraintException): SaveResult? {
     }
 }
 
-/**
- * Maps a row to the domain. A classification code that [Classification.fromCode] does not know
- * (for example written by a future app version) is skipped instead of failing the whole list.
- */
-private fun CompanyWithClassifications.toCompany(): Company = Company(
-    id = company.id,
-    name = company.name,
-    email = company.email,
-    url = company.url,
-    phone = company.phone,
-    products = company.products,
-    classifications = classifications.mapNotNull { Classification.fromCode(it.classification) }.toSet(),
+/** Maps a row to the domain; `classification_id` is resolved with [Classification.fromId]. */
+private fun CompanyEntity.toCompany(): Company = Company(
+    id = id,
+    name = name,
+    email = email,
+    url = url,
+    phone = phone,
+    products = products,
+    classification = Classification.fromId(classificationId),
 )

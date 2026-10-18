@@ -61,7 +61,7 @@ fun CompanyListScreen(
     state: CompanyListUiState,
     onQueryChange: (String) -> Unit,
     onClearQuery: () -> Unit,
-    onToggleClassification: (Classification) -> Unit,
+    onFilterToggled: (Classification) -> Unit,
     onCompanyClick: (Long) -> Unit,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -108,7 +108,7 @@ fun CompanyListScreen(
                 Classification.entries.forEach { classification ->
                     FilterChip(
                         selected = classification in state.selected,
-                        onClick = { onToggleClassification(classification) },
+                        onClick = { onFilterToggled(classification) },
                         label = { Text(stringResource(classification.labelRes())) },
                         modifier = Modifier.testTag(chipTag(classification)),
                     )
@@ -142,10 +142,6 @@ fun CompanyListScreen(
 
 @Composable
 private fun CompanyItem(company: Company, onClick: () -> Unit) {
-    // Classifications in enum order so the text is stable.
-    val labels = Classification.entries.filter { it in company.classifications }
-        .map { stringResource(it.labelRes()) }
-        .joinToString(", ")
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -157,7 +153,7 @@ private fun CompanyItem(company: Company, onClick: () -> Unit) {
     ) {
         Text(company.name, style = MaterialTheme.typography.titleMedium)
         Text(
-            labels,
+            stringResource(company.classification.labelRes()),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )

@@ -10,6 +10,7 @@ import com.edu.unal.directorio.data.SaveResult
 import com.edu.unal.directorio.data.db.CompanyEntity
 import com.edu.unal.directorio.data.db.DirectorioDatabase
 import com.edu.unal.directorio.data.toSaveResult
+import com.edu.unal.directorio.domain.Classification
 import com.edu.unal.directorio.domain.Classification.Consulting
 import com.edu.unal.directorio.domain.Classification.CustomDevelopment
 import com.edu.unal.directorio.domain.Classification.SoftwareFactory
@@ -28,7 +29,10 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** Repository tests on an empty in-memory database, without the sample-data callback (task 3.5). */
+/**
+ * Repository tests on an in-memory database with the classification catalog and no companies
+ * (tasks 3.5 and 9.3).
+ */
 @RunWith(AndroidJUnit4::class)
 class RoomCompanyRepositoryTest {
     private lateinit var db: DirectorioDatabase
@@ -49,7 +53,7 @@ class RoomCompanyRepositoryTest {
     private fun draft(
         name: String = "Acme Software",
         email: String = "contacto@acme.example.com",
-        vararg classifications: com.edu.unal.directorio.domain.Classification = arrayOf(Consulting),
+        classification: Classification = Consulting,
         phone: String = "",
         products: String = "",
     ) = CompanyDraft(
@@ -57,7 +61,7 @@ class RoomCompanyRepositoryTest {
         email = email,
         phone = phone,
         products = products,
-        classifications = classifications.toSet(),
+        classification = classification,
     )
 
     private suspend fun saved(d: CompanyDraft): Long =
@@ -80,7 +84,7 @@ class RoomCompanyRepositoryTest {
                 url = "https://acme.example.com",
                 phone = "+57 601 555 0100",
                 products = "ERP",
-                classifications = setOf(Consulting, SoftwareFactory),
+                classification = SoftwareFactory,
             ),
         )
 
@@ -89,7 +93,7 @@ class RoomCompanyRepositoryTest {
         assertEquals("https://acme.example.com", company.url)
         assertEquals("+57 601 555 0100", company.phone)
         assertEquals("ERP", company.products)
-        assertEquals(setOf(Consulting, SoftwareFactory), company.classifications)
+        assertEquals(SoftwareFactory, company.classification)
     }
 
     @Test
@@ -126,7 +130,7 @@ class RoomCompanyRepositoryTest {
         } catch (_: IllegalArgumentException) {
         }
         assertEquals(0L, count("company"))
-        assertEquals(0L, count("company_classification"))
+        assertEquals(3L, count("classification"))
     }
 
     // --- Uniqueness on create ---
@@ -208,14 +212,14 @@ class RoomCompanyRepositoryTest {
     }
 
     @Test
-    fun editReplacesClassificationsWithoutCreatingAnotherCompany() = runBlocking {
-        val id = saved(draft(classifications = arrayOf(Consulting, SoftwareFactory)))
+    fun editChangesTheClassificationWithoutCreatingAnotherCompany() = runBlocking {
+        val id = saved(draft(classification = SoftwareFactory))
 
-        repo.save(draft(classifications = arrayOf(CustomDevelopment)), id)
+        repo.save(draft(classification = CustomDevelopment), id)
 
-        assertEquals(setOf(CustomDevelopment), repo.observeCompany(id).first()!!.classifications)
+        assertEquals(CustomDevelopment, repo.observeCompany(id).first()!!.classification)
         assertEquals(1, all().size)
-        assertEquals(1L, count("company_classification"))
+        assertEquals(1L, count("company"))
     }
 
     @Test
@@ -226,7 +230,6 @@ class RoomCompanyRepositoryTest {
         } catch (_: NoSuchElementException) {
         }
         assertEquals(0L, count("company"))
-        assertEquals(0L, count("company_classification"))
     }
 
     // --- Violation raised by the database ---
@@ -258,6 +261,7 @@ class RoomCompanyRepositoryTest {
         nameKey = normalizeKey(name),
         email = email,
         emailKey = normalizeKey(email),
+        classificationId = Consulting.id,
     )
 
     private suspend fun captureViolation(block: suspend () -> Unit): SQLiteConstraintException {
@@ -272,21 +276,30 @@ class RoomCompanyRepositoryTest {
 
     // --- Atomicity ---
 
-    /** Makes any insert of a SOFTWARE_FACTORY classification row fail, after the company row. */
-    private suspend fun installFailingTrigger() = db.useWriterConnection { c ->
+    /** Makes any insert of a company named "Fallida" fail inside the database. */
+    private suspend fun installFailingInsertTrigger() = db.useWriterConnection { c ->
         c.usePrepared(
-            "CREATE TRIGGER fail_factory BEFORE INSERT ON company_classification " +
-                "WHEN NEW.classification = 'SOFTWARE_FACTORY' " +
+            "CREATE TRIGGER fail_insert BEFORE INSERT ON company " +
+                "WHEN NEW.name = 'Fallida' " +
+                "BEGIN SELECT RAISE(ABORT, 'simulated failure'); END",
+        ) { it.step() }
+    }
+
+    /** Makes any update that renames a company to "Fallida" fail inside the database. */
+    private suspend fun installFailingUpdateTrigger() = db.useWriterConnection { c ->
+        c.usePrepared(
+            "CREATE TRIGGER fail_update BEFORE UPDATE ON company " +
+                "WHEN NEW.name = 'Fallida' " +
                 "BEGIN SELECT RAISE(ABORT, 'simulated failure'); END",
         ) { it.step() }
     }
 
     @Test
-    fun failureWhileWritingClassificationsRollsBackANewCompany() = runBlocking {
-        installFailingTrigger()
+    fun failedInsertStoresNothing() = runBlocking {
+        installFailingInsertTrigger()
 
         try {
-            repo.save(draft(classifications = arrayOf(Consulting, SoftwareFactory)), null)
+            repo.save(draft(name = "Fallida", classification = SoftwareFactory), null)
             fail("Expected an exception")
         } catch (e: Exception) {
             // Not a uniqueness violation, so it must propagate untranslated.
@@ -294,30 +307,33 @@ class RoomCompanyRepositoryTest {
         }
 
         assertEquals(0L, count("company"))
-        assertEquals(0L, count("company_classification"))
+        assertEquals(3L, count("classification"))
     }
 
     @Test
-    fun failureWhileEditingRollsBackBothTheRowAndTheClassifications() = runBlocking {
-        val id = saved(draft(phone = "111", classifications = arrayOf(Consulting)))
-        installFailingTrigger()
+    fun failedEditLeavesTheOriginalRowIntact() = runBlocking {
+        val id = saved(draft(phone = "111", classification = Consulting))
+        installFailingUpdateTrigger()
 
         try {
-            repo.save(draft(phone = "222", classifications = arrayOf(SoftwareFactory)), id)
+            repo.save(draft(name = "Fallida", phone = "222", classification = SoftwareFactory), id)
             fail("Expected an exception")
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            assertTrue(e.message.orEmpty().contains("simulated failure"))
         }
 
         val company = repo.observeCompany(id).first()!!
+        assertEquals("Acme Software", company.name)
         assertEquals("111", company.phone)
-        assertEquals(setOf(Consulting), company.classifications)
+        assertEquals(Consulting, company.classification)
+        assertEquals(1L, count("company"))
     }
 
     // --- Delete and filter ---
 
     @Test
-    fun deleteRemovesCompanyAndClassifications() = runBlocking {
-        val id = saved(draft(classifications = arrayOf(Consulting, SoftwareFactory)))
+    fun deleteRemovesTheCompanyAndKeepsTheCatalog() = runBlocking {
+        val id = saved(draft(classification = SoftwareFactory))
         val other = saved(draft(name = "Beta Labs", email = "b@beta.example.com"))
 
         repo.delete(id)
@@ -326,14 +342,14 @@ class RoomCompanyRepositoryTest {
         assertNull(repo.observeCompany(id).first())
         assertNotNull(repo.observeCompany(other).first())
         assertEquals(1, all().size)
-        assertEquals(1L, count("company_classification"))
+        assertEquals(3L, count("classification"))
     }
 
     @Test
     fun observeCompaniesAppliesTheFilterAndOrdersByNormalizedName() = runBlocking {
-        saved(draft(name = "Ñandú Ágil", email = "n@nandu.example.com", classifications = arrayOf(Consulting)))
-        saved(draft(name = "Acme Software", email = "a@acme.example.com", classifications = arrayOf(SoftwareFactory)))
-        saved(draft(name = "Zeta Tecnología", email = "z@zeta.example.com", classifications = arrayOf(Consulting, CustomDevelopment)))
+        saved(draft(name = "Ñandú Ágil", email = "n@nandu.example.com", classification = Consulting))
+        saved(draft(name = "Acme Software", email = "a@acme.example.com", classification = SoftwareFactory))
+        saved(draft(name = "Zeta Tecnología", email = "z@zeta.example.com", classification = CustomDevelopment))
 
         assertEquals(
             listOf("Acme Software", "Ñandú Ágil", "Zeta Tecnología"),

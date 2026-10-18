@@ -1,6 +1,8 @@
 package com.edu.unal.directorio
 
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
@@ -18,7 +20,10 @@ import com.edu.unal.directorio.ui.detail.DELETE_DIALOG_CANCEL_TAG
 import com.edu.unal.directorio.ui.detail.DELETE_DIALOG_CONFIRM_TAG
 import com.edu.unal.directorio.ui.detail.DETAIL_DELETE_TAG
 import com.edu.unal.directorio.ui.detail.DETAIL_EDIT_TAG
+import com.edu.unal.directorio.domain.Classification
+import com.edu.unal.directorio.ui.form.FORM_CLASSIFICATION_TAG
 import com.edu.unal.directorio.ui.form.FORM_PHONE_TAG
+import com.edu.unal.directorio.ui.form.formClassificationTag
 import com.edu.unal.directorio.ui.form.FORM_SAVE_TAG
 import com.edu.unal.directorio.ui.list.SEARCH_FIELD_TAG
 import org.junit.After
@@ -87,6 +92,34 @@ class DirectorioDetailFlowTest {
         waitForText("Zafiro Labs")
         assertTrue(!isInList("Delta Soluciones"))
         assertTrue(isInList("Andes Consultores"))
+    }
+
+    @Test
+    fun theDetailShowsTheSingleClassification() {
+        openDetailOf("Cumbre Software")
+        rule.onNodeWithText("Clasificación").assertIsDisplayed()
+        rule.onNodeWithText("Fábrica de software").assertIsDisplayed()
+        rule.onAllNodesWithText("Consultoría").assertCountEquals(0)
+        rule.onAllNodesWithText("Desarrollo a la medida").assertCountEquals(0)
+        rule.onAllNodesWithText(",", substring = true).assertCountEquals(0)
+    }
+
+    @Test
+    fun editingTheClassificationFromTheMenuShowsItInTheDetail() {
+        openDetailOf("Cumbre Software")
+        rule.onNodeWithTag(DETAIL_EDIT_TAG).performClick()
+        waitForText("Editar empresa")
+        rule.waitUntil(5_000) {
+            rule.onAllNodesWithText("Cumbre Software").fetchSemanticsNodes().isNotEmpty()
+        }
+        rule.onNodeWithTag(FORM_CLASSIFICATION_TAG).performScrollTo().assertTextContains("Fábrica de software")
+        rule.onNodeWithTag(FORM_CLASSIFICATION_TAG).performClick()
+        rule.onNodeWithTag(formClassificationTag(Classification.Consulting)).performClick()
+        rule.onNodeWithTag(FORM_SAVE_TAG).performScrollTo().performClick()
+
+        waitForText("Detalle de empresa")
+        waitForText("Consultoría")
+        rule.onAllNodesWithText("Fábrica de software").assertCountEquals(0)
     }
 
     @Test
