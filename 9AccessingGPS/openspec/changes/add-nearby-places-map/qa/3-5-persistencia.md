@@ -2,7 +2,7 @@
 
 - Emulador: AVD `DADM_GraphicsSound_API35` (API 35, `google_apis`).
 - App: `com.edu.unal.lugarescercanos`, build debug instalada con `./gradlew :app:installDebug`.
-- Selección del dispositivo: el comando de adb se dirigió al emulador por su serial, que no se registra aquí.
+- Selección del dispositivo: el comando de adb se dirigió al emulador del AVD indicado, sin registrar su identificador.
 
 ## Pasos
 

@@ -4,12 +4,18 @@ Cambio: `add-nearby-places-map` (lugares cercanos con Maps Compose y Places SDK)
 
 ## 1. Resumen
 
-- Verificación automática completa desde cero (tarea 7.1): 92 pruebas JVM y 21 pruebas instrumentadas, 0 fallos, 0 errores y 0 omitidas. Lint sin errores y con 9 advertencias.
-- Commit probado: `dd3b664` (sin cambios locales en el código al iniciar esta verificación). Este registro y la tarea 7.1 son documentación posterior.
-- Las pruebas instrumentadas corrieron solo en el emulador AVD `DADM_GraphicsSound_API35` (API 35, Android 15). El celular físico no participó en esta verificación.
-- Pendientes: QA manual en el emulador (7.2), QA de errores (7.3), API 36 (7.4, opcional), celular (7.5) y revisión de evidencia (7.6).
+- Estado final: tareas 7.1 a 7.6 cerradas. La 7.4 (API 36, opcional) quedó **omitida** (sección 5).
+- Última corrida automática, tras corregir el defecto D1: 97 pruebas JVM y 22 pruebas instrumentadas, 0 fallos, 0 errores y 0 omitidas. Lint con 0 errores y 9 advertencias. Cifras confirmadas en los reportes de `app/build/test-results/testDebugUnitTest/` y `app/build/outputs/androidTest-results/connected/debug/` (2026-10-27, 21:28 y 21:29 hora local). Código probado: `c16dd81`, último commit que toca `app/`, con el árbol limpio.
+- Las pruebas instrumentadas corrieron solo en el emulador AVD `DADM_GraphicsSound_API35` (API 35, Android 15). El celular físico no participó en la verificación automática; se usó en la 7.5 (sección 6).
+- Defecto encontrado y corregido: **D1** (severidad media), en el QA de errores (sección 4). Con la ubicación del dispositivo desactivada no había botón «Actualizar ubicación» y el mensaje no se quitaba al reactivarla. Corregido en `c16dd81` y verificado en el re-test.
+- **C-07** (solo ubicación aproximada) no se pudo verificar en el emulador; se verificó en el celular del usuario (sección 6): PASA.
+- Observación **O-1** (baja, celular): ver sección 6.
+- Riesgo aceptado por el usuario (**U13**): «Hospitales y clínicas» incluye tipos amplios (`medical_clinic`) y se aceptan las etiquetas superpuestas en zonas densas. No se cuenta como defecto (sección 3).
+- Revisión de evidencia (7.6, sección 7): sin números de serie, identificadores del dispositivo ni la llave. Las coincidencias del `grep` son falsos positivos documentados.
 
 ## 2. Verificación automática (tarea 7.1)
+
+> Registro de la corrida de la tarea 7.1, hecha sobre `dd3b664` y antes de corregir D1: 92 pruebas JVM y 21 instrumentadas. Las cifras finales están en la sección 1.
 
 Comando exacto, ejecutado desde `9AccessingGPS/` con el emulador como único destino (variable de selección de dispositivo fijada al emulador; su identificador se omite de este registro) y con el JBR de Android Studio:
 
@@ -154,7 +160,7 @@ Estado final del emulador: versión normal instalada (con la llave real), ubicac
 
 ## 5. API 36, opcional (7.4)
 
-Pendiente.
+**Omitida.** Motivo: el único AVD de API 36 disponible pertenece a otro proyecto y no se usó; la app se verificó en un dispositivo real con Android 15 (7.5) y en el emulador de API 35 (7.1 a 7.3).
 
 ## 6. Celular del usuario (7.5)
 
@@ -167,9 +173,31 @@ Pendiente.
 
 ## 7. Revisión de evidencia (7.6)
 
-Pendiente.
+Comandos ejecutados desde `9AccessingGPS/`. Solo leen archivos; no usaron el celular ni el emulador.
+
+| Comando | Resultado |
+|---|---|
+| `grep -RniIE` de la verificación de 7.6 (patrones: número de serie, identificador de emulador, 16 caracteres hexadecimales y formato de la llave de Google Maps) sobre `qa/` y `verification.md` | Dos coincidencias, ambas en `qa/build-probe.md` (líneas 102 y 103). Falsos positivos, ver abajo |
+| El mismo `grep` sobre el cambio completo (control) | Además de las dos anteriores: `tasks.md:73` (un identificador de emulador en el comando documentado de 6.8) y `tasks.md:82` (la propia verificación de 7.6). `proposal.md`, `design.md` y `specs/` sin coincidencias |
+| Mismo `grep` sobre las capturas `qa/*.png` (sin `-I`) | Sin coincidencias en PNG |
+| `git ls-files 9AccessingGPS \| grep -E "secrets.properties\|local.properties"` | Sin resultados (ningún archivo de llaves versionado) |
+
+Correcciones hechas en esta revisión:
+
+- `qa/3-5-persistencia.md`, línea 5: la frase que nombraba el identificador del emulador se cambió por «el comando de adb se dirigió al emulador del AVD indicado, sin registrar su identificador». Sentido igual, sin el identificador.
+- `tasks.md`, 7.6: el comando de verificación ahora usa `grep -RniIE`, con `-I` para saltar archivos binarios.
+
+Falsos positivos documentados:
+
+- `qa/build-probe.md`, líneas 102 y 103: las rutas de caché de Gradle (`~/.gradle/caches/9.8.2/transforms/<hash>/`, una en `places-6.0.2-api.jar` y otra en `play-services-basement-18.9.0`) contienen un hash hexadecimal de 16 o más caracteres. Son nombres de directorio de caché de Gradle, no números de serie, identificadores de dispositivo ni llaves. No se editaron porque `build-probe.md` no forma parte de los archivos de este cierre.
+
+Con esas dos excepciones, el `grep` no encuentra nada. Ninguna captura, ningún registro ni este documento contiene la llave de Google Maps.
 
 ## 8. Observaciones y riesgos
 
-- Ninguna prueba falló. Las advertencias de lint y de compilación de la sección 2 no bloquean el cambio.
+- Ninguna prueba falló en la última corrida. Las advertencias de lint y de compilación de la sección 2 no bloquean el cambio.
+- D1 quedó corregido y verificado (sección 4).
+- O-1 (sección 6) es un riesgo bajo del celular y no se reproduce por la vía normal del usuario. No es la misma O-1 de `qa/7-qa-manual.md`, que describe las etiquetas superpuestas (riesgo U13).
+- U13 (sección 3) es un riesgo aceptado por el usuario.
+- El encabezado de `qa/7-qa-manual.md` todavía cita `dd3b664` como commit probado. El re-test del 2026-10-27 se hizo con la corrección de D1, que está en `c16dd81`.
 - `ExampleUnitTest` y `ExampleInstrumentedTest` son pruebas de la plantilla y siguen en la suite.
