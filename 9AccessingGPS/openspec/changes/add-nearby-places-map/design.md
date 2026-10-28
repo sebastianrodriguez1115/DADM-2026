@@ -139,6 +139,7 @@ Estado actual verificado en `/Users/jsrc1115/Code/DADM-2026/9AccessingGPS` (en a
 - **Geocoder sin backend**: el `Geocoder` puede no tener backend o fallar sin red. → Solo se muestran las coordenadas y «Dirección no disponible» (P3).
 - **Aproximación de la ubicación**: con solo ubicación aproximada, el radio y los lugares son menos precisos. → Se avisa al usuario (`current-location`).
 - **Etiquetas superpuestas**: en zonas densas, las etiquetas de nombre pueden superponerse. → Se acepta; el límite de 20 lo acota.
+- **Clínicas con tipos amplios (U13)**: un experimento con datos reales mostró que `medical_clinic` trae también consultorios, odontología y una veterinaria, así que «Hospitales y clínicas» incluye lugares que no son hospitales ni clínicas. → El usuario acepta el resultado por ser un taller académico; la categoría se queda con `hospital` y `medical_clinic`, y se aceptan las etiquetas superpuestas en zonas densas.
 
 ## Migration Plan
 

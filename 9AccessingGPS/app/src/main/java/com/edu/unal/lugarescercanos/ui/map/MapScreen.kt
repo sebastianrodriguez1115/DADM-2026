@@ -170,11 +170,14 @@ fun MapScreen(onOpenSettings: () -> Unit, modifier: Modifier = Modifier) {
                         onOpenSettings = { openAppSettings(context) },
                         onRefresh = viewModel::refreshLocation,
                     )
-                    CategoryChips(
-                        selected = state.category,
-                        onSelect = viewModel::selectCategory,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        CategoryChips(
+                            selected = state.category,
+                            onSelect = viewModel::selectCategory,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                        PlacesCountLabel(state = state)
+                    }
                     PlacesStatusCard(state = state, onRetry = viewModel::retrySearch)
                 }
             }

@@ -136,7 +136,7 @@ Si la llave de Google Maps es el valor por defecto `DEFAULT_API_KEY`, la aplicac
 
 ### Requirement: Estados visibles en el mapa
 
-El mapa MUST mostrar un estado claro en cada una de estas situaciones: carga de la ubicación, carga de lugares, sin permiso, permiso denegado de forma permanente, ubicación del dispositivo desactivada, ubicación no obtenida, error de búsqueda, llave de Google Maps no configurada y sin resultados. Cuando hay resultados, MUST mostrar el contador «<n> lugares».
+El mapa MUST mostrar un estado claro en cada una de estas situaciones: carga de la ubicación, carga de lugares, sin permiso, permiso denegado de forma permanente, ubicación del dispositivo desactivada, ubicación no obtenida, error de búsqueda, llave de Google Maps no configurada y sin resultados. Cuando hay resultados, MUST mostrar el contador «<n> lugares», en singular «1 lugar» cuando hay exactamente un resultado.
 
 #### Scenario: Cargando lugares
 
@@ -155,6 +155,12 @@ El mapa MUST mostrar un estado claro en cada una de estas situaciones: carga de 
 - **GIVEN** una búsqueda que devuelve 12 lugares
 - **WHEN** se muestra el resultado
 - **THEN** se muestra el contador «12 lugares»
+
+#### Scenario: Contador de un solo resultado
+
+- **GIVEN** una búsqueda que devuelve 1 lugar
+- **WHEN** se muestra el resultado
+- **THEN** se muestra el contador «1 lugar» en singular, y no «1 lugares»
 
 #### Scenario: Error de búsqueda
 

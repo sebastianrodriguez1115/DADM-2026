@@ -25,7 +25,10 @@
     <string name="category_tourist_sites">Sitios turísticos</string>
     <string name="category_parks">Parques</string>
     <string name="places_loading">Buscando lugares…</string>
-    <string name="places_count">%1$d lugares</string>
+    <plurals name="places_count">
+        <item quantity="one">%1$d lugar</item>
+        <item quantity="other">%1$d lugares</item>
+    </plurals>
     <string name="places_empty">No se encontraron lugares de «%1$s» a menos de %2$s</string>
     <string name="places_error_no_connection">Sin conexión a internet</string>
     <string name="places_error_over_limit">El servicio de lugares alcanzó su límite. Intenta más tarde</string>

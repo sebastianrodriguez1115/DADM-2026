@@ -2,6 +2,7 @@ package com.edu.unal.lugarescercanos
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -13,6 +14,7 @@ import com.edu.unal.lugarescercanos.location.LocationPermissionState
 import com.edu.unal.lugarescercanos.ui.map.LocationPanel
 import com.edu.unal.lugarescercanos.ui.map.LocationUiState
 import com.edu.unal.lugarescercanos.ui.map.MapUiState
+import com.edu.unal.lugarescercanos.ui.map.PlacesCountLabel
 import com.edu.unal.lugarescercanos.ui.map.PlacesStatusCard
 import com.edu.unal.lugarescercanos.ui.map.PlacesUiState
 import com.edu.unal.lugarescercanos.ui.theme.LugaresCercanosTheme
@@ -50,6 +52,14 @@ class MapStatesTest {
         rule.setContent {
             LugaresCercanosTheme {
                 PlacesStatusCard(state = state, onRetry = onRetry)
+            }
+        }
+    }
+
+    private fun showCount(state: MapUiState) {
+        rule.setContent {
+            LugaresCercanosTheme {
+                PlacesCountLabel(state = state)
             }
         }
     }
@@ -103,7 +113,7 @@ class MapStatesTest {
 
     @Test
     fun resultsShowTheCounter() {
-        showSearch(
+        showCount(
             MapUiState(
                 location = LocationUiState.Ready(bogota, 5f, null, resolvingAddress = false),
                 search = PlacesUiState.Results(places),
@@ -111,5 +121,38 @@ class MapStatesTest {
         )
 
         rule.onNodeWithText("2 lugares").assertIsDisplayed()
+    }
+
+    @Test
+    fun oneResultShowsTheSingularCounter() {
+        showCount(
+            MapUiState(
+                location = LocationUiState.Ready(bogota, 5f, null, resolvingAddress = false),
+                search = PlacesUiState.Results(places.take(1)),
+            ),
+        )
+
+        rule.onNodeWithText("1 lugar").assertIsDisplayed()
+    }
+
+    @Test
+    fun refreshButtonIsFoundByItsAccessibleName() {
+        var refreshes = 0
+        rule.setContent {
+            LugaresCercanosTheme {
+                LocationPanel(
+                    state = MapUiState(
+                        permission = LocationPermissionState.Precise,
+                        location = LocationUiState.Ready(bogota, 5f, null, resolvingAddress = false),
+                    ),
+                    onGrantPermission = {},
+                    onOpenSettings = {},
+                    onRefresh = { refreshes++ },
+                )
+            }
+        }
+
+        rule.onNodeWithContentDescription("Actualizar ubicación").performClick()
+        assertEquals(1, refreshes)
     }
 }
