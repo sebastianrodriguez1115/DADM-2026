@@ -94,3 +94,39 @@ Causa: `places` 6.0.2 pide `kotlin-stdlib` 2.4.0 y `maps-compose` 9.0.1 pide 2.4
 Contingencia probada y descartada: bajar a `maps-compose` 8.3.1 (pide `kotlin-stdlib` 2.3.21) y `places` 5.3.0 (pide 2.3.0). Con ellas la stdlib resolvía a 2.3.21 y `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug` terminaba con `BUILD SUCCESSFUL` con Kotlin 2.2.10. Se revirtió porque el usuario decidió subir Kotlin.
 
 Decisión U11 (usuario, 2026-10-27): se permite cambiar la versión de Kotlin. Se mantienen las últimas estables de ambas librerías y se sube Kotlin a 2.4.21.
+
+## Códigos de estado de Places (tarea 2.5)
+
+Fecha de la verificación: 2026-10-27. Fuente: `javap -constants` (JDK de Android Studio, `jbr`) sobre los jars que Gradle descargó para este proyecto, en la caché de Gradle 9.8.2:
+
+- `com.google.android.libraries.places.api.net.PlacesStatusCodes` en `places-6.0.2-api.jar` (`~/.gradle/caches/9.8.2/transforms/53033dd8a93dfc78dd13cf0fc24d0d9f/`).
+- `com.google.android.gms.common.api.CommonStatusCodes` en `play-services-basement-18.9.0/jars/classes.jar` (`~/.gradle/caches/9.8.2/transforms/bb22cf60cb95c5531dc1088cfe2b930f/`). `PlacesStatusCodes` hereda de esta clase.
+
+| Constante | Clase | Valor | Caso en `PlacesError` |
+|---|---|---|---|
+| `NETWORK_ERROR` | `CommonStatusCodes` | 7 | `NoConnection` |
+| `TIMEOUT` | `CommonStatusCodes` | 15 | `NoConnection` |
+| `OVER_QUERY_LIMIT` | `PlacesStatusCodes` | 9010 | `OverQueryLimit` |
+| `REQUEST_DENIED` | `PlacesStatusCodes` | 9011 | `RequestDenied` |
+| `INVALID_REQUEST` | `PlacesStatusCodes` | 9012 | `ServiceUnavailable` (no está en el encargo; sirve de caso «otro código») |
+| cualquier otro valor | — | — | `ServiceUnavailable` |
+
+Salida relevante de `javap`:
+
+```
+public final class com.google.android.libraries.places.api.net.PlacesStatusCodes extends com.google.android.gms.common.api.CommonStatusCodes {
+  public static final int OVER_QUERY_LIMIT = 9010;
+  public static final int REQUEST_DENIED = 9011;
+  public static final int INVALID_REQUEST = 9012;
+  public static final int NOT_FOUND = 9013;
+  ...
+}
+public class com.google.android.gms.common.api.CommonStatusCodes {
+  public static final int NETWORK_ERROR = 7;
+  ...
+  public static final int TIMEOUT = 15;
+  ...
+}
+```
+
+Los valores están en `P/domain/PlacesErrorMapper.kt` con un comentario que indica su clase y constante. La página de Places SDK no se consultó en esta tarea porque los jars del SDK 6.0.2 que usa el proyecto ya confirman los valores.
