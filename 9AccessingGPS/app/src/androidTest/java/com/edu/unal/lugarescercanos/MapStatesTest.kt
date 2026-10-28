@@ -155,4 +155,26 @@ class MapStatesTest {
         rule.onNodeWithContentDescription("Actualizar ubicación").performClick()
         assertEquals(1, refreshes)
     }
+
+    @Test
+    fun disabledLocationShowsMessageAndRefreshButtonThatCallsBack() {
+        var refreshes = 0
+        rule.setContent {
+            LugaresCercanosTheme {
+                LocationPanel(
+                    state = MapUiState(
+                        permission = LocationPermissionState.Precise,
+                        location = LocationUiState.Disabled,
+                    ),
+                    onGrantPermission = {},
+                    onOpenSettings = {},
+                    onRefresh = { refreshes++ },
+                )
+            }
+        }
+
+        rule.onNodeWithText("La ubicación del dispositivo está desactivada.").assertIsDisplayed()
+        rule.onNodeWithContentDescription("Actualizar ubicación").performClick()
+        assertEquals(1, refreshes)
+    }
 }

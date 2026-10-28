@@ -169,6 +169,16 @@ class MapViewModel(
         }
     }
 
+    /**
+     * La pantalla llama aquí al volver a primer plano, con el permiso actual. Si el permiso cambió
+     * lo registra. Si hay permiso y la ubicación estaba desactivada o no se obtuvo, la relee una
+     * vez (D1). Con la ubicación ya lista no relee, para no repetir la búsqueda al volver de Ajustes.
+     */
+    fun onAppResumed(permission: LocationPermissionState) {
+        if (permission != _state.value.permission) onPermissionResult(permission)
+        if (permission.isGranted && _state.value.location.canRecoverOnResume) refreshLocation()
+    }
+
     private suspend fun showPoint(result: LocationResult.Success) {
         setLocation(LocationUiState.Ready(result.point, result.accuracyMeters, null, resolvingAddress = true))
         // La búsqueda empieza con la posición, sin esperar a la dirección.
@@ -256,6 +266,10 @@ class MapViewModel(
             (extras[APPLICATION_KEY] as LugaresApplication).container
     }
 }
+
+/** Estados que se vuelven a leer al regresar a primer plano (D1, `current-location`). */
+private val LocationUiState.canRecoverOnResume: Boolean
+    get() = this == LocationUiState.Disabled || this == LocationUiState.Unavailable
 
 /**
  * Repositorio por defecto del constructor (para las pruebas de ubicación). Falla si se usa: con

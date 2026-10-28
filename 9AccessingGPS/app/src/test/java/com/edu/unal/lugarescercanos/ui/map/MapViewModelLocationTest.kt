@@ -157,4 +157,76 @@ class MapViewModelLocationTest {
 
         assertEquals(0, provider.readCount)
     }
+
+    @Test
+    fun resumeAfterDisabledLocationRereadsOnce() = runTest(dispatcher) {
+        val provider = FakeLocationProvider(LocationResult.LocationDisabled)
+        val viewModel = MapViewModel(provider, FakeAddressResolver(null))
+        viewModel.onPermissionResult(LocationPermissionState.Precise)
+        advanceUntilIdle()
+        assertEquals(LocationUiState.Disabled, viewModel.state.value.location)
+
+        provider.result = LocationResult.Success(bogota, 5f)
+        viewModel.onAppResumed(LocationPermissionState.Precise)
+        advanceUntilIdle()
+
+        assertEquals(2, provider.readCount)
+        assertEquals(bogota, (viewModel.state.value.location as LocationUiState.Ready).point)
+    }
+
+    @Test
+    fun resumeAfterUnavailableLocationRereads() = runTest(dispatcher) {
+        val provider = FakeLocationProvider(LocationResult.Unavailable)
+        val viewModel = MapViewModel(provider, FakeAddressResolver(null))
+        viewModel.onPermissionResult(LocationPermissionState.Precise)
+        advanceUntilIdle()
+
+        provider.result = LocationResult.Success(bogota, 5f)
+        viewModel.onAppResumed(LocationPermissionState.Precise)
+        advanceUntilIdle()
+
+        assertEquals(2, provider.readCount)
+        assertTrue(viewModel.state.value.location is LocationUiState.Ready)
+    }
+
+    @Test
+    fun resumeWithReadyLocationDoesNotReread() = runTest(dispatcher) {
+        val provider = FakeLocationProvider(LocationResult.Success(bogota, 5f))
+        val viewModel = MapViewModel(provider, FakeAddressResolver(null))
+        viewModel.onPermissionResult(LocationPermissionState.Precise)
+        advanceUntilIdle()
+
+        viewModel.onAppResumed(LocationPermissionState.Precise)
+        advanceUntilIdle()
+
+        assertEquals(1, provider.readCount)
+    }
+
+    @Test
+    fun resumeWithoutPermissionDoesNotRead() = runTest(dispatcher) {
+        val provider = FakeLocationProvider(LocationResult.LocationDisabled)
+        val viewModel = MapViewModel(provider, FakeAddressResolver(null))
+        viewModel.onPermissionResult(LocationPermissionState.Denied)
+        advanceUntilIdle()
+
+        viewModel.onAppResumed(LocationPermissionState.Denied)
+        advanceUntilIdle()
+
+        assertEquals(0, provider.readCount)
+        assertEquals(LocationUiState.Idle, viewModel.state.value.location)
+    }
+
+    @Test
+    fun resumeWithNewPermissionReadsOnlyOnce() = runTest(dispatcher) {
+        val provider = FakeLocationProvider(LocationResult.Success(bogota, 5f))
+        val viewModel = MapViewModel(provider, FakeAddressResolver(null))
+        viewModel.onPermissionResult(LocationPermissionState.Denied)
+        advanceUntilIdle()
+
+        viewModel.onAppResumed(LocationPermissionState.Precise)
+        advanceUntilIdle()
+
+        assertEquals(LocationPermissionState.Precise, viewModel.state.value.permission)
+        assertEquals(1, provider.readCount)
+    }
 }

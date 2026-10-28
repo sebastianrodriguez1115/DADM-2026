@@ -79,8 +79,8 @@ private fun PermissionCard(buttonText: String, onButton: () -> Unit, modifier: M
 @Composable
 private fun LocationCard(state: MapUiState, onRefresh: () -> Unit, modifier: Modifier) {
     val canRefresh = when (state.location) {
-        is LocationUiState.Ready, LocationUiState.Unavailable -> true
-        LocationUiState.Idle, LocationUiState.Loading, LocationUiState.Disabled -> false
+        is LocationUiState.Ready, LocationUiState.Unavailable, LocationUiState.Disabled -> true
+        LocationUiState.Idle, LocationUiState.Loading -> false
     }
     Card(modifier = modifier.fillMaxWidth()) {
         Row(

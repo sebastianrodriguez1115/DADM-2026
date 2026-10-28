@@ -29,7 +29,8 @@ internal val LOCATION_PERMISSIONS = arrayOf(
 
 /**
  * Lanzador de los permisos de ubicación. Al abrir el mapa pide los permisos si todavía no se
- * consultaron; al volver de Ajustes con permiso concedido actualiza el estado.
+ * consultaron; al volver a primer plano con permiso concedido actualiza el estado y relee la
+ * ubicación si estaba desactivada o no se obtuvo (`ViewModel.onAppResumed`).
  */
 @Composable
 internal fun rememberLocationPermissionLauncher(
@@ -65,8 +66,7 @@ internal fun rememberLocationPermissionLauncher(
         val lifecycle = (context.findActivity() as? LifecycleOwner)?.lifecycle
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME && context.hasAnyLocationPermission()) {
-                val current = context.currentPermissionState()
-                if (current != viewModel.state.value.permission) viewModel.onPermissionResult(current)
+                viewModel.onAppResumed(context.currentPermissionState())
             }
         }
         lifecycle?.addObserver(observer)
