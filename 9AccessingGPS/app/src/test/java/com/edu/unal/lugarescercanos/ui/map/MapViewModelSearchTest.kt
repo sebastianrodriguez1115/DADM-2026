@@ -12,7 +12,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -46,7 +50,7 @@ class MapViewModelSearchTest {
     private fun viewModel(
         repository: FakePlacesRepository,
         mapsKeyConfigured: Boolean = true,
-        radiusKm: MutableStateFlow<Double> = MutableStateFlow(1.0),
+        radiusKm: Flow<Double> = MutableStateFlow(1.0),
     ) = MapViewModel(
         locationProvider = FakeLocationProvider(LocationResult.Success(bogota, 5f)),
         addressResolver = FakeAddressResolver(null),
@@ -230,5 +234,90 @@ class MapViewModelSearchTest {
 
         assertEquals(PlacesUiState.Inactive, vm.state.value.search)
         assertTrue(repository.requests.isEmpty())
+    }
+
+    @Test
+    fun changingTheRadioRepeatsTheSearchWithTheNewRadius() = runTest(dispatcher) {
+        val repository = FakePlacesRepository { PlacesSearchResult.Success(listOf(hospital)) }
+        val radius = MutableSharedFlow<Double>(replay = 1).apply { tryEmit(1.0) }
+        val vm = viewModel(repository, radiusKm = radius)
+        vm.onPermissionResult(LocationPermissionState.Precise)
+        advanceUntilIdle()
+        assertEquals(1000.0, repository.requests.single().radiusMeters, 0.0)
+
+        radius.emit(2.0)
+        advanceUntilIdle()
+
+        assertEquals(2, repository.requests.size)
+        assertEquals(2000.0, repository.requests.last().radiusMeters, 0.0)
+        assertEquals(2.0, vm.state.value.radiusKm, 0.0)
+        assertEquals(PlacesUiState.Results(listOf(hospital)), vm.state.value.search)
+    }
+
+    @Test
+    fun sameRadiusEmittedAgainDoesNotRepeatTheSearch() = runTest(dispatcher) {
+        val repository = FakePlacesRepository()
+        val radius = MutableSharedFlow<Double>(replay = 1).apply { tryEmit(1.0) }
+        val vm = viewModel(repository, radiusKm = radius)
+        vm.onPermissionResult(LocationPermissionState.Precise)
+        advanceUntilIdle()
+
+        radius.emit(1.0)
+        advanceUntilIdle()
+
+        assertEquals(1, repository.requests.size)
+    }
+
+    @Test
+    fun radiusChangeWithoutLocationDoesNotSearch() = runTest(dispatcher) {
+        val repository = FakePlacesRepository()
+        val radius = MutableSharedFlow<Double>(replay = 1).apply { tryEmit(1.0) }
+        val vm = MapViewModel(
+            locationProvider = FakeLocationProvider(LocationResult.Unavailable),
+            addressResolver = FakeAddressResolver(null),
+            placesRepository = repository,
+            radiusKm = radius,
+            mapsKeyConfigured = true,
+        )
+        vm.onPermissionResult(LocationPermissionState.Precise)
+        advanceUntilIdle()
+
+        radius.emit(3.0)
+        advanceUntilIdle()
+
+        assertTrue("sin ubicación no debe haber búsquedas", repository.requests.isEmpty())
+        assertEquals(PlacesUiState.Inactive, vm.state.value.search)
+    }
+
+    @Test
+    fun radiusChangeWithoutKeyDoesNotSearch() = runTest(dispatcher) {
+        val repository = FakePlacesRepository()
+        val radius = MutableSharedFlow<Double>(replay = 1).apply { tryEmit(1.0) }
+        val vm = viewModel(repository, mapsKeyConfigured = false, radiusKm = radius)
+        vm.onPermissionResult(LocationPermissionState.Precise)
+        advanceUntilIdle()
+
+        radius.emit(3.0)
+        advanceUntilIdle()
+
+        assertTrue("sin llave no debe haber búsquedas", repository.requests.isEmpty())
+        assertEquals(PlacesUiState.MissingKey, vm.state.value.search)
+    }
+
+    @Test
+    fun firstSearchUsesTheSavedRadiusWhenLocationArrivesFirst() = runTest(dispatcher) {
+        // El radio guardado (3 km) llega después de que la ubicación ya está lista.
+        val repository = FakePlacesRepository()
+        val savedRadius = flow {
+            delay(100)
+            emit(3.0)
+        }
+        val vm = viewModel(repository, radiusKm = savedRadius)
+
+        vm.onPermissionResult(LocationPermissionState.Precise)
+        advanceUntilIdle()
+
+        assertEquals(1, repository.requests.size)
+        assertEquals(3000.0, repository.requests.single().radiusMeters, 0.0)
     }
 }

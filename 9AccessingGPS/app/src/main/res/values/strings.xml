@@ -17,4 +17,19 @@
     <string name="location_address_resolving">Buscando la dirección…</string>
     <string name="location_address_unavailable">Dirección no disponible</string>
     <string name="location_coordinates">Coordenadas: %1$s</string>
+    <string name="maps_missing_key">Falta configurar la llave de Google Maps</string>
+    <string name="map_user_marker_title">Tu ubicación</string>
+    <string name="category_hospitals">Hospitales y clínicas</string>
+    <string name="category_pharmacies">Farmacias</string>
+    <string name="category_restaurants">Restaurantes</string>
+    <string name="category_tourist_sites">Sitios turísticos</string>
+    <string name="category_parks">Parques</string>
+    <string name="places_loading">Buscando lugares…</string>
+    <string name="places_count">%1$d lugares</string>
+    <string name="places_empty">No se encontraron lugares de «%1$s» a menos de %2$s</string>
+    <string name="places_error_no_connection">Sin conexión a internet</string>
+    <string name="places_error_over_limit">El servicio de lugares alcanzó su límite. Intenta más tarde</string>
+    <string name="places_error_request_denied">La llave de Google Maps no es válida o no tiene permisos</string>
+    <string name="places_error_service">El servicio de lugares no respondió</string>
+    <string name="places_retry">Reintentar</string>
 </resources>

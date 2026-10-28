@@ -51,7 +51,7 @@ fun LocationPanel(
 @Composable
 private fun PermissionCard(buttonText: String, onButton: () -> Unit, modifier: Modifier) {
     Card(modifier = modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(12.dp)) {
             Text(stringResource(R.string.location_permission_message))
             Button(onClick = onButton, modifier = Modifier.padding(top = 8.dp)) {
                 Text(buttonText)
@@ -63,7 +63,7 @@ private fun PermissionCard(buttonText: String, onButton: () -> Unit, modifier: M
 @Composable
 private fun LocationCard(state: MapUiState, onRefresh: () -> Unit, modifier: Modifier) {
     Card(modifier = modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(12.dp)) {
             when (val location = state.location) {
                 LocationUiState.Idle -> Unit
                 LocationUiState.Loading -> Row {

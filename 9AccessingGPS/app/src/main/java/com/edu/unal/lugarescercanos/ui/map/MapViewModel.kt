@@ -109,9 +109,24 @@ class MapViewModel(
     private var searchJob: Job? = null
     private var latestSearchId = 0L
 
+    /** Radio de la última búsqueda iniciada; null mientras no se ha buscado (`search-radius-settings`). */
+    private var lastSearchedRadiusKm: Double? = null
+
+    /**
+     * False hasta la primera emisión del radio guardado. Así la primera búsqueda ya usa el radio
+     * de Ajustes y no el de por defecto (1 km) (`search-radius-settings`).
+     */
+    private var radiusLoaded = false
+
     init {
         viewModelScope.launch {
-            radiusKm.collect { km -> _state.update { it.copy(radiusKm = km) } }
+            radiusKm.collect { km ->
+                val changed = km != lastSearchedRadiusKm
+                _state.update { it.copy(radiusKm = km) }
+                radiusLoaded = true
+                // Radio distinto del último buscado: se repite la búsqueda si hay ubicación y llave.
+                if (changed && _state.value.location is LocationUiState.Ready) requestSearch()
+            }
         }
     }
 
@@ -182,6 +197,11 @@ class MapViewModel(
             setSearch(PlacesUiState.Inactive)
             return
         }
+        // Sin el radio guardado no se busca: la primera emisión del radio lanza la búsqueda.
+        if (!radiusLoaded) {
+            setSearch(PlacesUiState.Loading)
+            return
+        }
         startSearch(ready.point)
     }
 
@@ -190,6 +210,7 @@ class MapViewModel(
         val searchId = ++latestSearchId
         val current = _state.value
         val params = NearbySearchParams.create(point, current.radiusKm, current.category)
+        lastSearchedRadiusKm = current.radiusKm
         setSearch(PlacesUiState.Loading)
         searchJob = viewModelScope.launch {
             val result = placesRepository.searchNearby(params)
