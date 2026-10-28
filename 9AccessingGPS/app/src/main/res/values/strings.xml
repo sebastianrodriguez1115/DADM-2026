@@ -5,4 +5,16 @@
     <string name="settings_title">Ajustes</string>
     <string name="settings_back_description">Volver</string>
     <string name="settings_radius_label">Radio de búsqueda</string>
+    <string name="location_permission_message">Lugares cercanos necesita tu ubicación para buscar lugares cerca de ti.</string>
+    <string name="location_grant_permission">Conceder permiso</string>
+    <string name="location_open_settings">Abrir ajustes</string>
+    <string name="location_approximate_notice">Ubicación aproximada: los lugares y las distancias pueden ser menos precisos.</string>
+    <string name="location_loading">Obteniendo tu ubicación…</string>
+    <string name="location_disabled">La ubicación del dispositivo está desactivada.</string>
+    <string name="location_unavailable">No se pudo obtener la ubicación</string>
+    <string name="location_update">Actualizar ubicación</string>
+    <string name="location_card_title">Tu ubicación</string>
+    <string name="location_address_resolving">Buscando la dirección…</string>
+    <string name="location_address_unavailable">Dirección no disponible</string>
+    <string name="location_coordinates">Coordenadas: %1$s</string>
 </resources>
