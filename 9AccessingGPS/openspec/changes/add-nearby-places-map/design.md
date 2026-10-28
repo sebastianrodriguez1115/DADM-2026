@@ -24,7 +24,7 @@ Estado actual verificado en `/Users/jsrc1115/Code/DADM-2026/9AccessingGPS` (en a
 
 ### D1. Mapa con Maps Compose (U9, P6)
 
-- Se usa `com.google.maps.android:maps-compose` 9.0.1, con el composable `GoogleMap` y un `CameraPositionState`. Según su README, `play-services-maps` ya no se declara aparte: el Maps SDK entra como dependencia transitiva.
+- Se usa `com.google.maps.android:maps-compose` 9.0.1, con el composable `GoogleMap` y un `CameraPositionState`. Según su README, `play-services-maps` ya no se declara aparte: el Maps SDK entra como dependencia transitiva. Desde Maps SDK 20.0.0 el SDK quitó `org.apache.http.legacy` de su manifest y, con el renderizador legacy (Google Play services anteriores a 25.50.34), la app se cae con `ClassNotFoundException: org.apache.http.ProtocolVersion`; por eso el manifest declara `<uses-library android:name="org.apache.http.legacy" android:required="false" />` dentro de `<application>`.
 - Vista inicial: Plaza de Bolívar (4.5981, -74.0760, zoom 12) mientras llega la ubicación.
 - Marcador propio «Tu ubicación» con `BitmapDescriptorFactory.HUE_AZURE`. No se usa `isMyLocationEnabled`: así el marcador coincide con la ubicación usada en la búsqueda y no aparece el botón por defecto.
 - `Circle` semitransparente con el radio en metros.
@@ -112,7 +112,7 @@ Estado actual verificado en `/Users/jsrc1115/Code/DADM-2026/9AccessingGPS` (en a
 - Dependencias nuevas, en su última estable: `maps-compose` 9.0.1, `places` 6.0.2, `play-services-location` 21.4.0 y `datastore-preferences` 1.3.0. Además `lifecycle-viewmodel-compose`, `material-icons-core`, y solo para pruebas `kotlinx-coroutines-test`.
 - Plugin `com.google.android.libraries.mapsplatform.secrets-gradle-plugin` 2.0.1, que lee `secrets.properties` y, si no existe, `local.defaults.properties`. Su compatibilidad con AGP 9.4 no está verificada. Contingencia: si falla, se lee `secrets.properties` a mano en `app/build.gradle.kts` y se pasa la llave con `manifestPlaceholders["MAPS_API_KEY"]` y `buildConfigField`.
 - `buildFeatures.buildConfig = true`, para leer la llave en Kotlin.
-- Contingencias del grupo 1: si DataStore 1.3.0 no resuelve o no compila, se usa la última 1.2.x. Si el plugin de secretos no funciona con AGP 9.4, se aplica la contingencia manual. Si el mapa o Places no funcionan en el emulador con una llave válida, se detiene el trabajo y se consulta al usuario, en lugar de cambiar de SDK en silencio. Todo se registra en `C/qa/build-probe.md`.
+- Contingencias del grupo 1: si DataStore 1.3.0 no resuelve o no compila, se usa la última 1.2.x. Si el plugin de secretos no funciona con AGP 9.4, se aplica la contingencia manual. Si el mapa o Places no funcionan en el emulador con una llave válida, se detiene el trabajo y se consulta al usuario, en lugar de cambiar de SDK en silencio. Todo se registra en `C/qa/build-probe.md`. Por U12, `compileOptions` y el `jvmTarget` de Kotlin pasan a Java 17, porque `maps-compose` 9.0.1 está compilado para JVM 17 y con Java 11 no compila `rememberCameraPositionState`.
 
 ### D11. Llave de API fuera de git (U9, P13)
 

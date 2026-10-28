@@ -130,3 +130,15 @@ public class com.google.android.gms.common.api.CommonStatusCodes {
 ```
 
 Los valores están en `P/domain/PlacesErrorMapper.kt` con un comentario que indica su clase y constante. La página de Places SDK no se consultó en esta tarea porque los jars del SDK 6.0.2 que usa el proyecto ya confirman los valores.
+
+## Correcciones del mapa mínimo (tarea 1.8)
+
+1. **Caída al abrir el mapa.** Con Maps SDK 20.0.0 o posterior y el renderizador legacy, la app se caía con `ClassNotFoundException: Didn't find class "org.apache.http.ProtocolVersion"` desde `MapsDynamite.apk`. Fuente: notas de versión del Maps SDK for Android 20.0.0 (https://developers.google.com/maps/documentation/android-sdk/release-notes), que quitó `org.apache.http.legacy` de su manifest. El emulador `DADM_GraphicsSound_API35` tiene Google Play services 24.23.35 (renderizador legacy 20.31.15); el problema solo desaparece desde la 25.50.34. Corrección: `<uses-library android:name="org.apache.http.legacy" android:required="false" />` dentro de `<application>` en `app/src/main/AndroidManifest.xml`. Tras ella la app ya no se cae.
+2. **Java 17.** `maps-compose` 9.0.1 está compilado para JVM 17 y `rememberCameraPositionState {}` no compilaba con `JavaVersion.VERSION_11` (`INLINE_FROM_HIGHER_PLATFORM`). `compileOptions` pasa a `JavaVersion.VERSION_17` (U12). El `jvmTarget` de Kotlin sigue a `compileOptions` con el Kotlin integrado de AGP 9, sin configuración extra. `MapScreen.kt` vuelve a usar `rememberCameraPositionState { position = ... }`.
+
+## Grupo 1 con llave
+
+- **1.8 Mapa mínimo:** OK. `qa/1-8-mapa-minimo.png` muestra el mapa de Google sobre Bogotá (Plaza de Bolívar, zoom 12), con el logo de Google visible y la barra superior sin taparlo. Sin errores de autorización en logcat.
+- **1.9 Places real:** bloqueada. `searchNearby` devuelve `ApiException` con `statusCode` 9011 (`REQUEST_DENIED`): «Places API (New) has not been used in project ... before or it is disabled». Detalle en `qa/1-9-places-real.md`. Requiere acción del usuario en la consola de Google.
+- **1.10 Ubicación simulada:** bloqueada por el emulador. `getCurrentLocation(PRIORITY_HIGH_ACCURACY, ...)` devuelve `null` aun con `ACCESS_FINE_LOCATION` concedido, con `adb emu geo fix -74.0840 4.6381` enviado cada segundo durante la llamada y con actualizaciones de ubicación activas. Una prueba de diagnóstico con `LocationManager.GPS_PROVIDER` directo recibe 0 actualizaciones en 10 s: el proveedor `gps` del emulador queda con `ProviderRequest[OFF]`, `last location=null` y no hay registros de GNSS en logcat. El comando `geo fix` responde `OK` pero el emulador no entrega la posición. No se registró latitud, longitud ni precisión.
+- **1.11:** pendiente hasta cerrar 1.9 y 1.10. Se retiraron del repositorio las pruebas temporales (no hay pruebas temporales en `app/src/androidTest/`).
