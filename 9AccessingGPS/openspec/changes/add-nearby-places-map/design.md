@@ -7,12 +7,12 @@ Ver `proposal.md` para la motivación, el alcance y las decisiones de usuario (U
 Estado actual verificado en `/Users/jsrc1115/Code/DADM-2026/9AccessingGPS` (en adelante `P/` = `app/src/main/java/com/edu/unal/lugarescercanos/`):
 
 - La app es la plantilla Hello World ya renombrada: `P/MainActivity.kt` con Compose, `P/ui/theme/` y las pruebas de ejemplo. Paquete y `applicationId` `com.edu.unal.lugarescercanos`, nombre visible «Lugares cercanos».
-- Build: AGP 9.4.0, Kotlin 2.2.10 con el Kotlin integrado de AGP 9 (solo se aplica `org.jetbrains.kotlin.plugin.compose`), compileSdk y targetSdk 37, minSdk 35, Java 11, Compose BOM 2026.02.01, catálogo en `gradle/libs.versions.toml`.
+- Build: AGP 9.4.1 y Gradle 9.8.2 (desde U12; el plan original usaba 9.4.0 y 9.6.0), Kotlin 2.4.21 (desde U11; el plan original usaba 2.2.10) con el Kotlin integrado de AGP 9 (solo se aplica `org.jetbrains.kotlin.plugin.compose`, que arrastra el KGP 2.4.21), compileSdk y targetSdk 37, minSdk 35, Java 11, Compose BOM 2026.09.00, catálogo en `gradle/libs.versions.toml`.
 - Dependencias de la plantilla, viejas: core-ktx 1.10.1, lifecycle-runtime-ktx 2.6.1, activity-compose 1.8.0, junit 4.13.2, androidx junit 1.1.5 y espresso 3.5.1. No hay `lifecycle-viewmodel-compose` ni `kotlinx-coroutines-test`.
 - Versiones de las dependencias nuevas, según el encargo del 2026-10-27: `com.google.maps.android:maps-compose` 9.0.1 (8-oct-2026, la última en GitHub), `com.google.android.libraries.places:places` 6.0.2 (la última en Google Maven ese día), `com.google.android.gms:play-services-location` 21.4.0, `androidx.datastore:datastore-preferences` 1.3.0 y el plugin `com.google.android.libraries.mapsplatform.secrets-gradle-plugin` 2.0.1.
 - Imágenes de emulador disponibles: `DADM_GraphicsSound_API35` y `boticario_catalog_api36`, ambas `google_apis`, con Google Play services.
 
-**No verificado** (lo resuelven el grupo 1 de `tasks.md` y el QA): que el plugin de secretos 2.0.1 funcione con AGP 9.4; que maps-compose 9.0.1 y Places 6.0.2 compilen con Kotlin 2.2.10 y compileSdk 37; que el mapa y Places respondan en el emulador con una llave válida; que `getCurrentLocation` devuelva una posición con `adb emu geo fix`; y que los tipos de lugar elegidos existan en la Table A de Google.
+**No verificado** (lo resuelven el grupo 1 de `tasks.md` y el QA): que el plugin de secretos 2.0.1 funcione con AGP 9.4.1; que maps-compose 9.0.1 y Places 6.0.2 compilen con Kotlin 2.4.21 y compileSdk 37; que el mapa y Places respondan en el emulador con una llave válida; que `getCurrentLocation` devuelva una posición con `adb emu geo fix`; y que los tipos de lugar elegidos existan en la Table A de Google.
 
 ## Goals / Non-Goals
 
@@ -108,7 +108,7 @@ Estado actual verificado en `/Users/jsrc1115/Code/DADM-2026/9AccessingGPS` (en a
 
 ### D10. Librerías y contingencias del grupo 1 (P10)
 
-- Las librerías de la plantilla se suben a su última estable. Gradle, AGP y Kotlin no cambian.
+- Las librerías de la plantilla se suben a su última estable. Kotlin sube a 2.4.21 y el plugin de Compose a la misma versión (U11): `maps-compose` 9.0.1 y `places` 6.0.2 exigen `kotlin-stdlib` 2.4.x, que Kotlin 2.2.10 no puede leer. Por U12 también suben AGP a 9.4.1 y Gradle a 9.8.2, y los plugins del build quedan en su última estable (foojay-resolver-convention 1.0.0, secretos 2.0.1): el principio es «última estable para todo» (U11, U12). Alternativa descartada: bajar a `maps-compose` 8.3.1 y `places` 5.3.0, que sí compilan con Kotlin 2.2.10.
 - Dependencias nuevas, en su última estable: `maps-compose` 9.0.1, `places` 6.0.2, `play-services-location` 21.4.0 y `datastore-preferences` 1.3.0. Además `lifecycle-viewmodel-compose`, `material-icons-core`, y solo para pruebas `kotlinx-coroutines-test`.
 - Plugin `com.google.android.libraries.mapsplatform.secrets-gradle-plugin` 2.0.1, que lee `secrets.properties` y, si no existe, `local.defaults.properties`. Su compatibilidad con AGP 9.4 no está verificada. Contingencia: si falla, se lee `secrets.properties` a mano en `app/build.gradle.kts` y se pasa la llave con `manifestPlaceholders["MAPS_API_KEY"]` y `buildConfigField`.
 - `buildFeatures.buildConfig = true`, para leer la llave en Kotlin.
@@ -130,7 +130,8 @@ Estado actual verificado en `/Users/jsrc1115/Code/DADM-2026/9AccessingGPS` (en a
 - **Costo y facturación**: el SKU Pro de Nearby Search tiene cupo gratis mensual, y después se cobra por búsqueda. → Se mitiga con la llave restringida, la cuota diaria y solo campos Pro. Google responsabiliza al dueño del cobro por abuso de llaves sin restringir.
 - **Fuga de la llave**: si la llave se filtra, otra persona puede consumir la cuota. → `secrets.properties` va ignorado por git, la llave está restringida por paquete y SHA-1, y ningún artefacto ni registro la contiene (D11).
 - **Límite de 20 resultados**: con radios grandes en zonas densas, solo se ven los 20 lugares más cercanos. → Se acepta; el encargo lo aprobó como diferencia de Google (U9).
-- **Compatibilidad sin verificar**: el plugin de secretos con AGP 9.4, Places 6.0.2 y maps-compose 9.0.1 con Kotlin 2.2.10 y compileSdk 37. → El grupo 1 lo prueba antes de seguir y registra las contingencias (D10).
+- **Compatibilidad sin verificar**: el plugin de secretos con AGP 9.4.1, Places 6.0.2 y maps-compose 9.0.1 con Kotlin 2.4.21 y compileSdk 37. → El grupo 1 lo prueba antes de seguir y registra las contingencias (D10).
+- **Kotlin 2.4 con AGP 9.4.1 y Gradle 9.8.2**: AGP 9.4.1 trae por defecto el KGP 2.2.10 y se usa un KGP más nuevo. → Se verificó en el grupo 1 que el build compila; cualquier incompatibilidad de AGP con Kotlin 2.4 se registra en `C/qa/build-probe.md`.
 - **Google Play services**: el emulador y el celular lo necesitan para la ubicación y para el mapa. → Se usan imágenes `google_apis`.
 - **Resultados viejos**: una búsqueda antigua que llega tarde se descarta por identificador (D5, D9).
 - **SHA-1 distinta**: si el APK se compila en otra máquina, cambia la huella y habría que registrarla en la llave. → La instalación en el celular (tarea 7.5) usa la misma SHA-1, porque se compila en este Mac.
