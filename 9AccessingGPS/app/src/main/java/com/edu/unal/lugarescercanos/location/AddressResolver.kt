@@ -4,7 +4,9 @@ import android.content.Context
 import android.location.Address
 import android.location.Geocoder
 import com.edu.unal.lugarescercanos.domain.GeoPoint
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.resume
 
 /** Dirección de una posición. Devuelve null si no hay dirección (`current-location`, D4). */
@@ -25,12 +27,20 @@ class GeocoderAddressResolver(context: Context) : AddressResolver {
 
     override suspend fun addressFor(point: GeoPoint): String? {
         if (!Geocoder.isPresent()) return null
+        // GeocodeListener no garantiza respuesta: si el tiempo vence, no hay dirección.
         val lines = try {
-            requestLines(point)
+            withTimeoutOrNull(GEOCODE_TIMEOUT_MS) { requestLines(point) } ?: return null
+        } catch (e: CancellationException) {
+            throw e
         } catch (_: Exception) {
             return null
         }
         return chooseAddressLine(lines)
+    }
+
+    private companion object {
+        /** Tiempo máximo de espera del geocodificador antes de mostrar «Dirección no disponible». */
+        const val GEOCODE_TIMEOUT_MS = 10_000L
     }
 
     private suspend fun requestLines(point: GeoPoint): List<String?> =
