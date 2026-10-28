@@ -20,3 +20,6 @@ local.properties
 /.kiro/
 /.opencode/
 /.claude/
+
+# Llave de Google Maps: local, no se versiona
+secrets.properties
