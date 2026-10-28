@@ -158,7 +158,12 @@ Pendiente.
 
 ## 6. Celular del usuario (7.5)
 
-Pendiente.
+- Dispositivo: Samsung Galaxy S21 Ultra (SM-G998B), Android 15. Google Play services 26.41.31.
+- Instalada con `./gradlew :app:installDebug` (keystore de depuración de este Mac), 2026-10-27. Detalle en `qa/7-5-celular.md`.
+- Resultado: 12 de 12 casos PASAN (instalación y apertura sin fallos, diálogo de permisos, C-07 solo aproximada, mapa con tarjeta y círculo, 5 categorías, cambio de radio que repite la búsqueda, permiso preciso).
+- C-07 (solo aproximada): la app sigue funcionando, muestra la ubicación y el aviso «Ubicación aproximada: los lugares y las distancias pueden ser menos precisos.». PASA.
+- Observación O-1 (baja): al conceder la ubicación precisa con `pm grant` con la app abierta, el aviso de aproximada persiste hasta reiniciar la app. No se reproduce por la vía normal del usuario.
+- Sin capturas ni datos de ubicación en el registro.
 
 ## 7. Revisión de evidencia (7.6)
 
